@@ -25,7 +25,7 @@ class p_tree extends p_treenode implements p_component {
       stroke(0x00);
       p_treenode cnode = (p_treenode)super.get(i);
       String t = cnode.title;
-      while (textWidth(t) > w - 48)
+      while (textWidth(t) > w - 48 && t.length() > 0)
         t = t.substring(0, t.length() - 1);
       text(t, (float)x+((cnode.hasChildren) ? 24 : 0), (float)drawy);
       if (mouseX > x+((cnode.hasChildren) ? 24 : 0) && mouseX < x+((cnode.hasChildren) ? 24 : 0)+textWidth(t)+12 && mouseY < drawy && mouseY > drawy-16 && active) {
@@ -52,7 +52,7 @@ class p_tree extends p_treenode implements p_component {
             if (drawy > h+y) break;
             p_treenode bnode = (p_treenode)cnode.get(j);
             String t1 = bnode.title;
-            while (textWidth(t1) > w - 72)
+            while (textWidth(t1) > w - 72 && t1.length() > 0)
               t1 = t1.substring(0, t1.length() - 1);
             text(t1, (float)x+55, (float)drawy);
             if (!bnode.hasChildren) {

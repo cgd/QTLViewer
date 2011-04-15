@@ -16,7 +16,7 @@ class p_page extends ArrayList<p_component> implements p_component {
   void update() {
     updateComponents();
     for (int i = 0; i < size(); i++)
-      ((p_component)this.get(i)).setActive(active);
+      ((p_component)this.get(i)).setActive(this.active);
   }
   
   void addComponent(p_component c, int page, int index) {
@@ -29,10 +29,10 @@ class p_page extends ArrayList<p_component> implements p_component {
   
   void updateComponents() {
     for (int i = 0; i < size(); i++) {
-      pushMatrix();
-      translate(width * pindex, 0, 0);
+      //pushMatrix();
+      //translate(width * pindex, 0, 0);
       ((p_component)this.get(i)).update();
-      popMatrix();
+      //popMatrix();
     }
   }
   

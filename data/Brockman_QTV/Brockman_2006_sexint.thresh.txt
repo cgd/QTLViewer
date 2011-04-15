@@ -1,0 +1,11 @@
+Autosome LOD thresholds (100 permutations)
+     Bw3  Bw4  Bw5  Bw6  Afw  Afp   Mw Liver Kidney Spleen
+63% 2.81 3.19 3.08 3.03 2.92 3.00 3.37  2.93   2.94   2.98
+10% 4.08 4.62 4.47 4.07 4.41 4.23 4.48  4.07   3.97   4.08
+5%  4.43 5.11 5.03 4.27 4.63 4.83 5.14  4.38   4.30   4.45
+
+X chromosome LOD thresholds (5914 permutations)
+     Bw3  Bw4  Bw5  Bw6  Afw  Afp   Mw Liver Kidney Spleen
+63% 2.20 2.26 2.30 2.22 2.16 2.16 2.24  2.22   2.23   2.25
+10% 3.14 3.35 3.36 3.24 3.56 3.18 3.38  3.18   2.97   3.37
+5%  3.52 3.65 3.73 3.59 3.88 3.44 3.89  3.56   3.19   3.68

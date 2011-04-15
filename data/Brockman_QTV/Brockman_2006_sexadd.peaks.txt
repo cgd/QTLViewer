@@ -1,0 +1,54 @@
+Bw3:
+          chr  pos ci.low ci.high  lod   pval
+c7.loc6     7  7.9   1.91    51.9 3.43 0.0203
+c14.loc24  14 30.3  16.32    36.3 7.90 0.0000
+
+Bw4:
+          chr  pos ci.low ci.high   lod   pval
+c1.loc46    1 50.1   4.12    66.1  3.68 0.0508
+c7.loc10    7 11.9   1.91    49.9  3.93 0.0407
+c14.loc14  14 20.3  14.32    32.3 10.39 0.0000
+
+Bw5:
+          chr  pos ci.low ci.high  lod   pval
+c1.loc46    1 50.1   4.12    66.1 3.73 0.0508
+c7.loc22    7 23.9   1.91    55.9 3.59 0.0711
+c14.loc22  14 28.3  14.32    34.3 8.88 0.0000
+
+Bw6:
+          chr  pos ci.low ci.high  lod   pval
+c14.loc16  14 22.3   12.3    34.3 5.05 0.0102
+
+Afw:
+          chr  pos ci.low ci.high  lod pval
+c7.loc8     7  9.9   1.91    25.9 6.20    0
+c14.loc16  14 22.3  14.32    32.3 7.16    0
+
+Afp:
+          chr  pos ci.low ci.high  lod pval
+c7.loc8     7  9.9   1.91    25.9 6.07    0
+c14.loc16  14 22.3  14.32    32.3 6.33    0
+
+Mw:
+          chr  pos ci.low ci.high  lod   pval
+c1.loc50    1 54.1   4.12    82.1 3.03 0.0915
+c14.loc14  14 20.3  12.32    32.3 6.38 0.0000
+
+Liver:
+         chr   pos ci.low ci.high  lod   pval
+D1Mit68    1  4.12   4.12    52.1 3.14 0.0813
+c3.loc14   3 29.18  15.18    49.2 3.10 0.0915
+c4.loc46   4 66.16  52.16    82.6 3.51 0.0407
+c7.loc10   7 11.91   1.91    33.9 3.64 0.0305
+
+Kidney:
+          chr  pos ci.low ci.high  lod   pval
+c1.loc54    1 58.1  32.12    75.1 5.15 0.0102
+c2.loc18    2 32.6  14.63    80.6 3.02 0.0915
+c14.loc12  14 18.3  10.32    32.3 5.45 0.0000
+c17.loc16  17 24.1   8.14    40.1 3.21 0.0508
+
+Spleen:
+          chr  pos ci.low ci.high  lod   pval
+c12.loc20  12 35.7   15.7    60.6 3.42 0.0102
+

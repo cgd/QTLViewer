@@ -1,26 +1,29 @@
 class ChrDisplay implements p_component {
-  boolean focus = false, active = true, dragReady = true, dragging = false, chr_ready = true;
-  double x = 50.0, y = 50.0, legendX, legendY, legendW, legendH;
-  PFont legendFont = createFont("Arial", 16, true);
+  boolean focus = false, active = true, dragReady = true, dragging = false, chr_ready = true, update = false;
+  double x = 25.0, y = 25.0, w, h, legendX, legendY, legendW, legendH;
+  PFont legendFont = createFont("Arial", 16, true), normFont = createFont("Arial", 12, true);
   float legendOffsetX = -1, legendOffsetY = -1, legendA = 0x00, maxOffset = -1.0, cw, ch, multiplier;
   //int lastNum = -1;
   ChrOrganizer[] chrs = new ChrOrganizer[chr_lengths.length];
   
-  public ChrDisplay() {
+  public ChrDisplay(double ex, double why, double doubleu, double ache) {
     legendX = width-400.0;
-    legendY = 250.0;
+    legendY = 400.0;
     for (int i = 0; i < chrs.length; i++) chrs[i] = new ChrOrganizer();
-    cw = (width-(float)(2*x))/chr_columns;
-    ch = (height-(float)(2*y))/ceil(chr_lengths.length/(float)chr_columns);
-    multiplier = (ch-24.0)/max(chr_lengths);
+    x = ex; y = why; w = doubleu; h = ache;
   }
   
   void update() {
-    boolean update = filetree.hasUpdated();
+    if (w <= 0.0) w = (width-x)+w;
+    if (h <= 0.0) h = (height-y)+h;
+    cw = (float)w/chr_columns;
+    ch = (float)h/ceil(chr_lengths.length/(float)chr_columns);
+    multiplier = (ch-24.0)/max(chr_lengths);
+    update = (update || filetree.hasUpdated());
     stroke(0x00);
     fill(0x00);
     strokeWeight(1);
-    textFont(legendFont);
+    textFont(normFont);
     /*float rows = ceil(chr_lengths.length/(float)chr_columns);
     for (int i = 0; i <= rows; i++)
     line((float)x, (float)y+(ch*i), width-(float)x, (float)y+(ch*i));
@@ -29,15 +32,16 @@ class ChrDisplay implements p_component {
     ellipseMode(CENTER);
     for (int i = 0; i < chr_lengths.length; i++) {
       strokeWeight(1); noStroke();
-      if (i == chr_lengths.length-1) {
-        text("chromosome X", (float)x+(cw*(i%chr_columns))+2/*(cw-(textWidth("chromosome "+str(i+1))/2.0))*/, (float)y+(ch*floor(i/(float)chr_columns))+14);
-      } else text("chromosome "+str(i+1), (float)x+(cw*(i%chr_columns))+2/*(cw-(textWidth("chromosome "+str(i+1))/2.0))*/, (float)y+(ch*floor(i/(float)chr_columns))+14);
+      //if (i == chr_lengths.length-1) {
+        //text("chromosome X", (float)x+(cw*(i%chr_columns))+2/*(cw-(textWidth("chromosome "+str(i+1))/2.0))*/, (float)y+(ch*floor(i/(float)chr_columns))+14);
+      //} else 
+      text("chromosome "+chr_names[i], (float)x+(cw*(i%chr_columns))+2/*(cw-(textWidth("chromosome "+str(i+1))/2.0))*/, (float)y+(ch*floor(i/(float)chr_columns))+14);
       ellipse((float)x+(cw*(i%chr_columns))+8/*+(cw/2.0)*/, (float)y+(ch*floor(i/(float)chr_columns))+20, 8, 8);
       strokeWeight(2); stroke(0x00);
       line((float)x+(cw*(i%chr_columns))+8/*+(cw/2.0)*/, (float)y+(ch*floor(i/(float)chr_columns))+20+(chr_markerpos[i]*multiplier), (float)x+(cw*(i%chr_columns))+8/*+(cw/2.0)*/, (float)y+(ch*floor(i/(float)chr_columns))+20+(multiplier*chr_lengths[i]));
     }
     strokeWeight(1);
-    
+    textFont(legendFont);
     int[] colors = new int[0];
     String[] names = new String[0];
     float maxLen = -1.0;
@@ -68,11 +72,12 @@ class ChrDisplay implements p_component {
       for (int j = 0; j < chrs[i].peaks.length; j++) {
         fill(chrs[i].colors[j]); strokeWeight(1); stroke(chrs[i].colors[j]);
         line((float)chrs[i].uppers[j].getX()+(8*chrs[i].layers[j]), (float)chrs[i].uppers[j].getY(), (float)chrs[i].uppers[j].getX()+(8*chrs[i].layers[j]), (float)chrs[i].uppers[j].getY()+chrs[i].heights[j]);
-        fill(255-red(chrs[i].colors[j]), 255-green(chrs[i].colors[j]), 255-blue(chrs[i].colors[j])); noStroke();
+        //zfill(255-red(chrs[i].colors[j]), 255-green(chrs[i].colors[j]), 255-blue(chrs[i].colors[j])); noStroke();
         ellipse((float)chrs[i].uppers[j].getX()+(8*chrs[i].layers[j]), chrs[i].peakYs[j], 6, 6);
       }
     }
     if (update) for (ChrOrganizer co : chrs) co.organize();
+    update = false;
     //lastNum = num;        
     if (names.length > 0 && colors.length > 0) {
       if (mouseX > legendX && mouseX < legendX+legendW && mouseY > legendY && mouseY < legendY+legendH && active) {
@@ -91,10 +96,10 @@ class ChrDisplay implements p_component {
       } if (dragging) {
         legendX = mouseX - legendOffsetX;
         legendY = mouseY - legendOffsetY;
-        if (legendX < 0) legendX = 0;
-        else if (legendX > width-legendW) legendX = width-legendW;
-        if (legendY < 0) legendY = 0;
-        else if (legendY > height-legendH) legendY = height-legendH;
+        if (legendX < x) legendX = x;
+        else if (legendX > (x+w)-legendW) legendX = (x+w)-legendW;
+        if (legendY < y) legendY = y;
+        else if (legendY > (y+h)-legendH) legendY = (y+h)-legendH;
       } if (!mousePressed || mouseButton != LEFT || !active) {
         legendOffsetX = legendOffsetY = -1;
         dragging = false;
@@ -103,7 +108,6 @@ class ChrDisplay implements p_component {
       stroke(0x00, legendA);
       rect((float)legendX, (float)legendY, (float)(legendW=maxLen+18), (float)(legendH=(names.length*16)+4));
       stroke(0x00);
-      textFont(legendFont);
       for (int i = 0; i < names.length; i++) {
         fill(colors[i]);
         rect((float)legendX+4.0, (float)legendY+((i+1)*16)-11, 10, 10);
@@ -120,13 +124,14 @@ class ChrDisplay implements p_component {
   }
   
   void mouseAction() {
-    if (mousePressed && mouseButton == LEFT && !dragging && chr_ready && mouseX > 50 && mouseX < width-50 && mouseY > 50 && mouseY < height-50
+    if (mousePressed && mouseButton == LEFT && !dragging && chr_ready && mouseX > x && mouseX < (x+w) && mouseY > y && mouseY < (y+h)
       && !(mouseX > legendX && mouseX < legendX+legendW && mouseY > legendY && mouseY < legendY+legendH))
-      if (floor((mouseX-50)/cw)+(chr_columns*floor((mouseY-50)/ch)) < chr_lengths.length) {
-        int c = floor((mouseX-50)/cw)+(chr_columns*floor((mouseY-50)/ch));
+      if (floor((mouseX-(float)x)/cw)+(chr_columns*floor((mouseY-(float)y)/ch)) < chr_lengths.length && floor((mouseX-(float)x)/cw)+(chr_columns*floor((mouseY-(float)y)/ch)) >= 0) {
+        int c = floor((mouseX-(float)x)/cw)+(chr_columns*floor((mouseY-(float)y)/ch));
         if (chrs[c].peaks.length > 0) {
           loddisplay.current_chr = c;
-          folder.prevPage();
+          //folder.prevPage();
+          TEST.prevPage();
         }
       }
   }
@@ -145,6 +150,9 @@ class ChrDisplay implements p_component {
   String toString() { return ""; }
   void setActive(boolean a) { active = a; }
   boolean isActive() { return active; }
+  void updateOrganizer() {
+    
+  }
 }
 
 class ChrOrganizer {
