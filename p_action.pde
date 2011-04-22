@@ -1,7 +1,7 @@
 interface p_action {
-  public void doAction();
+    public void doAction();
 }
 
 interface p_listener {
-  public int eventHeard(int i, int j);
+    public int eventHeard(int i, int j);
 }
