@@ -39,149 +39,12 @@ void setup() {
     frameRate(60);
     frame.setTitle("QTL Viewer");
     
-    String[] titles = {"LOD Score view", "Chromosome view"};
-    tabs = new p_tabfolder(335, 30, 10, 10, titles);
+    // see InitUI for init* methods
+    initMenuBar();
     
-    // init menu bar, sub menus, menu items, etc.
-    MenuBar menu = new MenuBar();
+    initConstants();
     
-    Menu fileMenu = new Menu("File");
-    MenuItem openFileItem = new MenuItem("Open File...", new MenuShortcut(KeyEvent.VK_O));
-    // action handling callbacks using anonymous inner classes
-    openFileItem.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
-            openFile();
-        }
-    });
-    MenuItem openFolderItem = new MenuItem("Open Folder...", new MenuShortcut(KeyEvent.VK_O, true));
-    openFolderItem.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
-            loadFolder();
-        }
-    });
-    MenuItem loadConfigItem = new MenuItem("Load config...", new MenuShortcut(KeyEvent.VK_E));
-    loadConfigItem.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if(exiting) return;
-            loadConfig();
-        }
-    });
-    
-    fileMenu.add(openFileItem);
-    fileMenu.add(openFolderItem);
-    fileMenu.add(new MenuItem("-"));
-    fileMenu.add(loadConfigItem);
-    
-    Menu viewMenu = new Menu("View");
-    MenuItem menuup = new MenuItem("Show Menu", new MenuShortcut(KeyEvent.VK_UP, true));
-    menuup.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
-            menuTargetY = -100.0;
-        }
-    });
-    MenuItem menudown = new MenuItem("Hide Menu", new MenuShortcut(KeyEvent.VK_DOWN, true));
-    menudown.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
-            menuTargetY = 0.0;
-        }
-    });
-    MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(KeyEvent.VK_PERIOD));
-    nextchr.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
-            loddisplay.nextChr();
-        }
-    });
-    MenuItem prevchr = new MenuItem("Previous Chromosome", new MenuShortcut(KeyEvent.VK_COMMA));
-    prevchr.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
-            loddisplay.prevChr();
-        }
-    });
-    MenuItem showall = new MenuItem("Show All", new MenuShortcut(KeyEvent.VK_BACK_SPACE));
-    showall.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
-            loddisplay.allChr();
-        }
-    });
-    
-    viewMenu.add(menuup);
-    viewMenu.add(menudown);
-    viewMenu.add(new MenuItem("-"));
-    viewMenu.add(nextchr);
-    viewMenu.add(prevchr);
-    viewMenu.add(showall);
-    
-    menu.add(fileMenu);
-    menu.add(viewMenu);
-    frame.setMenuBar(menu);
-    
-    //frame.setResizable(true);
-    
-    // init chr position information, all stored as centimorgans
-    chrLengths = new float[20];
-    chrNames = new String[chrLengths.length]; // human-readable representations of chromosomes (e.g. "X"->chr 20)
-    chrOffsets = new float[chrLengths.length]; // chromosome offset from beginning of genome
-    chrMarkerpos = new float[chrLengths.length]; // marker positions, used in chromsome display
-    chrLengths[0] = 112.0;
-    chrLengths[1] = 114.0;
-    chrLengths[2] = 95.0;
-    chrLengths[3] = 84.0;
-    chrLengths[4] = 92.0;
-    chrLengths[5] = 75.0;
-    chrLengths[6] = 74.0;
-    chrLengths[7] = 82.0;
-    chrLengths[8] = 79.0;
-    chrLengths[9] = 82.0;
-    chrLengths[10] = 104.0;
-    chrLengths[11] = 66.0;
-    chrLengths[12] = 80.0;
-    chrLengths[13] = 69.0;
-    chrLengths[14] = 74.6;
-    chrLengths[15] = 72.0;
-    chrLengths[16] = 58.0;
-    chrLengths[17] = 59.0;
-    chrLengths[18] = 57.0;
-    chrLengths[19] = 79.44;
-    chrOffsets[0] = chrMarkerpos[0] = 0.0;
-    chrTotal = chrLengths[0];
-    
-    for (int i = 1; i < chrLengths.length; i++) {
-        chrNames[i-1] = str(i);
-        chrOffsets[i] = chrOffsets[i-1] + chrLengths[i-1];
-        chrTotal += chrLengths[i];
-        chrMarkerpos[i] = 0.0;
-    }
-    
-    chrNames[chrLengths.length-1] = "X";
-    
-    // set up menu
-    p_textinput upperDefault, lowerDefault;
-    upperDefault = new p_textinput(14, 0, 200, 50, "Default upper threshold");
-    upperDefault.setText("3.0");
-    lowerDefault = new p_textinput(14, 0, 200, 50, "Default lower threshold");
-    lowerDefault.setText("1.5");
-    
-    String[] groupNames = {"Centimorgans", "Base pairs"};
-    unitSelect = new p_radiogroup(275, height, groupNames);
-    
-    loadcfg = new p_button(425, height, "Load config", new p_action() {
-        public void doAction() {
-            loadConfig();
-        }
-    });
-    
-    texts = new p_container();
-    texts.add(lowerDefault);
-    texts.add(upperDefault);
-    
-    menuY = menuTargetY = 0.0;
+    initMenu();
     
     // set up exit prompt, fonts
     yes = new p_button((width/2.0)-40, (height/2.0)-24, "Yes", new p_action() {
@@ -204,107 +67,20 @@ void setup() {
         }
     });
     
+    // set up tab container
+    String[] titles = {"LOD Score view", "Chromosome view"};
+    tabs = new p_tabfolder(335, 30, 10, 10, titles);
     tabs.addComponent(loddisplay = new LODDisplay(400, 40, -35, -25), 0, 0);
     tabs.addComponent(new ChrDisplay(360, 40, -35, -25), 1, 0);
 }
 
 void draw() {
     background(0xAA);
-    double dif;
     
-    // expand/contract fileTree view area
-    if (Math.abs(tabs.x - tabsXTarget) < 0.1) tabs.x = tabsXTarget;
-    fileTree.w -= (tabs.x - tabsXTarget) * velocity;
-    tabs.x -= (tabs.x - tabsXTarget) * velocity;
-    ((LODDisplay)tabs.get(0).get(0)).x = tabs.x + 65;
-    ((LODDisplay)tabs.get(0).get(0)).w = -35;
-    ((ChrDisplay)tabs.get(1).get(0)).x = tabs.x + 25;
-    ((ChrDisplay)tabs.get(1).get(0)).w = -35;
-    if (tabs.x != tabsXTarget) ((ChrDisplay)tabs.get(1).get(0)).update = true; // update the ChrDisplay if its width has changed
+    // see module UpdateUI for update* methods
+    updateViewArea();
     
-    // draw triangle for view select
-    fill(0x55);
-    if (!exiting && mouseX > fileTree.x + fileTree.w && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
-        fill(0x00);
-    }
-    
-    noStroke();
-    pushMatrix();
-    translate((float)tabs.x - 6, height / 2.0);
-    rotate(PI * (float)((tabs.x - 110.0) / (335.0 - 110.0)));
-    beginShape();
-    vertex(3.0, 0);
-    vertex(-3.0, -(3.0 / cos(PI / 6.0)));
-    vertex(-3.0, (3.0 / cos(PI / 6.0)));
-    endShape();
-    popMatrix();
-    
-    // update focus, activity settings based on whether or not the user is being prompted for exit
-    tabs.setFocus(!exiting);
-    tabs.setActive(!exiting);
-    tabs.update();
-    fileTree.setFocus(!exiting);
-    fileTree.setActive(!exiting);
-    fileTree.update();
-    
-    // draw the menu, set focus/activity based on whether or not the menu is shown
-    stroke(0xCC);
-    fill(0x00, 0x00, 0x00, 0xAA);
-    pushMatrix();
-    
-    if (menuTargetY == -100.0) { // menu is shown
-        texts.setActive(!exiting);
-        texts.setFocus(!exiting);
-        unitSelect.setActive(!exiting);
-        unitSelect.setFocus(!exiting);
-        loadcfg.setFocus(!exiting);
-        loadcfg.setActive(!exiting);
-        //upperDefault.setActive(true);
-        //lowerDefault.setActive(true);
-    } else { // menu is hidden
-        texts.setActive(false);
-        texts.setFocus(false);
-        unitSelect.setActive(false);
-        unitSelect.setFocus(false);
-        loadcfg.setFocus(false);
-        loadcfg.setActive(false);
-        //upperDefault.setActive(false);
-        //lowerDefault.setActive(false);
-    }
-    
-    translate(0.0, (float)menuY, 0);
-    menuY += (menuTargetY - menuY) * velocity; // this moves the menu up or down in a non-linear way
-    if (abs((float)(menuTargetY - menuY)) < 0.25)
-        menuY = menuTargetY;
-
-    // draw the menu outline, taking cues from the sine function
-    beginShape();
-    for (int i = 0; i < 20; i+=2)
-        vertex(i+10, (-sin((i*HALF_PI)/20.0)*20.0)+height);
-    vertex(75, height-20);
-    for (int i = 20; i >= 0; i -= 2)
-        vertex(95-i, (-sin((abs(i)*HALF_PI)/20.0)*20.0)+height);
-    vertex(width-10, height);
-    vertex(width-10, height+100);
-    vertex(10, height+100);
-    vertex(10, height);
-    endShape();
-    
-    // update, draw menu components
-    fill(0xFF);
-    popMatrix();
-    //upperDefault.setY((height+menuY)+10);
-    //lowerDefault.setY((height+menuY)+36);
-    ((p_component)texts.get(0)).setY((height+menuY)+10);
-    ((p_component)texts.get(1)).setY((height+menuY)+36);
-    unitSelect.setY(height+menuY+10);
-    loadcfg.setY(height+menuY+10);
-    //upperDefault.update();
-    //lowerDefault.update();
-    texts.update();
-    unitSelect.update();
-    loadcfg.update();
-    //text((error.length() > 0) ? "Error: " + error : "", 35, (height+(float)menuY)+32);
+    updateMenu();
     
     // display exit prompt, buttons if appropriate
     if (exiting) {
@@ -324,8 +100,6 @@ void draw() {
         yes.setActive(false);
         no.setActive(false);
     }
-    //folder.setFocus(menuY > -2.5 && !exiting && mouseY < height+menuY);
-    //folder.setActive(menuY > -2.5 && !exiting && mouseY < height+menuY);
 }
 
 void keyPressed() { // most key events are handled by the MenuBar
