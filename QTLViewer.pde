@@ -11,8 +11,7 @@
 import processing.opengl.*;
 import java.util.ArrayList;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import javax.swing.JColorChooser;
 
 boolean exiting = false;
@@ -32,6 +31,7 @@ LODDisplay loddisplay;
 int chrColumns = 7;
 
 void setup() {
+  
     // set up base UI
     size(1100, 700, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
     smooth(); // enable Processing 2x AA
@@ -67,14 +67,29 @@ void setup() {
         }
     });
     
+    frame.addMouseWheelListener(new MouseWheelListener() {
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            if (e.getModifiers() == 1 && loddisplay.current_chr != -1) { // side scroll
+                // negative = left, positive = right
+                if (e.getWheelRotation() < 0) {
+                    loddisplay.prevChr();
+                } else if (e.getWheelRotation() > 0) {
+                    loddisplay.nextChr();
+                }
+            }
+        }
+    });
+    
     // set up tab container
     String[] titles = {"LOD Score view", "Chromosome view"};
     tabs = new p_tabfolder(335, 30, 10, 10, titles);
     tabs.addComponent(loddisplay = new LODDisplay(400, 40, -35, -25), 0, 0);
     tabs.addComponent(new ChrDisplay(360, 40, -35, -25), 1, 0);
+    
 }
 
 void draw() {
+  
     background(0xAA);
     
     // see module UpdateUI for update* methods
@@ -100,48 +115,41 @@ void draw() {
         yes.setActive(false);
         no.setActive(false);
     }
+    
 }
 
 void keyPressed() { // most key events are handled by the MenuBar
+
     if (key == ESC) {
         exiting = !exiting;
         key = 0; // nullify the key, preventing Processing from closing automatically
     }
+    
     if (exiting) {
         yes.keyAction(key, keyCode, keyEvent.getModifiersEx());
         no.keyAction(key, keyCode, keyEvent.getModifiersEx());
         return;
-    }/* else if (key == CODED && keyCode == RIGHT && keyEvent.getModifiersEx() == 0)
-        folder.nextPage();
-    else if (key == CODED && keyCode == LEFT && keyEvent.getModifiersEx() == 0)
-        folder.prevPage();
-    else if (key == CODED && keyCode == DOWN && keyEvent.getModifiersEx() == 0) {
-        if (menuY > -5.0) folder.zoomOut();
-        else menuTargetY = 0.0;
-    } else if (key == CODED && keyCode == UP && keyEvent.getModifiersEx() == 0) {
-        if (folder.isZoomed()) folder.zoomIn();
-        else menuTargetY = -100.0;
-    } else if (folder.isActive() && folder.isFocused()) {
-        folder.keyAction(key, keyCode, keyEvent.getModifiersEx());
-    } */else {
-        //upperDefault.keyAction(key, keyCode, keyEvent.getModifiersEx());
-        //lowerDefault.keyAction(key, keyCode, keyEvent.getModifiersEx());
+    } else {
         texts.keyAction(key, keyCode, keyEvent.getModifiersEx());
     }
+    
 }
 
 void keyReleased() {
+  
     if (! exiting && tabs.isActive() && tabs.isFocused()) {
         tabs.keyAction(key, keyCode, keyEvent.getModifiersEx());
     }
+    
 }
 
 void mousePressed() {
+  
     if (mouseX > 10 && mouseX < 95 && mouseY < menuY + height && mouseY > menuY + height - 20 && !exiting) {
-        //menuY = (menuY == 0.0) ? -100.0 : 0.0;
         menuTargetY = (menuY == 0.0) ? -100.0 : 0.0;
         tabs.setFocus(menuY == 0.0);
     }
+    
     if (!exiting && mouseX > fileTree.x+fileTree.w && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height+menuTargetY) {
         if (tabsXTarget == 110) tabsXTarget = 335;
         else tabsXTarget = 110;
@@ -150,35 +158,34 @@ void mousePressed() {
         no.mouseAction();
     } else if (mouseY < height+menuTargetY) {
         tabs.mouseAction();
-        //upperDefault.mouseAction();
-        //lowerDefault.mouseAction();
     } else {
         texts.mouseAction();
     }
+    
 }
 
 void mouseMoved() {
+  
     if (! exiting) {
         tabs.mouseAction();
-        //upperDefault.mouseAction();
-        //lowerDefault.mouseAction();
         texts.mouseAction();
     } else {
         yes.mouseAction();
         no.mouseAction();
     }
+    
 }
 
 void mouseReleased() {
+  
     if (! exiting) {
         tabs.mouseAction();
-        //upperDefault.mouseAction();
-        //lowerDefault.mouseAction();
         texts.mouseAction();
     } else {
         yes.mouseAction();
         no.mouseAction();
     }
+    
 }
 
     /*JFileChooser fd = new JFileChooser();
@@ -196,6 +203,7 @@ void mouseReleased() {
 * It is also important to note that due to some issues with Processing, neither selectInput nor selectFolder work on all setups. My AWT solution should work.
 */
 void openFile() {
+  
     String path;    
     // <OPTION 1> (works on my laptop):
     FileDialog fd = new FileDialog((Frame)null, "Select .lod.csv file...", FileDialog.LOAD); // annoying work-around; selectInput was hanging
@@ -208,6 +216,7 @@ void openFile() {
     // <OPTION 2> (works on lab desktop):
     //if ((path = selectInput("Select .lod.csv file...")) != null) {
     // </OPTION 2>
+    
 }
 
 /**
@@ -218,49 +227,52 @@ void openFile() {
 * @param path a String representing the path of the main LOD data file
 */
 void loadFile(String path) {
-    if (path.split("/").length < 1) return;
-    String pathName = path.split("/")[path.split("/").length - 1];
-    String modifiedPath = "";
-    if (split(path, ".").length == 2) modifiedPath = split(path, ".")[0];
-    else if (split(path, ".").length == 1) modifiedPath = path;
-    else {
-        for (int i = 0; i < split(path, ".").length - 2; i++)
-            modifiedPath += split(path, ".")[i] + ".";
-        if (modifiedPath.length() > 0) modifiedPath = modifiedPath.substring(0, modifiedPath.length()-1);
-        //modifiedPath += "_";
+  
+    if (path.split("/").length < 1) {
+        return;
     }
+    
+    String pathName = path.split("/")[path.split("/").length - 1];
+    // see module FileIO
+    String modifiedPath = getModifiedPath(path);
+    
     fileTree.add(new p_treenode(pathName, true));
     Parent_File parent = new Parent_File(pathName);
-    //parentFiles.add(new Parent_File(pathName));
     float autoLower = 1.5, autoUpper = 3.0;
+    
     try {
         autoLower = float(((p_textinput)texts.get(0)).getText());
         autoUpper = float(((p_textinput)texts.get(1)).getText());
     } catch (Exception error3) {
         println("EXCEPTION:");
         println(error3.getLocalizedMessage());
-    } try {
+    }
+    
+    try {
         FileReader fr = new FileReader(path);
         String[][] data = readCSV(fr);
         fr.close();
         String[] names = new String[0];
-        HashMap<String, float[][]> chrdata = new HashMap<String, float[][]>();
-        ArrayList<HashMap<String, float[]>> tdata = new ArrayList<HashMap<String, float[]>>();
+        HashMap<String, float[][]> chrData = new HashMap<String, float[][]>();
+        ArrayList<HashMap<String, float[]>> thresholdData = new ArrayList<HashMap<String, float[]>>();
         String[][] csvPeaks = new String[0][0], csvThresh = new String[0][0];
         int alphacol = -1;
         if (new File(modifiedPath + ".peaks.txt").exists()) {
             FileReader chrf = new FileReader(modifiedPath + ".peaks.txt");
-            chrdata = readPeaks(chrf);
+            chrData = readPeaks(chrf);
             chrf.close();
-            Iterator it = chrdata.keySet().iterator();
-            while (it.hasNext()) names = (String[])append(names, it.next());
+            Iterator it = chrData.keySet().iterator();
+            while (it.hasNext()) {
+                names = (String[])append(names, it.next());
+            }
         } else if (new File(modifiedPath + ".peaks.csv").exists()) {
             FileReader chrf = new FileReader(modifiedPath + ".peaks.csv");
-            chrdata = readPeaks(chrf);
+            chrData = readPeaks(chrf);
             chrf.close();
         } if (new File(modifiedPath + ".thresh.txt").exists()) {
-            tdata = getThresholdData(modifiedPath + ".thresh.txt", names, parent);
-        } else if (new File(modifiedPath + ".thresh.csv").exists()) try {
+            thresholdData = getThresholdData(modifiedPath + ".thresh.txt", names, parent);
+        } else if (new File(modifiedPath + ".thresh.csv").exists()) {
+            try {
                 FileReader tf = new FileReader(modifiedPath + ".thresh.csv");
                 csvThresh = readCSV(tf);
                 tf.close();
@@ -279,146 +291,174 @@ void loadFile(String path) {
                 println("EXCEPTION:");
                 println(error.getLocalizedMessage());
             }
-        int lfiles = 0, tfiles = 3 * (data[0].length - 3);
-        if (names.length == 0 && new File(modifiedPath + ".thresh.txt").exists()) {
-            for (int i = 3; i < data[0].length; i++) names = (String[])append(names, data[0][i].trim());
-            tdata = getThresholdData(modifiedPath + ".thresh.txt", names, parent);
         }
+        
+        if (names.length == 0 && new File(modifiedPath + ".thresh.txt").exists()) {
+            for (int i = 3; i < data[0].length; i++) {
+                names = (String[])append(names, data[0][i].trim());
+            }
+            thresholdData = getThresholdData(modifiedPath + ".thresh.txt", names, parent);
+        }
+        
         for (int i = 3; i < data[0].length; i++) {
             ((p_treenode)fileTree.last()).add(new p_treenode(data[0][i].trim()));
-            Phenotype p = new Phenotype(data[0][i]);
-            for (int j = 1; j < data.length; j++)
+            Phenotype currentPhenotype = new Phenotype(data[0][i]);
+            
+            for (int j = 1; j < data.length; j++) {
                 if (data[j].length-1 >= i) {
-                    p.lodscores = append(p.lodscores, float(data[j][i]));
-                    p.position = append(p.position, float(data[j][2]));
-                    p.chromosome = append(p.chromosome, getChr(data[j][1]));
+                    currentPhenotype.lodscores = append(currentPhenotype.lodscores, float(data[j][i]));
+                    currentPhenotype.position = append(currentPhenotype.position, float(data[j][2]));
+                    currentPhenotype.chromosome = append(currentPhenotype.chromosome, getChr(data[j][1]));
                 }
-            if (new File(modifiedPath + ".thresh.txt").exists() && !parent.useModelThresholds) try {
-                    p.thresholds = new float[1][0];
-                    float[] th = tdata.get(0).get(p.name);
-                    for (float thf : th) p.thresholds[0] = append(p.thresholds[0], thf);
-                    if (tdata.size() > 1) {
-                        float[] thx = tdata.get(1).get(p.name);
-                        if (tdata.get(1).get(p.name) != null) {
-                            p.thresholds = (float[][])append(p.thresholds, new float[0]);
-                            for (float thf : thx) p.thresholds[1] = append(p.thresholds[1], thf);
-                            p.useXDefaults = false;
+            }
+            
+            if (new File(modifiedPath + ".thresh.txt").exists() && !parent.useModelThresholds) {
+                try {
+                    currentPhenotype.thresholds = new float[1][0];
+                    float[] th = thresholdData.get(0).get(currentPhenotype.name);
+                    
+                    for (float thf : th) {
+                        currentPhenotype.thresholds[0] = append(currentPhenotype.thresholds[0], thf);
+                    }
+                    
+                    if (thresholdData.size() > 1) {
+                        float[] thx = thresholdData.get(1).get(currentPhenotype.name);
+                        if (thresholdData.get(1).get(currentPhenotype.name) != null) {
+                            currentPhenotype.thresholds = (float[][])append(currentPhenotype.thresholds, new float[0]);
+                            for (float thf : thx) {
+                                currentPhenotype.thresholds[1] = append(currentPhenotype.thresholds[1], thf);
+                            }
+                            currentPhenotype.useXDefaults = false;
                         }
-                    } else p.useXDefaults = true;
-                    p.useDefaults = false;
+                    } else {
+                        currentPhenotype.useXDefaults = true;
+                    }
+                    
+                    currentPhenotype.useDefaults = false;
                 } catch (NullPointerException error) {
-                    println("ERROR: No threshold data associated with phenotype \""+p.name+"\"."); 
-                    //p.Alower = p.Xlower = autoLower;
-                    //p.Aupper = p.Xupper = autoUpper;
-                    p.thresholds = new float[][] { { autoLower, autoUpper } };
-                    p.useDefaults = true;
-                    p.useXDefaults = true;
+                    println("ERROR: No threshold data associated with phenotype \""+currentPhenotype.name+"\"."); 
+                    currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
+                    currentPhenotype.useDefaults = true;
+                    currentPhenotype.useXDefaults = true;
                 } catch (Exception e) {
                     println("EXCEPTION:");
                     println(e.getLocalizedMessage());
-                    //p.Alower = p.Xlower = autoLower;
-                    //p.Aupper = p.Xupper = autoUpper;
-                    p.thresholds = new float[][] { { autoLower, autoUpper } };
-                    p.useDefaults = true;
-                    p.useXDefaults = true;
+                    currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
+                    currentPhenotype.useDefaults = true;
+                    currentPhenotype.useXDefaults = true;
+                }
             } else if (new File(modifiedPath + ".thresh.csv").exists() && !parent.useModelThresholds) try {
                 String mark = (alphacol >= 0) ? csvThresh[1][alphacol] : "";
                 int col = -1;
-                for (int j = (alphacol == -1) ? 1 : 2; j < csvThresh[0].length; j++)
-                    if (csvThresh[0][j].equals(p.name)) {
+                for (int j = (alphacol == -1) ? 1 : 2; j < csvThresh[0].length; j++) {
+                    if (csvThresh[0][j].equals(currentPhenotype.name)) {
                         col = j;
                         break;
                     }
-                p.thresholds = new float[1][0];
-                if (col == -1) throw new Exception(""); // not sure if this is an accepted practice, but it should work
+                }
+                currentPhenotype.thresholds = new float[1][0];
+                
+                if (col == -1) {
+                    throw new Exception(""); // not sure if this is an accepted practice, but it should work
+                }
+                
                 for (int j = 1; j < csvThresh.length; j++) {
                     if (alphacol > -1 && !csvThresh[j][alphacol].equals(mark)) {
-                        if (p.thresholds.length == 1) p.thresholds = (float[][])append(p.thresholds, new float[0]);
-                        p.thresholds[1] = (float[])append(p.thresholds[1], float(csvThresh[j][col]));
-                        p.useXDefaults = false;
-                    } else p.thresholds[0] = (float[])append(p.thresholds[0], float(csvThresh[j][col]));
+                        if (currentPhenotype.thresholds.length == 1) currentPhenotype.thresholds = (float[][])append(currentPhenotype.thresholds, new float[0]);
+                        currentPhenotype.thresholds[1] = (float[])append(currentPhenotype.thresholds[1], float(csvThresh[j][col]));
+                        currentPhenotype.useXDefaults = false;
+                    } else {
+                        currentPhenotype.thresholds[0] = (float[])append(currentPhenotype.thresholds[0], float(csvThresh[j][col]));
+                    }
                 }
-                if (p.thresholds[0].length < 2) p.thresholds[0] = (float[])append(p.thresholds[0], -height);
-                if (p.thresholds.length > 1 && p.thresholds[1].length < 2) p.thresholds[1] = (float[])append(p.thresholds[1], -height);
-                p.useDefaults = false;
+                
+                if (currentPhenotype.thresholds[0].length < 2) {
+                    currentPhenotype.thresholds[0] = (float[])append(currentPhenotype.thresholds[0], -height);
+                }
+                
+                if (currentPhenotype.thresholds.length > 1 && currentPhenotype.thresholds[1].length < 2) {
+                    currentPhenotype.thresholds[1] = (float[])append(currentPhenotype.thresholds[1], -height);
+                }
+                
+                currentPhenotype.useDefaults = false;
             } catch(Exception error) {
                 println("EXCEPTION:");
                 println(error.getLocalizedMessage());
-                p.thresholds = new float[][] { { autoLower, autoUpper } };
-                p.useDefaults = true;
-                p.useXDefaults = true;
-            } else if (new File(modifiedPath + "_" + p.name + ".sum.csv").exists()) try {
-                FileReader sum = new FileReader(modifiedPath + "_" + p.name + ".sum.csv");
+                currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
+                currentPhenotype.useDefaults = true;
+                currentPhenotype.useXDefaults = true;
+            } else if (new File(modifiedPath + "_" + currentPhenotype.name + ".sum.csv").exists()) try {
+                FileReader sum = new FileReader(modifiedPath + "_" + currentPhenotype.name + ".sum.csv");
                 String[][] sdata = readCSV(sum);
-                p.thresholds = new float[1][2];
-                p.thresholds[0][0] = float(sdata[1][1]);
-                p.thresholds[0][1] = float(sdata[2][1]);
+                currentPhenotype.thresholds = new float[1][2];
+                currentPhenotype.thresholds[0][0] = float(sdata[1][1]);
+                currentPhenotype.thresholds[0][1] = float(sdata[2][1]);
                 if (sdata.length > 4) {
-                    p.thresholds = (float[][])append(p.thresholds, new float[2]);
-                    p.thresholds[1][0] = float(sdata[3][1]);
-                    p.thresholds[1][1] = float(sdata[4][1]);
-                    p.useXDefaults = false;
-                } else //{
-                    //p.Xlower = autoLower;
-                    //p.Xupper = autoUpper;
-                    p.useXDefaults = true;
-                //}
-                p.useDefaults = false;
+                    currentPhenotype.thresholds = (float[][])append(currentPhenotype.thresholds, new float[2]);
+                    currentPhenotype.thresholds[1][0] = float(sdata[3][1]);
+                    currentPhenotype.thresholds[1][1] = float(sdata[4][1]);
+                    currentPhenotype.useXDefaults = false;
+                } else {
+                    currentPhenotype.useXDefaults = true;
+                }
+                currentPhenotype.useDefaults = false;
                 sum.close();
             } catch (Exception error1) {
                 println("EXCEPTION:");
                 println(error1.getLocalizedMessage());
-                //p.Alower = p.Xlower = autoLower;
-                //p.Aupper = p.Xupper = autoUpper;
-                p.thresholds = new float[][] { { autoLower, autoUpper } };
-                p.useDefaults = true;
-                p.useXDefaults = true;
+                currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
+                currentPhenotype.useDefaults = true;
+                currentPhenotype.useXDefaults = true;
             }
             if (new File(modifiedPath + ".peaks.txt").exists()) {
-                float[][] values = chrdata.get(p.name);
+                float[][] values = chrData.get(currentPhenotype.name);
                 for (int j = 0; j < values.length; j++) {
-                    if (values[j].length == 0) continue;
-                    p.chr_chrs = append(p.chr_chrs, j+1);
-                    p.chr_peaks = append(p.chr_peaks, values[j][0]);
+                    if (values[j].length == 0) {
+                        continue;
+                    }
+                    
+                    currentPhenotype.chr_chrs = append(currentPhenotype.chr_chrs, j+1);
+                    currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, values[j][0]);
                     Range r = new Range();
                     r.upper = values[j][2];
                     r.lower = values[j][1];
-                    p.bayesintrange = (Range[])append(p.bayesintrange, r);
+                    currentPhenotype.bayesintrange = (Range[])append(currentPhenotype.bayesintrange, r);
                 }
             } else if (new File(modifiedPath + ".peaks.csv").exists()) try {
                 for (int j = 1; j < csvPeaks.length; j++)
-                    if (csvPeaks[j][0].startsWith(p.name)) {
-                        p.chr_chrs = (int[])append(p.chr_chrs, getChr(csvPeaks[j][1]));
-                        p.chr_peaks = (float[])append(p.chr_peaks, csvPeaks[j][2]);
+                    if (csvPeaks[j][0].startsWith(currentPhenotype.name)) {
+                        currentPhenotype.chr_chrs = (int[])append(currentPhenotype.chr_chrs, getChr(csvPeaks[j][1]));
+                        currentPhenotype.chr_peaks = (float[])append(currentPhenotype.chr_peaks, csvPeaks[j][2]);
                         Range r = new Range();
                         r.lower = float(csvPeaks[j][3]);
                         r.upper = float(csvPeaks[j][4]);
-                        p.bayesintrange = (Range[])append(p.bayesintrange, r);
+                        currentPhenotype.bayesintrange = (Range[])append(currentPhenotype.bayesintrange, r);
                     }
             } catch (Exception error) {
                 println("EXCEPTION:");
                 println(error.getLocalizedMessage());
-            } else if (new File(modifiedPath + "_" + p.name + ".chr.csv").exists()) try {
-                FileReader chr = new FileReader(modifiedPath + "_" + p.name + ".chr.csv");
+            } else if (new File(modifiedPath + "_" + currentPhenotype.name + ".chr.csv").exists()) try {
+                FileReader chr = new FileReader(modifiedPath + "_" + currentPhenotype.name + ".chr.csv");
                 String[][] cdata = readCSV(chr);
                 for (int j = 1; j < cdata.length; j++) {
-                    if (cdata[j].length < 7) continue;
-                    p.chr_chrs = append(p.chr_chrs, getChr(cdata[j][1]));
-                    p.chr_peaks = append(p.chr_peaks, float(cdata[j][2]));
+                    if (cdata[j].length < 7) {
+                        continue;
+                    }
+                    
+                    currentPhenotype.chr_chrs = append(currentPhenotype.chr_chrs, getChr(cdata[j][1]));
+                    currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, float(cdata[j][2]));
                     String range = cdata[j][6];
                     Range r = new Range();
                     r.upper = float(range.split("-")[1].trim());
                     r.lower = float(range.split("-")[0].trim());
-                    p.bayesintrange = (Range[])append(p.bayesintrange, r);
+                    currentPhenotype.bayesintrange = (Range[])append(currentPhenotype.bayesintrange, r);
                 }
                 chr.close();
             } catch (Exception error2) {
                 println("EXCEPTION:");
                 println(error2.getLocalizedMessage());
             }
-            //p.name = ((p_treenode)filetree.last()).title;
-            parent.add(p);
-            //((Parent_File)parentFiles).add(p);
+            parent.add(currentPhenotype);
         }
         parentFiles.add(parent);
     } catch (Exception error) {
@@ -427,6 +467,7 @@ void loadFile(String path) {
         println(error.getLocalizedMessage());
     }
     parent.update();
+    
 }
 
 /**
@@ -436,6 +477,7 @@ void loadFile(String path) {
 * It is also important to note that due to some issues with Processing, neither selectInput nor selectFolder work on all setups. My AWT solution should work.
 */
 void loadFolder() {
+  
     /*selectFolder();*/
     // ^^ same issue as with selectInput
     FileDialog folderPrompt = new FileDialog((Frame)null, "Select folder...", FileDialog.LOAD);
@@ -446,6 +488,7 @@ void loadFolder() {
         for (String path : new File(folderPrompt.getDirectory() + folderPrompt.getFile()).list())
             if (path.toLowerCase().endsWith(".lod.csv") && !(new File(folderPrompt.getDirectory() + folderPrompt.getFile() + "/" + path).isDirectory()))
                 loadFile(folderPrompt.getDirectory() + folderPrompt.getFile() + "/" + path);
+                
 }
 
 /**
@@ -455,8 +498,10 @@ void loadFolder() {
 * @return the floating-point width of the button
 */
 float getButtonWidth(String text) {
+  
     textFont(buttonfont);
     return textWidth(text) + 8.0;
+    
 }
 
 void loadConfig() {
@@ -472,6 +517,7 @@ void loadConfig() {
 * @return the order of the chromosome
 */
 int getChr(String stringChr) {
+  
     int chr = 1;
     try {
         chr = Integer.parseInt(stringChr);
@@ -483,44 +529,5 @@ int getChr(String stringChr) {
             }
     }
     return chr;
-}
-
-/**
-* This method is used to obtain threshold information from a text file generated by an R script.
-*
-* It returns an ArrayList of HashMaps (one for each chromosome specified) that match Strings to float arrays. Each String is the name of a phenotype, and each float array contains the specified thresholds, as ordered by the file.
-* Due to the nature of the file format (variable-width space-delimited), this method must be given the names of the phenotypes, which are often not known by the Parent_File until all data has been parsed.
-* Note that while this method could throw one of three exceptions, they will be caught and handled when it is called (in loadFile).
-*
-* @throws FileNotFoundException if the file represented by path was not found
-* @throws IOException if a general I/O exception is encountered
-* @throws Exception if a general exception is encountered
-* @param path a String representing the path of the threshold file
-* @param names a String array containing the list of phenotypes from the main LOD data file
-* @param parent the Parent_File containing the rest of the information about the phenotypes
-* @return an ArrayList of phenotype names mapped to threshold information
-*/
-ArrayList<HashMap<String, float[]>> getThresholdData(String path, String[] names, Parent_File parent) throws FileNotFoundException, IOException, Exception {
-    FileReader pathInput = new FileReader(path);
-    ArrayList<HashMap<String, float[]>> threshData = readThresholds(pathInput, names, new String[0], new String[0]);
-    pathInput.close();
-    for (int i = 0; i < threshData.size(); i++) {
-        HashMap<String, float[]> h = threshData.get(i);
-        Iterator it = h.keySet().iterator();
-        String[] tnames = new String[0];
-        while (it.hasNext()) tnames = (String[])append(tnames, it.next());
-        if (tnames.length == 1 && names.length > 1) {
-            String n = tnames[0];
-            parent.useModelThresholds = true;
-            float[] th = threshData.get(0).get("*");
-            parent.data[0] = th;
-            if (threshData.size() > 1) {
-                parent.data = (float[][])append(parent.data, new float[0]);
-                float[] thx = threshData.get(1).get("*");
-                parent.data[1] = thx;
-            }
-            parent.useModelThresholds = true;
-        }
-    }
-    return threshData;
+    
 }
