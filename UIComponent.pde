@@ -1,4 +1,4 @@
-interface p_component {
+interface UIComponent {
     
     void mouseAction();
     
@@ -16,7 +16,7 @@ interface p_component {
     
     boolean isActive();
     
-    void addComponent(p_component c, int index, int index2);
+    void addComponent(UIComponent c, int index, int index2);
     
     void removeComponent(int index1, int index2);
     
@@ -33,10 +33,10 @@ interface p_component {
     String toString();
 }
 
-interface p_action {
+interface UIAction {
     public void doAction();
 }
 
-interface p_listener {
+interface UIListener {
     public int eventHeard(int i, int j);
 }

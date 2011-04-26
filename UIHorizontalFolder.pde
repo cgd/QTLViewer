@@ -1,4 +1,4 @@
-class UIHorizontalFolder extends ArrayList<p_page> implements UIComponent {
+class UIHorizontalFolder extends ArrayList<UIPage> implements UIComponent {
     
     int pages = 0, currentpage = 0;
     double tx = 0.0, tz = 0.0, v = 0.1, x, y, target = 0.0, ztarget = 0.0;
@@ -14,26 +14,26 @@ class UIHorizontalFolder extends ArrayList<p_page> implements UIComponent {
         target = -(current * width);
         tx = -(current * width);
         for (int i = 0; i < ps; i++)
-            this.add(new p_page(titles[i], i));
+            this.add(new UIPage(titles[i], i));
     }
     
     void addComponent(UIComponent c, int page, int index) {
-        ((p_page)this.get(page)).addComponent(c, page, index);
+        ((UIPage)this.get(page)).addComponent(c, page, index);
     }
     
     void removeComponent(int page, int index) {
-        ((p_page)this.get(page)).removeComponent(page, index);
+        ((UIPage)this.get(page)).removeComponent(page, index);
     }
     
     void mouseAction() {
         if (tz != 0.0)
             return;
-        ((p_page)this.get(currentpage)).mouseAction();
+        ((UIPage)this.get(currentpage)).mouseAction();
     }
     
     void keyAction(char k, int c, int mods) {
         if (tz != 0.0 && (c == ENTER || c == RETURN)) zoomIn();
-        else ((p_page)this.get(currentpage)).keyAction(k, c, mods);
+        else ((UIPage)this.get(currentpage)).keyAction(k, c, mods);
     }
     
     void updateComponents() {
@@ -53,15 +53,15 @@ class UIHorizontalFolder extends ArrayList<p_page> implements UIComponent {
             rect((float)(x + (i * width)), (float)y, (float)(width-(x*2.0)), (float)(height-(y*2.0)));
         }
         for (int i = 0; i < pages; i++) {
-            ((p_page)this.get(i)).setFocus(i == currentpage && tz > -5.0 && focus);
-            ((p_page)this.get(i)).setActive(i == currentpage && tz > -5.0 && active);
-            //((p_page)this.get(i)).update();
+            ((UIPage)this.get(i)).setFocus(i == currentpage && tz > -5.0 && focus);
+            ((UIPage)this.get(i)).setActive(i == currentpage && tz > -5.0 && active);
+            //((UIPage)this.get(i)).update();
         }
-        ((p_page)this.get(currentpage)).update();
+        ((UIPage)this.get(currentpage)).update();
         fill(0x55);
         textFont(main);
         for (int i = 0; i < pages; i++) 
-            text(((p_page)this.get(i)).toString(), (float)((i*width)+x), 18, 0);
+            text(((UIPage)this.get(i)).toString(), (float)((i*width)+x), 18, 0);
         popMatrix();
         noStroke();
         

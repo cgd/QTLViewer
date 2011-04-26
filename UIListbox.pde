@@ -1,4 +1,4 @@
-class p_listbox extends ArrayList<String> implements UIComponent {
+class UIListbox extends ArrayList<String> implements UIComponent {
     
     double x, y, w, h;
     String data;
@@ -7,7 +7,7 @@ class p_listbox extends ArrayList<String> implements UIComponent {
     ArrayList<Boolean> selected;
     int keyc = 0, firsti = -1, lasti = -1;
     
-    p_listbox(double ex, double why, double doubleu, double ach, String title) {
+    UIListbox(double ex, double why, double doubleu, double ach, String title) {
         super();
         selected = new ArrayList<Boolean>();
         data = title; x = ex; y = why; w = doubleu; h = ach;

@@ -1,10 +1,10 @@
-class p_page extends ArrayList<UIComponent> implements UIComponent {
+class UIPage extends ArrayList<UIComponent> implements UIComponent {
     
     boolean focus = false, active = false;
     String title;
     int pindex;
     
-    p_page(String t, int i) {
+    UIPage(String t, int i) {
         super();
         title = t;
         pindex = i;

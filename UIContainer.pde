@@ -1,7 +1,7 @@
-class p_container extends ArrayList<UIComponent> implements UIComponent {
+class UIContainer extends ArrayList<UIComponent> implements UIComponent {
     boolean ready = true, focus = false, active = true;
     
-    p_container() {
+    UIContainer() {
      super(); 
     }
     

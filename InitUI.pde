@@ -41,6 +41,7 @@ void initMenuBar() {
         public void actionPerformed(ActionEvent e) {
             if (exiting) return;
             menuTargetY = -100.0;
+            tabs.focus = false;
         }
     });
     MenuItem menudown = new MenuItem("Hide Menu", new MenuShortcut(KeyEvent.VK_DOWN, true));
@@ -48,6 +49,7 @@ void initMenuBar() {
         public void actionPerformed(ActionEvent e) {
             if (exiting) return;
             menuTargetY = 0.0;
+            tabs.focus = true;
         }
     });
     MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(KeyEvent.VK_PERIOD));
@@ -125,22 +127,22 @@ void initConstants() {
 
 void initMenu() {
     // set up menu
-    p_textinput upperDefault, lowerDefault;
-    upperDefault = new p_textinput(14, 0, 200, 50, "Default upper threshold");
+    UITextInput upperDefault, lowerDefault;
+    upperDefault = new UITextInput(14, 0, 200, 50, "Default upper threshold");
     upperDefault.setText("3.0");
-    lowerDefault = new p_textinput(14, 0, 200, 50, "Default lower threshold");
+    lowerDefault = new UITextInput(14, 0, 200, 50, "Default lower threshold");
     lowerDefault.setText("1.5");
     
     String[] groupNames = {"Centimorgans", "Base pairs"};
-    unitSelect = new p_radiogroup(275, height, groupNames);
+    unitSelect = new UIRadioGroup(275, height, groupNames);
     
-    loadcfg = new p_button(425, height, "Load config", new p_action() {
+    loadcfg = new UIButton(425, height, "Load config", new UIAction() {
         public void doAction() {
             loadConfig();
         }
     });
     
-    texts = new p_container();
+    texts = new UIContainer();
     texts.add(lowerDefault);
     texts.add(upperDefault);
     

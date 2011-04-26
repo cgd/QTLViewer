@@ -1,4 +1,4 @@
-class p_button implements UIComponent {
+class UIButton implements UIComponent {
     float w, h;
     double x, y;
     String data;
@@ -10,12 +10,12 @@ class p_button implements UIComponent {
     boolean ready = true, focus = false, active = true;
     UIAction action = null;
     
-    p_button(float ex, float why, String dee, UIAction aye) {
+    UIButton(float ex, float why, String dee, UIAction aye) {
         x = ex; y = why; w = textWidth(dee); h = 25; data = dee;
         action = aye;
     }
     
-    /*p_button(float ex, float why, float doubleu, float aech, String dee) {
+    /*UIButton(float ex, float why, float doubleu, float aech, String dee) {
         x = ex; y = why; w = doubleu; h = aech; data = dee;
         font = createFont("Arial", 16, true);
     }

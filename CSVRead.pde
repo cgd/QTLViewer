@@ -1,19 +1,31 @@
-//import java.io.*;
-
-String[][] readCSV(InputStreamReader e) throws IOException, Exception {
-    return readCSV(e, ',');
+/**
+* This uses the default entry delimeter.
+*
+* See readCSV(InputStreamReader, char)
+*/
+String[][] readCSV(InputStreamReader reader) throws IOException, Exception {
+    return readCSV(reader, ',');
 }
 
-String[][] readCSV(InputStreamReader e, char delim) throws IOException, Exception {
+/**
+* This method parses a CSV file, and returns a matrix of the values as Strings.
+*
+* @param reader the InputStreamReader being used to read the file
+* @param delim the character separating entries (usually ',')
+* @return the matrix (two-dimensional array) of table entries in the file
+*/
+String[][] readCSV(InputStreamReader reader, char delim) throws IOException, Exception {
     char[] cbuf = new char[10], total = new char[0];
     int l, oldl;
     String[][] ret = new String[1][0];
-    while ((l = e.read(cbuf, 0, cbuf.length)) != -1) {
+    boolean inQuotes = false;
+    String data = "";
+    
+    while ((l = reader.read(cbuf, 0, cbuf.length)) != -1) {
         total = expand(total, (oldl = total.length) + l);
         arrayCopy(cbuf, 0, total, oldl, l);
     }
-    boolean inQuotes = false;
-    String data = "";
+    
     for (int i = 0; i < total.length; i++) {
         if (total[i] == delim && !inQuotes) {
             ret[ret.length - 1] = append(ret[ret.length - 1], data);
@@ -39,8 +51,10 @@ String[][] readCSV(InputStreamReader e, char delim) throws IOException, Exceptio
                 continue;
             }
         } else if (!inQuotes && (total[i] == '\n' || total[i] == '\r')) {
-            if (i < total.length - 1 && total[i + 1] == '\n')
+            if (i < total.length - 1 && total[i + 1] == '\n') {
                 i++;
+            }
+            
             ret[ret.length - 1] = append(ret[ret.length - 1], data);
             data = "";
             ret = (String[][])append(ret, new String[0]);
@@ -53,6 +67,10 @@ String[][] readCSV(InputStreamReader e, char delim) throws IOException, Exceptio
         }
         data += total[i];
     }
-    if (ret[ret.length-1].length == 0) ret = (String[][])shorten(ret);
+    
+    if (ret[ret.length-1].length == 0) {
+        ret = (String[][])shorten(ret);
+    }
+    
     return ret;
 }

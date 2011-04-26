@@ -1,9 +1,13 @@
-class ChrDisplay implements p_component {
+/**
+* Class that handles the chromosome view.
+*/
+class ChrDisplay implements UIComponent {
+  
     boolean focus = false, active = true, dragReady = true, dragging = false, chr_ready = true, update = false;
     double x = 25.0, y = 25.0, w, h, legendX, legendY, legendW, legendH;
     PFont legendFont = createFont("Arial", 16, true), normFont = createFont("Arial", 12, true);
-    float legendOffsetX = -1, legendOffsetY = -1, legendA = 0x00, maxOffset = -1.0, cw, ch, multiplier;
-    //int lastNum = -1;
+    float legendOffsetX = -1, legendOffsetY = -1, legendA = 0x00, maxOffset = -1.0, chromosomeWidth, chromosomeHeight, multiplier;
+
     ChrOrganizer[] chrs = new ChrOrganizer[chrLengths.length];
     
     public ChrDisplay(double ex, double why, double doubleu, double ache) {
@@ -16,29 +20,21 @@ class ChrDisplay implements p_component {
     void update() {
         if (w <= 0.0) w = (width-x)+w;
         if (h <= 0.0) h = (height-y)+h;
-        cw = (float)w/chrColumns;
-        ch = (float)h/ceil(chrLengths.length/(float)chrColumns);
-        multiplier = (ch-24.0)/max(chrLengths);
+        chromosomeWidth = (float)w/chrColumns;
+        chromosomeHeight = (float)h/ceil(chrLengths.length/(float)chrColumns);
+        multiplier = (chromosomeHeight-24.0)/max(chrLengths);
         update = (update || fileTree.hasUpdated());
         stroke(0x00);
         fill(0x00);
         strokeWeight(1);
         textFont(normFont);
-        /*float rows = ceil(chrLengths.length/(float)chrColumns);
-        for (int i = 0; i <= rows; i++)
-        line((float)x, (float)y+(ch*i), width-(float)x, (float)y+(ch*i));
-        for (int i = 0; i <= chrColumns; i++)
-        line((float)x+(cw*i), (float)y, (float)x+(cw*i), height-(float)y);*/
         ellipseMode(CENTER);
         for (int i = 0; i < chrLengths.length; i++) {
             strokeWeight(1); noStroke();
-            //if (i == chrLengths.length-1) {
-                //text("chromosome X", (float)x+(cw*(i%chrColumns))+2/*(cw-(textWidth("chromosome "+str(i+1))/2.0))*/, (float)y+(ch*floor(i/(float)chrColumns))+14);
-            //} else 
-            text("chromosome "+chrNames[i], (float)x+(cw*(i%chrColumns))+2/*(cw-(textWidth("chromosome "+str(i+1))/2.0))*/, (float)y+(ch*floor(i/(float)chrColumns))+14);
-            ellipse((float)x+(cw*(i%chrColumns))+8/*+(cw/2.0)*/, (float)y+(ch*floor(i/(float)chrColumns))+20, 8, 8);
+            text("chromosome "+chrNames[i], (float)x+(chromosomeWidth*(i%chrColumns))+2/*(chromosomeWidth-(textWidth("chromosome "+str(i+1))/2.0))*/, (float)y+(chromosomeHeight*floor(i/(float)chrColumns))+14);
+            ellipse((float)x+(chromosomeWidth*(i%chrColumns))+8/*+(chromosomeWidth/2.0)*/, (float)y+(chromosomeHeight*floor(i/(float)chrColumns))+20, 8, 8);
             strokeWeight(2); stroke(0x00);
-            line((float)x+(cw*(i%chrColumns))+8/*+(cw/2.0)*/, (float)y+(ch*floor(i/(float)chrColumns))+20+(chrMarkerpos[i]*multiplier), (float)x+(cw*(i%chrColumns))+8/*+(cw/2.0)*/, (float)y+(ch*floor(i/(float)chrColumns))+20+(multiplier*chrLengths[i]));
+            line((float)x+(chromosomeWidth*(i%chrColumns))+8/*+(chromosomeWidth/2.0)*/, (float)y+(chromosomeHeight*floor(i/(float)chrColumns))+20+(chrMarkerpos[i]*multiplier), (float)x+(chromosomeWidth*(i%chrColumns))+8/*+(chromosomeWidth/2.0)*/, (float)y+(chromosomeHeight*floor(i/(float)chrColumns))+20+(multiplier*chrLengths[i]));
         }
         strokeWeight(1);
         textFont(legendFont);
@@ -46,25 +42,25 @@ class ChrDisplay implements p_component {
         String[] names = new String[0];
         float maxLen = -1.0;
         noStroke(); fill(0x00);
-        /*int num = 0; for (int i = 0; i < phenos.size(); i++) for (int j = 0; j < ((p_treenode)filetree.get(i)).size(); j++)
-            if (((p_treenode)((p_treenode)filetree.get(i)).get(j)).checked)
-                num += ((p_treenode)filetree.get(i)).size();*/
+        /*int num = 0; for (int i = 0; i < phenos.size(); i++) for (int j = 0; j < ((UITreeNode)filetree.get(i)).size(); j++)
+            if (((UITreeNode)((UITreeNode)filetree.get(i)).get(j)).checked)
+                num += ((UITreeNode)filetree.get(i)).size();*/
         if (update) for (ChrOrganizer co : chrs)
             co.clear();
         for (int i = 0; i < parentFiles.size(); i++) {
-            for (int j = 0; j < ((p_treenode)fileTree.get(i)).size(); j++) {
+            for (int j = 0; j < ((UITreeNode)fileTree.get(i)).size(); j++) {
                 Phenotype p = ((Parent_File)parentFiles.get(i)).get(j);
-                p_treenode tn = ((p_treenode)((p_treenode)fileTree.get(i)).get(j));
+                UITreeNode tn = ((UITreeNode)((UITreeNode)fileTree.get(i)).get(j));
                 if (tn.checked) {
-                    names = append(names, p.name+" ("+((p_treenode)fileTree.get(i)).title+")");
+                    names = append(names, p.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
                     colors = append(colors, tn.drawcolor);
-                    if (textWidth(p.name+" ("+((p_treenode)fileTree.get(i)).title+")") > maxLen) maxLen = textWidth(p.name+" ("+((p_treenode)fileTree.get(i)).title+")");
+                    if (textWidth(p.name+" ("+((UITreeNode)fileTree.get(i)).title+")") > maxLen) maxLen = textWidth(p.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
                     if (!update) continue;
                     for (int k = 0; k < p.bayesintrange.length; k++) {
-                        chrs[p.chr_chrs[k]-1].add(p.chr_peaks[k], p.bayesintrange[k], tn.drawcolor, (float)x+(cw*((p.chr_chrs[k]-1)%chrColumns))+16/*+(cw/2.0)*/,
-                            (multiplier*(p.bayesintrange[k].lower))+(float)y+(ch*floor((p.chr_chrs[k]-1)/(float)chrColumns))+20, 
+                        chrs[p.chr_chrs[k]-1].add(p.chr_peaks[k], p.bayesintrange[k], tn.drawcolor, (float)x+(chromosomeWidth*((p.chr_chrs[k]-1)%chrColumns))+16/*+(chromosomeWidth/2.0)*/,
+                            (multiplier*(p.bayesintrange[k].lower))+(float)y+(chromosomeHeight*floor((p.chr_chrs[k]-1)/(float)chrColumns))+20, 
                             multiplier*(p.bayesintrange[k].upper - p.bayesintrange[k].lower),
-                            (multiplier*((p.chr_peaks[k]-1)))+(float)y+(ch*floor((p.chr_chrs[k]-1)/(float)chrColumns))+20);
+                            (multiplier*((p.chr_peaks[k]-1)))+(float)y+(chromosomeHeight*floor((p.chr_chrs[k]-1)/(float)chrColumns))+20);
                     }
                 }
             }
@@ -126,8 +122,8 @@ class ChrDisplay implements p_component {
     void mouseAction() {
         if (mousePressed && mouseButton == LEFT && !dragging && chr_ready && mouseX > x && mouseX < (x+w) && mouseY > y && mouseY < (y+h)
             && !(mouseX > legendX && mouseX < legendX+legendW && mouseY > legendY && mouseY < legendY+legendH))
-            if (floor((mouseX-(float)x)/cw)+(chrColumns*floor((mouseY-(float)y)/ch)) < chrLengths.length && floor((mouseX-(float)x)/cw)+(chrColumns*floor((mouseY-(float)y)/ch)) >= 0) {
-                int c = floor((mouseX-(float)x)/cw)+(chrColumns*floor((mouseY-(float)y)/ch));
+            if (floor((mouseX-(float)x)/chromosomeWidth)+(chrColumns*floor((mouseY-(float)y)/chromosomeHeight)) < chrLengths.length && floor((mouseX-(float)x)/chromosomeWidth)+(chrColumns*floor((mouseY-(float)y)/chromosomeHeight)) >= 0) {
+                int c = floor((mouseX-(float)x)/chromosomeWidth)+(chrColumns*floor((mouseY-(float)y)/chromosomeHeight));
                 if (chrs[c].peaks.length > 0) {
                     loddisplay.current_chr = c;
                     //folder.prevPage();
@@ -137,8 +133,8 @@ class ChrDisplay implements p_component {
     }
     void keyAction(char c, int i, int j) { }
     int size() { return 0; }
-    void addComponent(p_component p) { }
-    void addComponent(p_component p, int i, int j) { }
+    void addComponent(UIComponent p) { }
+    void addComponent(UIComponent p, int i, int j) { }
     void removeComponent(int index1, int index2) { }
     void updateComponents() { }
     boolean isFocused() { return focus; }

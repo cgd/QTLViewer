@@ -96,10 +96,8 @@ public ArrayList<HashMap<String, float[]>> readThresholds(InputStreamReader e, S
 * @param parent the Parent_File containing the rest of the information about the phenotypes
 * @return an ArrayList of phenotype names mapped to threshold information
 */
-ArrayList<HashMap<String, float[]>> getThresholdData(String path, String[] names, Parent_File parent) throws FileNotFoundException, IOException, Exception {
-    FileReader pathInput = new FileReader(path);
+ArrayList<HashMap<String, float[]>> getThresholdData(InputStreamReader pathInput, String[] names, Parent_File parent) throws FileNotFoundException, IOException, Exception {
     ArrayList<HashMap<String, float[]>> threshData = readThresholds(pathInput, names, new String[0], new String[0]);
-    pathInput.close();
     for (int i = 0; i < threshData.size(); i++) {
         HashMap<String, float[]> h = threshData.get(i);
         Iterator it = h.keySet().iterator();
@@ -119,6 +117,32 @@ ArrayList<HashMap<String, float[]>> getThresholdData(String path, String[] names
         }
     }
     return threshData;
+}
+
+String[][] getThresholdData(InputStreamReader threshFileReader, Parent_File parent, String[] names, int[] alphaArray) throws IOException, Exception {
+    String[][] csvThresh = readCSV(threshFileReader);
+    
+    int alphaCol = -1;
+    
+    if (csvThresh[0][1].equalsIgnoreCase("alpha")) {
+        alphaCol = 0;
+    }
+
+    if (csvThresh[0].length == 3 && names.length > 1) {
+        String mark = (alphaCol >= 0) ? csvThresh[1][alphaCol] : "";
+        for (int i = 1; i < csvThresh.length; i++) {
+            if (!csvThresh[i][alphaCol].equals(mark) && alphaCol != -1) {
+                if (parent.data.length == 1) parent.data = (float[][])append(parent.data, new float[0]);
+                parent.data[1] = (float[])append(parent.data, float(csvThresh[i][2]));
+            } else {
+                parent.data[0] = (float[])append(parent.data, float(csvThresh[i][2]));
+            }
+        }
+        parent.useModelThresholds = true;
+    }
+
+    alphaArray[0] = alphaCol;
+    return csvThresh;
 }
 
 private String[] splitNoDupes(String s) {

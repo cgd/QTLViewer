@@ -1,4 +1,4 @@
-class LODDisplay implements p_component {
+class LODDisplay implements UIComponent {
     boolean focus = false, active = true, dragReady = true, dragging = false, chr_ready = true;
     double x = 50.0, y = 50.0, legendX, legendY, legendW, legendH;
     float w, h;
@@ -73,8 +73,8 @@ class LODDisplay implements p_component {
             String[] names = new String[0];
             float maxLen = -1.0, autoLower = 1.5, autoUpper = 3.0;
             try {
-                autoLower = float(((p_textinput)texts.get(0)).getText());
-                autoUpper = float(((p_textinput)texts.get(1)).getText());
+                autoLower = float(((UITextInput)texts.get(0)).getText());
+                autoUpper = float(((UITextInput)texts.get(1)).getText());
             } catch (Exception error3) {
                 println("EXCEPTION:");
                 println(error3.getLocalizedMessage());
@@ -84,14 +84,14 @@ class LODDisplay implements p_component {
             textFont(font);
             if (current_chr != -1) text("chromosome "+((current_chr == xNum) ? "X" : (current_chr+1)), (float)x+2, (float)y+16);
             for (int i = 0; i < parentFiles.size(); i++) {
-                for (int j = 0; j < ((p_treenode)fileTree.get(i)).size(); j++) {
+                for (int j = 0; j < ((UITreeNode)fileTree.get(i)).size(); j++) {
                     Phenotype p = ((Parent_File)parentFiles.get(i)).get(j);
-                    p_treenode tn = ((p_treenode)((p_treenode)fileTree.get(i)).get(j));
+                    UITreeNode tn = ((UITreeNode)((UITreeNode)fileTree.get(i)).get(j));
                     if (tn.checked) {
                         textFont(legendFont);
-                        names = append(names, p.name+" ("+((p_treenode)fileTree.get(i)).title+")");
+                        names = append(names, p.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
                         colors = append(colors, tn.drawcolor);
-                        if (textWidth(p.name+" ("+((p_treenode)fileTree.get(i)).title+")") > maxLen) maxLen = textWidth(p.name+" ("+((p_treenode)fileTree.get(i)).title+")");
+                        if (textWidth(p.name+" ("+((UITreeNode)fileTree.get(i)).title+")") > maxLen) maxLen = textWidth(p.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
                         stroke(tn.drawcolor, 0x7F);
                         fill(tn.drawcolor, 0x7F);
                         strokeWeight(3);
@@ -237,19 +237,19 @@ class LODDisplay implements p_component {
     }
     
     void nextChr() {
-        if (/*folder*/tabs.currentpage != 0) return;
+        if (tabs.currentpage != 0) return;
         if (current_chr > -1 && current_chr < lastChr()-1) current_chr++;
-        else current_chr = -1;
+        //else current_chr = -1;
     }
     
     void prevChr() {
-        if (/*folder*/tabs.currentpage != 0) return;
+        if (tabs.currentpage != 0) return;
         if (current_chr > 0) current_chr--;
-        else current_chr = -1;
+        //else current_chr = -1;
     }
     
     void allChr() {
-        if (/*folder*/tabs.currentpage != 0) return;
+        if (tabs.currentpage != 0) return;
         current_chr = -1;
     }
     
@@ -259,7 +259,7 @@ class LODDisplay implements p_component {
             Parent_File pf = (Parent_File)parentFiles.get(i);
             for (int j = 0; j < pf.size(); j++) {
                 Phenotype p = pf.get(j);
-                if (((p_treenode)((p_treenode)fileTree.get(i)).get(j)).checked) {
+                if (((UITreeNode)((UITreeNode)fileTree.get(i)).get(j)).checked) {
                     /*for (int k = 0; k < p.lodscores.length; k++) {
                         if (current_chr == -1) { if (p.lodscores[k] > maxLod) maxLod = p.lodscores[k]; }
                         else { 
@@ -288,15 +288,15 @@ class LODDisplay implements p_component {
             Parent_File pf = (Parent_File)parentFiles.get(i);
             for (int j = 0; j < pf.size(); j++) {
                 Phenotype p = pf.get(j);
-                if (((p_treenode)((p_treenode)fileTree.get(i)).get(j)).checked)
+                if (((UITreeNode)((UITreeNode)fileTree.get(i)).get(j)).checked)
                     if (p.chromosome[p.chromosome.length-1] > maxChr) maxChr = p.chromosome[p.chromosome.length-1];
             }
         }
         return maxChr;
     }    
     int size() { return 0; }
-    void addComponent(p_component p) { }
-    void addComponent(p_component p, int i, int j) { }
+    void addComponent(UIComponent p) { }
+    void addComponent(UIComponent p, int i, int j) { }
     void removeComponent(int index1, int index2) { }
     void updateComponents() { }
     boolean isFocused() { return focus; }
