@@ -1,4 +1,4 @@
-class p_button implements p_component {
+class p_button implements UIComponent {
     float w, h;
     double x, y;
     String data;
@@ -8,9 +8,9 @@ class p_button implements p_component {
     color mouse = color(0x99);
     color textc = color(0x33);
     boolean ready = true, focus = false, active = true;
-    p_action action = null;
+    UIAction action = null;
     
-    p_button(float ex, float why, String dee, p_action aye) {
+    p_button(float ex, float why, String dee, UIAction aye) {
         x = ex; y = why; w = textWidth(dee); h = 25; data = dee;
         action = aye;
     }
@@ -62,7 +62,7 @@ class p_button implements p_component {
     void setFocus(boolean f) { focus = f; }
     int size() { return 0; }
     void removeComponent(int a, int b) { }
-    void addComponent(p_component c, int a, int b) { }
+    void addComponent(UIComponent c, int a, int b) { }
     String toString() { return data; }
     void setActive(boolean a) { active = a; }
     boolean isActive() { return active; }

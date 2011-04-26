@@ -1,11 +1,11 @@
-class p_horizontalfolder extends ArrayList<p_page> implements p_component {
+class UIHorizontalFolder extends ArrayList<p_page> implements UIComponent {
     
     int pages = 0, currentpage = 0;
     double tx = 0.0, tz = 0.0, v = 0.1, x, y, target = 0.0, ztarget = 0.0;
     boolean prevready = true, nextready = true, focus = true, active = true;
     PFont main = createFont("Arial", 24, true);
     
-    p_horizontalfolder(double xmargin, double ymargin, int ps, int current, String[] titles) {
+    UIHorizontalFolder(double xmargin, double ymargin, int ps, int current, String[] titles) {
         super();
         x = xmargin;
         y = ymargin;
@@ -17,7 +17,7 @@ class p_horizontalfolder extends ArrayList<p_page> implements p_component {
             this.add(new p_page(titles[i], i));
     }
     
-    void addComponent(p_component c, int page, int index) {
+    void addComponent(UIComponent c, int page, int index) {
         ((p_page)this.get(page)).addComponent(c, page, index);
     }
     

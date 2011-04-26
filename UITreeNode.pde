@@ -1,15 +1,15 @@
-class p_treenode extends ArrayList<p_treenode> {
+class UITreeNode extends ArrayList<UITreeNode> {
     String title;
     boolean checked = false, hasChildren = false, expanded = false;
     ArrayList<Boolean> c_expanded;
     color drawcolor = 0x00;
-    p_treenode(String t) {
+    UITreeNode(String t) {
         super();
         title = t;
         drawcolor = color(random(256), random(256), random(256));
     }
     
-    p_treenode(String t, boolean c) {
+    UITreeNode(String t, boolean c) {
         super();
         title = t;
         hasChildren = c;
@@ -17,17 +17,17 @@ class p_treenode extends ArrayList<p_treenode> {
         drawcolor = color(random(256), random(256), random(256));
     }
     
-    void add(int i, p_treenode o) {
+    void add(int i, UITreeNode o) {
         if (hasChildren) c_expanded.add(i, Boolean.FALSE);
-        if (o instanceof p_treenode) {
-            p_treenode newnode = (p_treenode)o;
+        if (o instanceof UITreeNode) {
+            UITreeNode newnode = (UITreeNode)o;
             String oldname = newnode.title;
             boolean jmp = false;
             int iter = 1;
             while (!jmp) {
                 jmp = true;
                 for (int j = 0; j < super.size(); j++)
-                    if (((p_treenode)super.get(j)).title.equalsIgnoreCase(newnode.title)) {
+                    if (((UITreeNode)super.get(j)).title.equalsIgnoreCase(newnode.title)) {
                         jmp = false;
                         break;
                     }
@@ -38,17 +38,17 @@ class p_treenode extends ArrayList<p_treenode> {
         super.add(i, o);
     }
     
-    boolean add(p_treenode o) {
+    boolean add(UITreeNode o) {
         if (hasChildren) c_expanded.add(Boolean.FALSE);
-        if (o instanceof p_treenode) {
-            p_treenode newnode = (p_treenode)o;
+        if (o instanceof UITreeNode) {
+            UITreeNode newnode = (UITreeNode)o;
             String oldname = newnode.title;
             boolean jmp = false;
             int iter = 1;
             while (!jmp) {
                 jmp = true;
                 for (int i = 0; i < super.size(); i++)
-                    if (((p_treenode)super.get(i)).title.equalsIgnoreCase(newnode.title)) {
+                    if (((UITreeNode)super.get(i)).title.equalsIgnoreCase(newnode.title)) {
                         jmp = false;
                         break;
                     }
@@ -59,7 +59,7 @@ class p_treenode extends ArrayList<p_treenode> {
         return super.add(o);
     }
     
-    p_treenode remove(int i) {
+    UITreeNode remove(int i) {
         if (hasChildren) c_expanded.remove(i);
         return super.remove(i);
     }

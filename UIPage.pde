@@ -1,4 +1,4 @@
-class p_page extends ArrayList<p_component> implements p_component {
+class p_page extends ArrayList<UIComponent> implements UIComponent {
     
     boolean focus = false, active = false;
     String title;
@@ -16,10 +16,10 @@ class p_page extends ArrayList<p_component> implements p_component {
     void update() {
         updateComponents();
         for (int i = 0; i < size(); i++)
-            ((p_component)this.get(i)).setActive(this.active);
+            ((UIComponent)this.get(i)).setActive(this.active);
     }
     
-    void addComponent(p_component c, int page, int index) {
+    void addComponent(UIComponent c, int page, int index) {
         this.add(index, c);
     }
     
@@ -31,19 +31,19 @@ class p_page extends ArrayList<p_component> implements p_component {
         for (int i = 0; i < size(); i++) {
             //pushMatrix();
             //translate(width * pindex, 0, 0);
-            ((p_component)this.get(i)).update();
+            ((UIComponent)this.get(i)).update();
             //popMatrix();
         }
     }
     
     void mouseAction() {
         for (int i = 0; i < this.size(); i++)
-            ((p_component)this.get(i)).mouseAction();
+            ((UIComponent)this.get(i)).mouseAction();
     }
     
     void keyAction(char k, int c, int mods) {
         for (int i = 0; i < this.size(); i++)
-            ((p_component)this.get(i)).keyAction(k, c, mods);
+            ((UIComponent)this.get(i)).keyAction(k, c, mods);
     }
     
     void setX(double newx) { }

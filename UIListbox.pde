@@ -1,4 +1,4 @@
-class p_listbox extends ArrayList<String> implements p_component {
+class p_listbox extends ArrayList<String> implements UIComponent {
     
     double x, y, w, h;
     String data;
@@ -109,7 +109,7 @@ class p_listbox extends ArrayList<String> implements p_component {
     boolean isFocused() { return focus; }
     void setFocus(boolean f) { focus = f; }
     void removeComponent(int a, int b) { }
-    void addComponent(p_component c, int a, int b) { }
+    void addComponent(UIComponent c, int a, int b) { }
     String toString() { return data; }
     void setActive(boolean a) { active = a; }
     boolean isActive() { return active; }

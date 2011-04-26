@@ -1,8 +1,8 @@
-class p_tabfolder extends p_horizontalfolder {
+class UITabFolder extends UIHorizontalFolder {
     
     double xl, yl;
     PFont sfont;
-    p_tabfolder(double xmargin, double ymargin, double xlm, double ylm, String[] titles) {
+    UITabFolder(double xmargin, double ymargin, double xlm, double ylm, String[] titles) {
         super(xmargin, ymargin, titles.length, 0, titles);
         xl = xlm; yl = ylm;
         sfont = createFont("Arial", 16, true);

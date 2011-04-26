@@ -1,9 +1,9 @@
-class p_progressbar implements p_component {
+class UIProgressBar implements UIComponent {
     double x, y, w, h, v;
     boolean active = true;
     int type;
     
-    p_progressbar(double ex, double why, double doubleu, double ach) {
+    UIProgressBar(double ex, double why, double doubleu, double ach) {
         x = ex; y = why; w = doubleu; h = ach; type = 0; v = 0.0;
     }
     
@@ -27,8 +27,8 @@ class p_progressbar implements p_component {
     void setValue(double newval) { v = newval; update(); }
     int size() { return 0; }
     void removeComponent(int i, int j) { }
-    void addComponent(p_component c) { }
-    void addComponent(p_component c, int i, int j) { }
+    void addComponent(UIComponent c) { }
+    void addComponent(UIComponent c, int i, int j) { }
     void updateComponents() { }
     void mouseAction() { }
     void keyAction(char c, int i, int j) { }

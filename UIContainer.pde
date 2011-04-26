@@ -1,4 +1,4 @@
-class p_container extends ArrayList<p_component> implements p_component {
+class p_container extends ArrayList<UIComponent> implements UIComponent {
     boolean ready = true, focus = false, active = true;
     
     p_container() {
@@ -11,13 +11,13 @@ class p_container extends ArrayList<p_component> implements p_component {
     
     void updateComponents() {
         for (int i = 0; i < size(); i++) {
-            ((p_component)this.get(i)).setActive(active);
-            ((p_component)this.get(i)).update();
-            if (! focus) ((p_component)this.get(i)).setFocus(false);
+            ((UIComponent)this.get(i)).setActive(active);
+            ((UIComponent)this.get(i)).update();
+            if (! focus) ((UIComponent)this.get(i)).setFocus(false);
         }
     }
     
-    void addComponent(p_component c, int page, int index) {
+    void addComponent(UIComponent c, int page, int index) {
         this.add(index, c);
     }
     
@@ -28,27 +28,27 @@ class p_container extends ArrayList<p_component> implements p_component {
     void mouseAction() {
         if (active && focus)
             for (int i = 0; i < size(); i++)
-                ((p_component)this.get(i)).mouseAction();
+                ((UIComponent)this.get(i)).mouseAction();
     }
     
     void keyAction(char c, int i, int j) {
         if (focus && active && (c == TAB || c == ENTER || c == RETURN)) {
             int index = -1;
             for (int k = 0; k < size(); k++) {
-                if (((p_component)this.get(k)).isFocused()) {
+                if (((UIComponent)this.get(k)).isFocused()) {
                     index = k;
-                    ((p_component)this.get(k)).setFocus(false);
+                    ((UIComponent)this.get(k)).setFocus(false);
                     if (k + 1 < size())
-                        ((p_component)this.get(k+1)).setFocus(true);
-                    //else ((p_component)this.get(0)).setFocus(true);
+                        ((UIComponent)this.get(k+1)).setFocus(true);
+                    //else ((UIComponent)this.get(0)).setFocus(true);
                     break;
                 }
             }
-            if (index == -1 && size() > 0) ((p_component)this.get(0)).setFocus(true);
+            if (index == -1 && size() > 0) ((UIComponent)this.get(0)).setFocus(true);
         } else
             for (int k = 0; k < size(); k++) {
-                if (((p_component)this.get(k)).isFocused() && ((p_component)this.get(k)).isActive())
-                    ((p_component)this.get(k)).keyAction(c, i, j);
+                if (((UIComponent)this.get(k)).isFocused() && ((UIComponent)this.get(k)).isActive())
+                    ((UIComponent)this.get(k)).keyAction(c, i, j);
         }
     }
     

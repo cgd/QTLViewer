@@ -1,10 +1,10 @@
-class p_textinput implements p_component {
+class UITextInput implements UIComponent {
     double w, x, y, dx;
     String data, label;
     PFont font = createFont("Arial", 16, true);
     boolean ready = true, focus = false, active = true;
 
-    p_textinput(double ex, double why, double desiredX, double doubleu, String el) {
+    UITextInput(double ex, double why, double desiredX, double doubleu, String el) {
         label = el;
         x = ex;
         y = why;
@@ -13,7 +13,7 @@ class p_textinput implements p_component {
         dx = desiredX;
     }
     
-    p_textinput(double ex, double why, double doubleu, String el) {
+    UITextInput(double ex, double why, double doubleu, String el) {
         label = el;
         x = ex;
         y = why;
@@ -80,7 +80,7 @@ class p_textinput implements p_component {
     void setFocus(boolean f) { focus = f; }
     int size() { return 0; }
     void removeComponent(int a, int b) { }
-    void addComponent(p_component c, int a, int b) { }
+    void addComponent(UIComponent c, int a, int b) { }
     String toString() { return data; }
     void setActive(boolean a) { active = a; }
     boolean isActive() { return active; }

@@ -1,10 +1,10 @@
-class p_tree extends p_treenode implements p_component {
+class UITree extends UITreeNode implements UIComponent {
     
     double x, y, w, h;
     boolean focus = false, active = true, ready = true, hasUpdated = false;
     PFont font;
-    p_listener removeN, removeE;
-    p_tree(double ex, double why, double doubleu, double ach, p_listener n, p_listener e) {
+    UIListener removeN, removeE;
+    UITree(double ex, double why, double doubleu, double ach, UIListener n, UIListener e) {
         super("", true);
         x = ex; y = why; w = doubleu; h = ach;
         font = createFont("Arial", 16, true);
@@ -23,7 +23,7 @@ class p_tree extends p_treenode implements p_component {
             if (drawy > h+y) break;
             fill(0x33);
             stroke(0x00);
-            p_treenode cnode = (p_treenode)super.get(i);
+            UITreeNode cnode = (UITreeNode)super.get(i);
             String t = cnode.title;
             while (textWidth(t) > w - 48 && t.length() > 0)
                 t = t.substring(0, t.length() - 1);
@@ -43,14 +43,14 @@ class p_tree extends p_treenode implements p_component {
                 if (!cnode.expanded)
                     line((float)x+12, (float)drawy-11, (float)x+12, (float)drawy-1);
                 if (mouseX >= x+7 && mouseX <= x+17 && mouseY >= drawy-11 && mouseY <= drawy-1 && active && ready && mousePressed && mouseButton == LEFT) {
-                    ((p_treenode)super.get(i)).toggleExpanded();
+                    ((UITreeNode)super.get(i)).toggleExpanded();
                     ready = false;
                 } if (cnode.expanded) {
                     for (int j = 0; j < cnode.size(); j++) {
                         fill(0x33);
                         drawy += 16;
                         if (drawy > h+y) break;
-                        p_treenode bnode = (p_treenode)cnode.get(j);
+                        UITreeNode bnode = (UITreeNode)cnode.get(j);
                         String t1 = bnode.title;
                         while (textWidth(t1) > w - 72 && t1.length() > 0)
                             t1 = t1.substring(0, t1.length() - 1);
@@ -72,12 +72,12 @@ class p_tree extends p_treenode implements p_component {
                                 line((float)x+textWidth(t1)+57, (float)drawy-1, (float)x+textWidth(t1)+67, (float)drawy-11);
                                 strokeWeight(1);
                                 if (ready && mousePressed && mouseButton == LEFT && mouseX > x+textWidth(t1)+57 && mouseX < x+textWidth(t1)+67) {
-                                    ((p_treenode)super.get(i)).remove(removeE.eventHeard(i, j--));
+                                    ((UITreeNode)super.get(i)).remove(removeE.eventHeard(i, j--));
                                     hasUpdated = true;
                                     ready = false;
                                 }
                             } else if (mouseX > x+31 && mouseX < x+49 && mouseY > drawy-11 && mouseY < drawy-1 && active && ready && mousePressed && mouseButton == LEFT) {
-                                ((p_treenode)cnode.get(j)).toggleChecked();
+                                ((UITreeNode)cnode.get(j)).toggleChecked();
                                 hasUpdated = true;
                                 ready = false;
                             }    
@@ -110,7 +110,7 @@ class p_tree extends p_treenode implements p_component {
     boolean isFocused() { return focus; }
     void setFocus(boolean f) { focus = f; }
     void removeComponent(int a, int b) { }
-    void addComponent(p_component c, int a, int b) { }
+    void addComponent(UIComponent c, int a, int b) { }
     String toString() { return ""; }
     void setActive(boolean a) { active = a; }
     boolean isActive() { return active; }

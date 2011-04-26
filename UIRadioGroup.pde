@@ -1,11 +1,11 @@
-class p_radiogroup implements p_component {
+class UIRadioGroup implements UIComponent {
     String[] titles;
     int selected;
     float x, y;
     boolean focus, active;
     PFont font = createFont("Arial", 16, true);
     
-    p_radiogroup(float ex, float why, String[] t) {
+    UIRadioGroup(float ex, float why, String[] t) {
         titles = t;
         selected = 0;
         x = ex; y = why;
@@ -42,5 +42,5 @@ class p_radiogroup implements p_component {
     boolean isActive() { return active; }
     int size() { return titles.length; }
     void removeComponent(int i, int j) { }
-    void addComponent(p_component p, int i, int j) { }
+    void addComponent(UIComponent p, int i, int j) { }
 }
