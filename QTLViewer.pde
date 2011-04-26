@@ -68,24 +68,7 @@ void setup() {
         }
     });
     
-    // add scoll capability for LOD display -- new feature
-    frame.addMouseWheelListener(new MouseWheelListener() {
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            // side scroll: e.getModifiers is 1
-            if (loddisplay.current_chr != -1 && !exiting && tabs.currentpage == 0 && mouseX > tabsXTarget && tabs.focus && tabs.active) {
-                // negative = left, positive = right
-                if (e.getModifiers() == 1 && e.getWheelRotation() < 0 && (frameCount - lastFrame) > 8) { // 8 means no more than 60/8 switches per second (FPS is 60)
-                    loddisplay.prevChr();
-                    lastFrame = frameCount;
-                } else if (e.getModifiers() == 1 && e.getWheelRotation() > 0 && (frameCount - lastFrame) > 8) {
-                    loddisplay.nextChr();
-                    lastFrame = frameCount;
-                } else if (e.getModifiers() == 0 && e.getWheelRotation() < -5) { // -5 is threshold for scrolling up
-                    loddisplay.allChr();
-                }
-            }
-        }
-    });
+    initMouseWheelListener();
     
     // set up tab container
     String[] titles = {"LOD Score view", "Chromosome view"};

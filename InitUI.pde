@@ -148,3 +148,43 @@ void initMenu() {
     
     menuY = menuTargetY = 0.0;
 }
+
+void initMouseWheelListener() {
+    // add scoll capability for LOD display -- new feature
+    frame.addMouseWheelListener(new MouseWheelListener() {
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            // side scroll: e.getModifiers is 1  
+            if (loddisplay.current_chr != -1 && !exiting && tabs.currentpage == 0 && mouseX > tabsXTarget && tabs.focus && tabs.active) {
+                // negative = left, positive = right
+                if (e.getModifiers() == 1 && e.getWheelRotation() < 0 && (frameCount - lastFrame) > 8) { // 8 means no more than 60/8 switches per second (FPS is 60)
+                    loddisplay.prevChr();
+                    lastFrame = frameCount;
+                } else if (e.getModifiers() == 1 && e.getWheelRotation() > 0 && (frameCount - lastFrame) > 8) {
+                    loddisplay.nextChr();
+                    lastFrame = frameCount;
+                } else if (e.getModifiers() == 0 && e.getWheelRotation() < -5) { // -5 is threshold for scrolling up
+                    loddisplay.allChr();
+                    lastFrame = frameCount;
+                    return;
+                }
+            }
+            
+            if ((mouseX < tabsXTarget || loddisplay.current_chr == -1 || tabs.currentpage != 0) && e.getModifiers() == 1 && !exiting) {
+                if (e.getWheelRotation() < 0) {
+                  tabsXTarget = 110; // X coordinate
+                } else if (e.getWheelRotation() > 0) {
+                  tabsXTarget = 335;
+                }
+            }
+            
+            if (menuTargetY < 0.0 && !exiting && e.getModifiers() == 0 && e.getWheelRotation() > 5) {
+                menuTargetY = 0.0;
+            }
+            
+            // wait 1/2 second for mouse movement to cease
+            if (menuTargetY > -100.0 && !exiting && e.getModifiers() == 0 && e.getWheelRotation() < -5 && (frameCount - lastFrame) > 30) {
+                menuTargetY = -100.0;
+            }
+        }
+    });
+}
