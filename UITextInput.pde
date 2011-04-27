@@ -2,7 +2,7 @@ class UITextInput extends UIComponent {
     float dx;
     String data, label;
     PFont font = createFont("Arial", 16, true);
-    boolean ready = true, focus = false, active = true;
+    boolean ready = true;
 
     UITextInput(float newX, float newY, float desiredX, float newWidth, String el) {
         label = el;

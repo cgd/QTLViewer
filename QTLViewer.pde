@@ -140,7 +140,7 @@ void mousePressed() {
         tabs.focus = (menuY == 0.0);
     }
     
-    if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height+menuTargetY) {
+    if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
         if (tabsXTarget == 110) tabsXTarget = 335;
         else tabsXTarget = 110;
     } else if (exiting) {
@@ -155,7 +155,6 @@ void mousePressed() {
 }
 
 void mouseMoved() {
-  
     if (! exiting) {
         tabs.mouseAction();
         texts.mouseAction();
@@ -163,11 +162,9 @@ void mouseMoved() {
         yes.mouseAction();
         no.mouseAction();
     }
-    
 }
 
 void mouseReleased() {
-  
     if (! exiting) {
         tabs.mouseAction();
         texts.mouseAction();
@@ -175,7 +172,6 @@ void mouseReleased() {
         yes.mouseAction();
         no.mouseAction();
     }
-    
 }
 
     /*JFileChooser fd = new JFileChooser();
@@ -295,63 +291,36 @@ void loadFile(String path) {
             
             // load threshold information
             if (new File(modifiedPath + ".thresh.txt").exists() && !parent.useModelThresholds) {
-                try {
-                    addThresholdData(currentPhenotype, thresholdData);
-                } catch (NullPointerException error) {
-                    println("ERROR: No threshold data associated with phenotype \""+currentPhenotype.name+"\"."); 
-                    currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
-                    currentPhenotype.useDefaults = true;
-                    currentPhenotype.useXDefaults = true;
-                } catch (Exception e) {
-                    println("EXCEPTION:");
-                    println(e.getLocalizedMessage());
+                if (! addThresholdData(currentPhenotype, thresholdData)) {
                     currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
                     currentPhenotype.useDefaults = true;
                     currentPhenotype.useXDefaults = true;
                 }
             } else if (new File(modifiedPath + ".thresh.csv").exists() && !parent.useModelThresholds) {
-                try {
-                    addThresholdData(currentPhenotype, csvThresh, alphaCol);
-                } catch(Exception error) {
-                    println("EXCEPTION:");
-                    println(error.getLocalizedMessage());
+                if (! addThresholdData(currentPhenotype, csvThresh, alphaCol)) {
                     currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
                     currentPhenotype.useDefaults = true;
                     currentPhenotype.useXDefaults = true;
                 }
             } else if (new File(modifiedPath + "_" + currentPhenotype.name + ".sum.csv").exists()) {
-                try {
-                    FileReader sumFile = new FileReader(modifiedPath + "_" + currentPhenotype.name + ".sum.csv");
-                    addThreshCSVFile(currentPhenotype, sumFile);
-                    sumFile.close();
-                } catch (Exception error1) {
-                    println("EXCEPTION:");
-                    println(error1.getLocalizedMessage());
+                FileReader sumFile = new FileReader(modifiedPath + "_" + currentPhenotype.name + ".sum.csv");
+                if (! addThreshCSVFile(currentPhenotype, sumFile)) {
                     currentPhenotype.thresholds = new float[][] { { autoLower, autoUpper } };
                     currentPhenotype.useDefaults = true;
                     currentPhenotype.useXDefaults = true;
                 }
+                sumFile.close();
             }
             
             // load peak information
             if (new File(modifiedPath + ".peaks.txt").exists()) {
                 addPeakData(currentPhenotype, chrData.get(currentPhenotype.name));  
             } else if (new File(modifiedPath + ".peaks.csv").exists()) {
-                try {
-                    addPeakData(currentPhenotype, csvPeaks);
-                } catch (Exception error) {
-                    println("EXCEPTION:");
-                    println(error.getLocalizedMessage());
-                } 
+                addPeakData(currentPhenotype, csvPeaks);
             } else if (new File(modifiedPath + "_" + currentPhenotype.name + ".chr.csv").exists()) {
-                try {
-                    FileReader peakCSVReader = new FileReader(modifiedPath + "_" + currentPhenotype.name + ".chr.csv");
-                    addPeakCSVFile(currentPhenotype, peakCSVReader);
-                    peakCSVReader.close();
-                } catch (Exception error2) {
-                    println("EXCEPTION:");
-                    println(error2.getLocalizedMessage());
-                }
+                FileReader peakCSVReader = new FileReader(modifiedPath + "_" + currentPhenotype.name + ".chr.csv");
+                addPeakCSVFile(currentPhenotype, peakCSVReader);
+                peakCSVReader.close();
             }
             
             parent.add(currentPhenotype);

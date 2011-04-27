@@ -1,23 +1,32 @@
 class UITabFolder extends UIHorizontalFolder {
     
-    float xl, yl;
+    float xLowerMargin, yLowerMargin;
     PFont sfont;
-    UITabFolder(float xmargin, float ymargin, float xLowerMargin, float yLowerMargin, String[] titles) {
+    boolean ready = true;
+    
+    UITabFolder(float xmargin, float ymargin, float newxLowerMargin, float newyLowerMargin, String[] titles) {
         super(xmargin, ymargin, 0, titles);
-        xl = xLowerMargin;
-        yl = yLowerMargin;
+        xLowerMargin = newxLowerMargin;
+        yLowerMargin = newyLowerMargin;
         sfont = createFont("Arial", 16, true);
     }
     
     void update() {
         stroke(0x00);
         fill(0xFF);
-        //rect((float)x, (float)y, width-(float)(x+xl), height-(float)(y+yl));
+        //rect((float)x, (float)y, width-(float)(x+xLowerMargin), height-(float)(y+yLowerMargin));
         float xOff = 0.0;
         textFont(sfont);
+        
+        if (! mousePressed) {
+            ready = true;
+        } else if (!(mouseY < y && mouseY > y - 20 && mouseX > x && mouseX < width - xLowerMargin)) {
+            ready = false;
+        }
+        
         for (int j = 0; j < size(); j++) {
             int c_text = 0xCC, c_tab = 0x55;
-            if (focus && active && mouseX > xOff + x && mouseX < xOff + x + textWidth(get(j).title) + 40.0 && mouseY < y && mouseY > y - 20) {
+            if (ready && focus && active && mouseX > xOff + x && mouseX < xOff + x + textWidth(get(j).title) + 40.0 && mouseY < y && mouseY > y - 20) {
                 if (mousePressed && mouseButton == LEFT) currentpage = j;
                 else {
                     c_text = 0xDD; c_tab = 0x44;
@@ -37,9 +46,9 @@ class UITabFolder extends UIHorizontalFolder {
             for (int i = 20; i >= 0; i -= 2)
                 vertex(xOff + 40.0 + x + textWidth(get(j).title) - i, y + (-sin((abs(i)*HALF_PI)/20.0)*20.0));
             if (currentpage == j) {
-                vertex(width - xl, y);
-                vertex(width-xl, height - yl);
-                vertex(x, height - yl);
+                vertex(width - xLowerMargin, y);
+                vertex(width-xLowerMargin, height - yLowerMargin);
+                vertex(x, height - yLowerMargin);
                 vertex(x, y);
             }
             endShape();
@@ -48,6 +57,7 @@ class UITabFolder extends UIHorizontalFolder {
             text(get(j).title, xOff+20.0+(float)x, (float)y-4.0);
             xOff += 40.0+textWidth(get(j).title);
         }
+        
         get(currentpage).update();
     }
     

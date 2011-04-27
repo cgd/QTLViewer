@@ -1,23 +1,20 @@
-class UIPage extends UIComponent {
+class UIPage extends UIComponentContainer {
     
     String title;
     int pindex;
-    ArrayList<UIComponent> components;
     
     UIPage(String t, int i) {
         super();
         title = t;
         pindex = i;
-        components = new ArrayList<UIComponent>();
     }
-    
-    boolean isFocused() { return focus; }
-    void setFocus(boolean f) { focus = f; }
     
     void update() {
         updateComponents();
-        for (int i = 0; i < size(); i++)
+        for (int i = 0; i < size(); i++) {
             ((UIComponent)this.get(i)).active = this.active;
+            ((UIComponent)this.get(i)).focus = this.focus;
+        }
     }
     
     void addComponent(UIComponent c, int page, int index) {
@@ -45,25 +42,5 @@ class UIPage extends UIComponent {
     void keyAction(char k, int c, int mods) {
         for (int i = 0; i < this.size(); i++)
             ((UIComponent)this.get(i)).keyAction(k, c, mods);
-    }
-    
-    UIComponent get(int index) {
-        return components.get(index);
-    }
-    
-    boolean add(UIComponent newComponent) {
-        return components.add(newComponent);
-    }
-    
-    void add(int newIndex, UIComponent newComponent) {
-        components.add(newIndex, newComponent);
-    }
-    
-    void remove(int index) {
-        components.remove(index);
-    }
-    
-    int size() {
-        return components.size();
     }
 }

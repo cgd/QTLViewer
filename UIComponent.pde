@@ -28,6 +28,34 @@ abstract class UIComponent {
     String toString() { return ""; }
 }
 
+abstract class UIComponentContainer extends UIComponent {
+    ArrayList<UIComponent> components;
+     
+    UIComponentContainer() {
+        components = new ArrayList<UIComponent>();
+    }
+     
+    int size() {
+        return components.size();
+    }
+     
+    boolean add(UIComponent newComponent) {
+        return components.add(newComponent);
+    }
+    
+    UIComponent remove(int index) {
+        return components.remove(index);
+    }
+    
+    void add(int index, UIComponent newComponent) {
+        components.add(index, newComponent);
+    }
+    
+    UIComponent get(int index) {
+        return components.get(index);
+    }
+}
+
 interface UIAction {
     public void doAction();
 }

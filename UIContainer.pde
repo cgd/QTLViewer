@@ -1,10 +1,8 @@
-class UIContainer extends UIComponent {
+class UIContainer extends UIComponentContainer {
     boolean ready = true;
-    ArrayList<UIComponent> components;
     
     UIContainer() {
         super(); 
-        components = new ArrayList<UIComponent>();
     }
     
     void update() {
@@ -52,25 +50,5 @@ class UIContainer extends UIComponent {
                 if (((UIComponent)this.get(k)).focus && ((UIComponent)this.get(k)).active)
                     ((UIComponent)this.get(k)).keyAction(c, i, j);
         }
-    }
-    
-    int size() {
-        return components.size();
-    }
-    
-    boolean add(UIComponent newComponent) {
-        return components.add(newComponent);
-    }
-    
-    UIComponent remove(int index) {
-        return components.remove(index);
-    }
-    
-    void add(int index, UIComponent newComponent) {
-        components.add(index, newComponent);
-    }
-    
-    UIComponent get(int index) {
-        return components.get(index);
     }
 }

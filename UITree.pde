@@ -3,6 +3,7 @@ class UITree extends UITreeNode {
     boolean ready = true, hasUpdated = false;
     PFont font;
     UIListener removeN, removeE;
+    
     UITree(float newX, float newY, float newWidth, float newHeight, UIListener nodeRemove, UIListener elementRemove) {
         super("", true);
         x = newX;

@@ -2,7 +2,7 @@ class UIHorizontalFolder extends UIComponent {
     
     int currentpage = 0;
     float tx = 0.0, tz = 0.0, v = 0.1, target = 0.0, ztarget = 0.0;
-    boolean prevready = true, nextready = true, focus = true, active = true;
+    boolean prevready = true, nextready = true;
     PFont main = createFont("Arial", 24, true);
     ArrayList<UIPage> pages;
     UIHorizontalFolder(float xmargin, float ymargin, int current, String[] titles) {

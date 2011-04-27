@@ -1,5 +1,5 @@
 class LODDisplay extends UIComponent {
-    boolean focus = false, active = true, dragReady = true, dragging = false, chr_ready = true;
+    boolean dragReady = true, dragging = false, chr_ready = true;
     float legendX, legendY, legendW, legendH;
     PFont font = createFont("Arial", 24, true), legendFont = createFont("Arial", 16, true), smallFont = createFont("Arial", 12, true);
     float legendOffsetX = -1, legendOffsetY = -1, legendA = 0x00, maxOffset = -1.0;
@@ -219,7 +219,7 @@ class LODDisplay extends UIComponent {
     
     void mouseAction() {
         if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH) return;
-        if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && mousePressed && mouseButton == LEFT && !dragging && chr_ready && current_chr == -1) {
+        if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && !dragging && chr_ready && current_chr == -1) {
                 for (int i = 0; i < chrOffsets.length; i++) {
                     if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
                         if (i == chrOffsets.length - 1)
