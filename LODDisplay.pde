@@ -189,9 +189,9 @@ class LODDisplay extends UIComponent {
                 legendX = mouseX - legendOffsetX;
                 legendY = mouseY - legendOffsetY;
                 if (legendX < x) legendX = x;
-                else if (legendX > (x + cWidth)-legendW) legendX = (x + cWidth)-legendW;
+                else if (legendX > (x + cWidth) - legendW) legendX = (x + cWidth)-legendW;
                 if (legendY < y) legendY = y;
-                else if (legendY > (y + cHeight)-legendH) legendY = (y + cHeight)-legendH;
+                else if (legendY > (y + cHeight) - legendH) legendY = (y + cHeight)-legendH;
             } if (!mousePressed || mouseButton != LEFT || !active) {
                 legendOffsetX = legendOffsetY = -1;
                 dragging = false;
@@ -221,10 +221,10 @@ class LODDisplay extends UIComponent {
         if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH) return;
         if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && mousePressed && mouseButton == LEFT && !dragging && chr_ready && current_chr == -1) {
                 for (int i = 0; i < chrOffsets.length; i++) {
-                    if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, cWidth - 50 - x) + x) {
+                    if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
                         if (i == chrOffsets.length - 1)
                             current_chr = i;
-                        else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, cWidth - 50 - x) + x)
+                        else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, width - 50 - x) + x)
                             current_chr = i;
                     }
              }
