@@ -21,7 +21,7 @@ String getModifiedPath(String path) {
         }
         
         if (modifiedPath.length() > 0) {
-            modifiedPath = modifiedPath.substring(0, modifiedPath.length()-1);
+            modifiedPath = modifiedPath.substring(0, modifiedPath.length() - 1);
         }
     }
     return modifiedPath;

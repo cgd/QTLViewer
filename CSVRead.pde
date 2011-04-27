@@ -16,61 +16,62 @@ String[][] readCSV(InputStreamReader reader) throws IOException, Exception {
 */
 String[][] readCSV(InputStreamReader reader, char delim) throws IOException, Exception {
     char[] cbuf = new char[10], total = new char[0];
-    int l, oldl;
-    String[][] ret = new String[1][0];
-    boolean inQuotes = false;
-    String data = "";
+    int readLen, oldLen;
+    String[][] returnData = new String[1][0]; // String matrix to be returned
+    boolean inQuotes = false; // whether or not a quoted entry is being parsed
+    String data = ""; // one entry in the table
     
-    while ((l = reader.read(cbuf, 0, cbuf.length)) != -1) {
-        total = expand(total, (oldl = total.length) + l);
-        arrayCopy(cbuf, 0, total, oldl, l);
+    while ((readLen = reader.read(cbuf, 0, cbuf.length)) != -1) {
+        total = expand(total, (oldLen = total.length) + readLen);
+        arrayCopy(cbuf, 0, total, oldLen, readLen);
     }
     
     for (int i = 0; i < total.length; i++) {
-        if (total[i] == delim && !inQuotes) {
-            ret[ret.length - 1] = append(ret[ret.length - 1], data);
+        if (total[i] == delim && !inQuotes) { // reached delimiter, not in quotes
+            returnData[returnData.length - 1] = append(returnData[returnData.length - 1], data);
             data = "";
             continue;
-        } else if (!inQuotes && total[i] == '"') {
+        } else if (!inQuotes && total[i] == '"') { // reached a quoted entry
             inQuotes = true;
             continue;
-        } else if (inQuotes && total[i] == '"') {
+        } else if (inQuotes && total[i] == '"') { // ended a quoted entry...
             if (i == total.length - 1) {
                 inQuotes = false;
-                ret[ret.length - 1] = append(ret[ret.length - 1], data);
+                returnData[returnData.length - 1] = append(returnData[returnData.length - 1], data);
                 data = "";
                 continue;
-            } else {
+            } else { // ...unless it is escaped with a following quote
                 if (total[i + 1] == '"') {
                     data += total[i++];
                 } else {
                     inQuotes = false;
-                    //ret[ret.length - 1] = append(ret[ret.length - 1], data);
+                    //returnData[returnData.length - 1] = append(returnData[returnData.length - 1], data);
                     //data = "";
                 }
                 continue;
             }
-        } else if (!inQuotes && (total[i] == '\n' || total[i] == '\r')) {
+        } else if (!inQuotes && (total[i] == '\n' || total[i] == '\r')) { // reached a new line/entry
+        
             if (i < total.length - 1 && total[i + 1] == '\n') {
                 i++;
             }
             
-            ret[ret.length - 1] = append(ret[ret.length - 1], data);
+            returnData[returnData.length - 1] = append(returnData[returnData.length - 1], data);
             data = "";
-            ret = (String[][])append(ret, new String[0]);
+            returnData = (String[][])append(returnData, new String[0]);
             continue;
-        } else if (i == total.length - 1) {
+        } else if (i == total.length - 1) { // reached the last character
             data += total[i];
-            ret[ret.length - 1] = append(ret[ret.length - 1], data);
+            returnData[returnData.length - 1] = append(returnData[returnData.length - 1], data);
             data = "";
             continue;
         }
-        data += total[i];
+        data += total[i]; // just another character to be added
     }
     
-    if (ret[ret.length-1].length == 0) {
-        ret = (String[][])shorten(ret);
+    if (returnData[returnData.length-1].length == 0) {
+        returnData = (String[][])shorten(returnData);
     }
     
-    return ret;
+    return returnData;
 }
