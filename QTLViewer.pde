@@ -15,7 +15,7 @@ import java.awt.event.*;
 import javax.swing.JColorChooser;
 
 boolean exiting = false;
-double menuY, menuTargetY;
+float menuY, menuTargetY;
 long lastFrame = 0;
 UIButton yes, no;
 PFont large, buttonfont = createFont("Arial", 16, true);
@@ -127,7 +127,7 @@ void keyPressed() { // most key events are handled by the MenuBar
 
 void keyReleased() {
   
-    if (! exiting && tabs.isActive() && tabs.isFocused()) {
+    if (! exiting && tabs.active && tabs.focus) {
         tabs.keyAction(key, keyCode, keyEvent.getModifiersEx());
     }
     
@@ -140,7 +140,7 @@ void mousePressed() {
         tabs.focus = (menuY == 0.0);
     }
     
-    if (!exiting && mouseX > fileTree.x+fileTree.w && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height+menuTargetY) {
+    if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height+menuTargetY) {
         if (tabsXTarget == 110) tabsXTarget = 335;
         else tabsXTarget = 110;
     } else if (exiting) {

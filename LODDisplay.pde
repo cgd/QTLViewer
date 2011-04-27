@@ -1,26 +1,31 @@
-class LODDisplay implements UIComponent {
+class LODDisplay extends UIComponent {
     boolean focus = false, active = true, dragReady = true, dragging = false, chr_ready = true;
-    double x = 50.0, y = 50.0, legendX, legendY, legendW, legendH;
-    float w, h;
+    float legendX, legendY, legendW, legendH;
     PFont font = createFont("Arial", 24, true), legendFont = createFont("Arial", 16, true), smallFont = createFont("Arial", 12, true);
     float legendOffsetX = -1, legendOffsetY = -1, legendA = 0x00, maxOffset = -1.0;
     int current_chr = -1;
-    LODDisplay(double ex, double why, double doubleu, double ache) {
-        x = ex; y = why; w = (float)doubleu; h = (float)ache;
+    LODDisplay(float newX, float newY, float newWidth, float newHeight) {
+        super(newX, newY, newWidth, newHeight);
         legendX = width-400.0;
         legendY = 250.0;
     }
     
     void update() {
-        if (w <= 0.0) w = (float)(width-x)+w;
-        if (h <= 0.0) h = (float)(height-y)+h;
+        if (cWidth <= 0.0) {
+            cWidth = (width - x) + cWidth;
+        }
+        
+        if (cHeight <= 0.0) {
+            cHeight = (height - y) + cHeight;
+        }
+        
         findMax();
         if (current_chr > lastChr()-1) current_chr = -1;
         textFont(font);
         strokeWeight(2);
         stroke(0x00);
-        line((float)x, (float)y, (float)x, (float)(y+h)-50);
-        line((float)x, (float)(y+h)-50, (float)(x+w), (float)(y+h)-50);
+        line(x, y, x, (y + cHeight) - 50);
+        line(x, (y + cHeight) - 50, x + cWidth, (y + cHeight) - 50);
         fill(0x00);
         strokeWeight(1);
         //double current_x = 0;
@@ -33,17 +38,17 @@ class LODDisplay implements UIComponent {
                 //else text(str(i+1), (float)(x+current_x-(textWidth(str(i+1))/2.0)), height-64);
                 //line((float)(x+current_x), height-100, (float)(x+current_x), height-84);
                 //current_x += map(chrLengths[i], 0.0, chrTotal, 0.0, width-150);
-                float pos = map(chrOffsets[i]+(chrLengths[i]/2.0), 0.0, chrTotal, 0.0, (float)w);
+                float pos = map(chrOffsets[i] + (chrLengths[i]/2.0), 0.0, chrTotal, 0.0, cWidth);
                 //if (i == chrLengths.length-1) text("X", (float)x+pos-(textWidth("X")/2.0), height-64);
                 //else 
-                text(chrNames[i], (float)x+pos-(textWidth(chrNames[i])/2.0), (float)(y+h)-14);
-                line((float)x+pos, (float)(y+h)-50, (float)x+pos, (float)(y+h)-34);
+                text(chrNames[i], x + pos-(textWidth(chrNames[i])/2.0), (y + cHeight) - 14);
+                line(x + pos, (y + cHeight) - 50, x + pos, (y + cHeight) - 34);
             }
         else for (int i = 1; i <= 4; i++) {
             int value = round((i*ceil(maxOffset))/4.0);
-            float x_off = map(value, 0.0, ceil(maxOffset), 0.0, (float)w);
-            text(str(value)+((i == 1) ? "cM" : ""), (float)x+x_off-(textWidth(str(value)+((i == 1) ? "cM" : ""))/2.0), (float)(y+h)-14);
-            line((float)x+x_off, (float)(y+h)-50, (float)x+x_off, (float)(y+h)-34);
+            float x_off = map(value, 0.0, ceil(maxOffset), 0.0, cWidth);
+            text(str(value) + ((i == 1) ? "cM" : ""), x + x_off-(textWidth(str(value) + ((i == 1) ? "cM" : ""))/2.0), (y + cHeight) - 14);
+            line(x + x_off, (y + cHeight) - 50, x + x_off, (y + cHeight) - 34);
         } if (maxLod != -1.0) {
             //line((float)x, (float)y, (float)x-16, (float)y);
             //text(str(top), (float)x-16-textWidth(str(top)), (float)y+12);
@@ -52,18 +57,18 @@ class LODDisplay implements UIComponent {
             int m = ceil(maxLod);
             if (maxLod < 1.0) {
                 m = 1;
-                float y_off = map(m, 0.0, m, 0.0, h-50);
-                text("1", (float)x-16-textWidth("1"), (float)(y+h)-50-y_off+8);
-                line((float)x, (float)(y+h)-50-y_off, (float)x-16, (float)(y+h)-50-y_off);
-                y_off = map(0, 0.0, m, 0.0, h-50);
-                text("0", (float)x-16-textWidth("0"), (float)(y+h)-50-y_off+8);
-                line((float)x, (float)(y+h)-50-y_off, (float)x-16, (float)(y+h)-50-y_off);
+                float y_off = map(m, 0.0, m, 0.0, cHeight - 50);
+                text("1", x - 16 - textWidth("1"), (y + cHeight) - 50 - y_off + 8);
+                line(x, (y + cHeight) - 50 - y_off, x - 16, (y + cHeight) - 50 - y_off);
+                y_off = map(0, 0.0, m, 0.0, cHeight - 50);
+                text("0", x - 16 - textWidth("0"), (y + cHeight) - 50 - y_off + 8);
+                line(x, (y + cHeight) - 50 - y_off, x - 16, (y + cHeight) - 50 - y_off);
             } else {
                 for (int i = 0; i <= 4; i++) {
                     int value = round((i*m)/4.0);
-                    float y_off = map(value, 0.0, m, 0.0, h-50);
-                    text(str(value), (float)x-16-textWidth(str(value)), (float)(y+h)-50-y_off+8);
-                    line((float)x, (float)(y+h)-50-y_off, (float)x-16, (float)(y+h)-50-y_off);
+                    float y_off = map(value, 0.0, m, 0.0, cHeight - 50);
+                    text(str(value), x - 16 - textWidth(str(value)), (y + cHeight) - 50 - y_off + 8);
+                    line(x, (y + cHeight) - 50 - y_off, x - 16, (y + cHeight) - 50 - y_off);
                 }
             }
             strokeWeight(1);
@@ -102,63 +107,63 @@ class LODDisplay implements UIComponent {
                             p.thresholds[1][0] = autoLower;
                             p.thresholds[1][1] = autoUpper;
                         }
-                        float y_offL = map(p.thresholds[0][0], 0.0, m, 0.0, h-50);
-                        float y_offU = map(p.thresholds[0][1], 0.0, m, 0.0, h-50);
-                        float y_offXL = map((p.thresholds.length > 1) ? p.thresholds[1][0] : p.thresholds[0][0], 0.0, m, 0.0, h-50);
-                        float y_offXU = map((p.thresholds.length > 1) ? p.thresholds[1][1] : p.thresholds[0][1], 0.0, m, 0.0, h-50);
+                        float y_offL = map(p.thresholds[0][0], 0.0, m, 0.0, cHeight - 50);
+                        float y_offU = map(p.thresholds[0][1], 0.0, m, 0.0, cHeight - 50);
+                        float y_offXL = map((p.thresholds.length > 1) ? p.thresholds[1][0] : p.thresholds[0][0], 0.0, m, 0.0, cHeight - 50);
+                        float y_offXU = map((p.thresholds.length > 1) ? p.thresholds[1][1] : p.thresholds[0][1], 0.0, m, 0.0, cHeight - 50);
                         textFont(smallFont);
                         if (current_chr == -1) {
-                            float endX = (p.thresholds.length > 1 && p.thresholds[0][0] == p.thresholds[1][0] && p.thresholds[0][1] == p.thresholds[1][1]) ? (float)(x+w) : map(chrOffsets[xNum], 0.0, chrTotal, (float)x, (float)(x+w));
+                            float endX = (p.thresholds.length > 1 && p.thresholds[0][0] == p.thresholds[1][0] && p.thresholds[0][1] == p.thresholds[1][1]) ? (x + cWidth) : map(chrOffsets[xNum], 0.0, chrTotal, (float)x, (x + cWidth));
                             for (float xp = (float)x; xp < endX-10; xp += 20.0) {
-                                if (p.thresholds[0][1] <= m) line(xp, /*height-y_offU-(float)y-50.0*/(float)(y+h)-50-y_offU, xp+10.0, /*height-y_offU-(float)y-50.0*/(float)(y+h)-50-y_offU);
-                                if (p.thresholds[0][0] <= m) line(xp, /*height-y_offU-(float)y-50.0*/(float)(y+h)-50-y_offL, xp+10.0, /*height-y_offL-(float)y-50.0*/(float)(y+h)-50-y_offL);
+                                if (p.thresholds[0][1] <= m) line(xp, /*height-y_offU-(float)y-50.0*/(y + cHeight)-50-y_offU, xp+10.0, /*height-y_offU-(float)y-50.0*/(y + cHeight)-50-y_offU);
+                                if (p.thresholds[0][0] <= m) line(xp, /*height-y_offU-(float)y-50.0*/(y + cHeight)-50-y_offL, xp+10.0, /*height-y_offL-(float)y-50.0*/(y + cHeight)-50-y_offL);
                             } if ((p.thresholds.length > 1 && (p.thresholds[0][0] != p.thresholds[1][0] || p.thresholds[0][1] != p.thresholds[1][1])) || p.thresholds.length > 0) {
-                                if (p.thresholds.length > 1) for (float xp = endX; xp < (float)(x+w)-10; xp += 20.0) {
-                                    if (p.thresholds[1][0] <= m) line(xp, (float)(y+h)-50-y_offXL, xp+10.0, (float)(y+h)-50-y_offXL);
-                                    if (p.thresholds[1][1] <= m) line(xp, (float)(y+h)-50-y_offXU, xp+10.0, (float)(y+h)-50-y_offXU);
+                                if (p.thresholds.length > 1) for (float xp = endX; xp < (x + cWidth)-10; xp += 20.0) {
+                                    if (p.thresholds[1][0] <= m) line(xp, (y + cHeight)-50-y_offXL, xp+10.0, (y + cHeight)-50-y_offXL);
+                                    if (p.thresholds[1][1] <= m) line(xp, (y + cHeight)-50-y_offXU, xp+10.0, (y + cHeight)-50-y_offXU);
                                 }
-                                if (p.thresholds.length > 1 && p.thresholds[1][1] <= m) text("a="+(round(p.thresholds[1][1]*100)/100.0), (float)(x+w)-textWidth("a="+(round(p.thresholds[1][1]*100)/100.0)), (float)(y+h)-y_offXU-54.0);
-                                if (p.thresholds.length > 1 && p.thresholds[1][0] <= m) text("a="+(round(p.thresholds[1][0]*100)/100.0), (float)(x+w)-textWidth("a="+(round(p.thresholds[1][0]*100)/100.0)), (float)(y+h)-y_offXL-54.0);
-                                if (p.thresholds[0][1] <= m) text("a="+(round(p.thresholds[0][1]*100)/100.0), endX-textWidth("a="+(round(p.thresholds[0][1]*100)/100.0)), (float)(y+h)-y_offU-54.0);
-                                if (p.thresholds[0][0] <= m) text("a="+(round(p.thresholds[0][0]*100)/100.0), endX-textWidth("a="+(round(p.thresholds[0][0]*100)/100.0)), (float)(y+h)-y_offL-54.0);
+                                if (p.thresholds.length > 1 && p.thresholds[1][1] <= m) text("a="+(round(p.thresholds[1][1]*100)/100.0), (x + cWidth)-textWidth("a="+(round(p.thresholds[1][1]*100)/100.0)), (y + cHeight)-y_offXU-54.0);
+                                if (p.thresholds.length > 1 && p.thresholds[1][0] <= m) text("a="+(round(p.thresholds[1][0]*100)/100.0), (x + cWidth)-textWidth("a="+(round(p.thresholds[1][0]*100)/100.0)), (y + cHeight)-y_offXL-54.0);
+                                if (p.thresholds[0][1] <= m) text("a="+(round(p.thresholds[0][1]*100)/100.0), endX-textWidth("a="+(round(p.thresholds[0][1]*100)/100.0)), (y + cHeight)-y_offU-54.0);
+                                if (p.thresholds[0][0] <= m) text("a="+(round(p.thresholds[0][0]*100)/100.0), endX-textWidth("a="+(round(p.thresholds[0][0]*100)/100.0)), (y + cHeight)-y_offL-54.0);
                             } else {
-                                if (p.thresholds.length > 1 && p.thresholds[1][1] <= m) text("a="+(round(p.thresholds[0][1]*100)/100.0), (float)(x+w)-textWidth("a="+(round(p.thresholds[0][1]*100)/100.0)), (float)(y+h)-y_offXU-54.0);
-                                if (p.thresholds.length > 1 && p.thresholds[1][0] <= m) text("a="+(round(p.thresholds[0][0]*100)/100.0), (float)(x+w)-textWidth("a="+(round(p.thresholds[0][0]*100)/100.0)), (float)(y+h)-y_offXL-54.0);
+                                if (p.thresholds.length > 1 && p.thresholds[1][1] <= m) text("a="+(round(p.thresholds[0][1]*100)/100.0), (x + cWidth)-textWidth("a="+(round(p.thresholds[0][1]*100)/100.0)), (y + cHeight)-y_offXU-54.0);
+                                if (p.thresholds.length > 1 && p.thresholds[1][0] <= m) text("a="+(round(p.thresholds[0][0]*100)/100.0), (x + cWidth)-textWidth("a="+(round(p.thresholds[0][0]*100)/100.0)), (y + cHeight)-y_offXL-54.0);
                             }
                         } else {
-                            for (float xp = (float)x; xp < (float)(x+w)-10; xp += 20.0) {
+                            for (float xp = (float)x; xp < (x + cWidth)-10; xp += 20.0) {
                                 if (((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][1] : p.thresholds[0][1]) <= m)
-                                    line(xp, (float)(y+h)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXU : y_offU)-50.0, xp+10.0, (float)(y+h)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXU : y_offU)-50.0);
+                                    line(xp, (y + cHeight)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXU : y_offU)-50.0, xp+10.0, (y + cHeight)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXU : y_offU)-50.0);
                                 if (((current_chr == xNum    && p.thresholds.length > 1) ? p.thresholds[1][0] : p.thresholds[0][0]) <= m)
-                                    line(xp, (float)(y+h)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXL : y_offL)-50.0, xp+10.0, (float)(y+h)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXL : y_offL)-50.0);
+                                    line(xp, (y + cHeight)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXL : y_offL)-50.0, xp+10.0, (y + cHeight)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXL : y_offL)-50.0);
                             }
                             if (((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][1] : p.thresholds[0][1]) <= m)
                                 text("a="+(round(((current_chr == xNum) ? p.thresholds[1][1] : p.thresholds[0][1])*100)/100.0), 
-                                    (float)(x+w)-textWidth("a="+(round(((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][1] : p.thresholds[0][1])*100)/100.0)), 
-                                    (float)(y+h)-((current_chr == xNum) ? y_offXU : y_offU)-54.0);
+                                    (x + cWidth)-textWidth("a="+(round(((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][1] : p.thresholds[0][1])*100)/100.0)), 
+                                    (y + cHeight)-((current_chr == xNum) ? y_offXU : y_offU)-54.0);
                             if (((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][0] : p.thresholds[0][0]) <= m)
                                 text("a="+(round(((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][0] : p.thresholds[0][0])*100)/100.0), 
-                                    (float)(x+w)-textWidth("a="+(round(((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][0] : p.thresholds[0][0])*100)/100.0)), 
-                                    (float)(y+h)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXL : y_offL)-54.0);
+                                    (x + cWidth)-textWidth("a="+(round(((current_chr == xNum && p.thresholds.length > 1) ? p.thresholds[1][0] : p.thresholds[0][0])*100)/100.0)), 
+                                    (y + cHeight)-((current_chr == xNum && p.thresholds.length > 1) ? y_offXL : y_offL)-54.0);
                         }
                         stroke(tn.drawcolor);
                         strokeWeight(1);
-                        float lastx = map(p.position[0]+chrOffsets[p.chromosome[0]-1], 0.0, chrTotal, 0.0, w), lasty = map(p.lodscores[0], 0.0, m, 0.0, h-50);
+                        float lastx = map(p.position[0] + chrOffsets[p.chromosome[0] - 1], 0.0, chrTotal, 0.0, cWidth), lasty = map(p.lodscores[0], 0.0, m, 0.0, cHeight - 50);
                         if (current_chr != -1) lastx = -1.0;
                         for (int k = 1; k < p.position.length; k++) {
                             try {
                                 if (current_chr != -1) {
                                     if (lastx == -1.0 && p.chromosome[k]-1 == current_chr) {
-                                        lastx = map(p.position[k], 0.0, ceil(maxOffset), 0.0, w);
-                                        lasty = map(p.lodscores[k], 0.0, m, 0.0, h-50);
+                                        lastx = map(p.position[k], 0.0, ceil(maxOffset), 0.0, cWidth);
+                                        lasty = map(p.lodscores[k], 0.0, m, 0.0, cHeight - 50);
                                     } else if (p.chromosome[k]-1 == current_chr) {
-                                        line((float)x+lastx, (float)(y+h)-lasty-50.0, (float)x+(lastx = map(p.position[k], 0.0, ceil(maxOffset), 0.0, w)), (float)(y+h)-(lasty = map(p.lodscores[k], 0.0, m, 0.0, h-50))-50.0);
+                                        line(x + lastx, (y + cHeight) - lasty - 50.0, x + (lastx = map(p.position[k], 0.0, ceil(maxOffset), 0.0, cWidth)), (y + cHeight) - (lasty = map(p.lodscores[k], 0.0, m, 0.0, cHeight - 50)) - 50.0);
                                     }
                                     continue;
                                 } if (p.chromosome[k-1] != p.chromosome[k]) {
-                                    lastx = map(p.position[k]+chrOffsets[p.chromosome[k]-1], 0.0, chrTotal, 0.0, w);
-                                    lasty = map(p.lodscores[k], 0.0, m, 0.0, h-50);
-                                } else line((float)x+lastx, (float)(y+h)-lasty-50.0, (float)x+(lastx = map(p.position[k]+chrOffsets[p.chromosome[k]-1], 0.0, chrTotal, 0.0, w)), (float)(y+h)-(lasty = map(p.lodscores[k], 0.0, m, 0.0, h-50))-50.0);
+                                    lastx = map(p.position[k] + chrOffsets[p.chromosome[k] - 1], 0.0, chrTotal, 0.0, cWidth);
+                                    lasty = map(p.lodscores[k], 0.0, m, 0.0, cHeight - 50);
+                                } else line(x + lastx, (y + cHeight) - lasty - 50.0, x + (lastx = map(p.position[k] + chrOffsets[p.chromosome[k] - 1], 0.0, chrTotal, 0.0, cWidth)), (y + cHeight) - (lasty = map(p.lodscores[k], 0.0, m, 0.0, cHeight - 50)) - 50.0);
                             } catch (ArrayIndexOutOfBoundsException error) {
                                 println("EXCEPTION:");
                                 println(error.getLocalizedMessage());
@@ -167,14 +172,14 @@ class LODDisplay implements UIComponent {
                     }
                 }
             }
-            if (mouseX > legendX && mouseX < legendX+legendW && mouseY > legendY && mouseY < legendY+legendH && active) {
+            if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH && active) {
                 legendA += (legendA < 0xFF) ? frameRate/5.0 : 0;
                 if (legendA > 0xFF) legendA = 0xFF;
                 if (dragReady && mousePressed && mouseButton == LEFT) {
                     dragging = true;
                     if (legendOffsetX == -1 || legendOffsetY == -1) {
-                        legendOffsetX = mouseX - (float)legendX;
-                        legendOffsetY = mouseY - (float)legendY; 
+                        legendOffsetX = mouseX - legendX;
+                        legendOffsetY = mouseY - legendY; 
                     }
                 }
             } else {
@@ -184,9 +189,9 @@ class LODDisplay implements UIComponent {
                 legendX = mouseX - legendOffsetX;
                 legendY = mouseY - legendOffsetY;
                 if (legendX < x) legendX = x;
-                else if (legendX > (x+w)-legendW) legendX = (w+x)-legendW;
+                else if (legendX > (x + cWidth)-legendW) legendX = (x + cWidth)-legendW;
                 if (legendY < y) legendY = y;
-                else if (legendY > (y+h)-legendH) legendY = (y+h)-legendH;
+                else if (legendY > (y + cHeight)-legendH) legendY = (y + cHeight)-legendH;
             } if (!mousePressed || mouseButton != LEFT || !active) {
                 legendOffsetX = legendOffsetY = -1;
                 dragging = false;
@@ -207,19 +212,19 @@ class LODDisplay implements UIComponent {
             //dragReady = (!mousePressed || mouseButton != LEFT);
         //else
         dragReady = !(mousePressed && mouseButton == LEFT) && active;
-        if (mouseX > x && mouseY > y && mouseX < width-50 && mouseY < height-100 && active)
+        if (mouseX > x && mouseY > y && mouseX < cWidth - 50 && mouseY < height-100 && active)
             chr_ready = (!mousePressed || mouseButton != LEFT);
         else chr_ready = !(mousePressed && mouseButton == LEFT && active && dragging);
     }
     
     void mouseAction() {
-        if (mouseX > legendX && mouseX < legendX+legendW && mouseY > legendY && mouseY < legendY+legendH) return;
-        if (mouseX > x && mouseY > y && mouseX < x+w && mouseY < y+h-50 && active && mousePressed && mouseButton == LEFT && !dragging && chr_ready && current_chr == -1) {
+        if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH) return;
+        if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && mousePressed && mouseButton == LEFT && !dragging && chr_ready && current_chr == -1) {
                 for (int i = 0; i < chrOffsets.length; i++) {
-                    if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, width-50-(float)x)+x) {
+                    if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, cWidth - 50 - x) + x) {
                         if (i == chrOffsets.length - 1)
                             current_chr = i;
-                        else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, width-50-(float)x)+x)
+                        else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, cWidth - 50 - x) + x)
                             current_chr = i;
                     }
              }
@@ -295,17 +300,4 @@ class LODDisplay implements UIComponent {
         return maxChr;
     }    
     int size() { return 0; }
-    void addComponent(UIComponent p) { }
-    void addComponent(UIComponent p, int i, int j) { }
-    void removeComponent(int index1, int index2) { }
-    void updateComponents() { }
-    boolean isFocused() { return focus; }
-    void setFocus(boolean f) { focus = f; }
-    void setX(double newx) { }
-    void setY(double newy) { }
-    double getX() { return 0.0; }
-    double getY() { return 0.0; }
-    String toString() { return ""; }
-    void setActive(boolean a) { active = a; }
-    boolean isActive() { return active; }
 }

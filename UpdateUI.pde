@@ -9,23 +9,23 @@ void updateMenu() {
     pushMatrix();
     
     if (menuTargetY == -100.0) { // menu is shown
-        texts.setActive(!exiting);
-        texts.setFocus(!exiting);
-        unitSelect.setActive(!exiting);
-        unitSelect.setFocus(!exiting);
-        loadcfg.setFocus(!exiting);
-        loadcfg.setActive(!exiting);
-        //upperDefault.setActive(true);
-        //lowerDefault.setActive(true);
+        texts.active = !exiting;
+        texts.focus = !exiting;
+        unitSelect.active = !exiting;
+        unitSelect.focus = !exiting;
+        loadcfg.focus = !exiting;
+        loadcfg.active = !exiting;
+        //upperDefault.active = true);
+        //lowerDefault.active = true);
     } else { // menu is hidden
-        texts.setActive(false);
-        texts.setFocus(false);
-        unitSelect.setActive(false);
-        unitSelect.setFocus(false);
-        loadcfg.setFocus(false);
-        loadcfg.setActive(false);
-        //upperDefault.setActive(false);
-        //lowerDefault.setActive(false);
+        texts.active = false;
+        texts.focus = false;
+        unitSelect.active = false;
+        unitSelect.focus = false;
+        loadcfg.focus = false;
+        loadcfg.active = false;
+        //upperDefault.active = false;
+        //lowerDefault.active = false;
     }
     
     translate(0.0, (float)menuY, 0);
@@ -49,12 +49,12 @@ void updateMenu() {
     // update, draw menu components
     fill(0xFF);
     popMatrix();
-    //upperDefault.setY((height+menuY)+10);
-    //lowerDefault.setY((height+menuY)+36);
-    ((UIComponent)texts.get(0)).setY((height+menuY)+10);
-    ((UIComponent)texts.get(1)).setY((height+menuY)+36);
-    unitSelect.setY(height+menuY+10);
-    loadcfg.setY(height+menuY+10);
+    //upperDefault.y = (height+menuY)+10);
+    //lowerDefault.y = (height+menuY)+36);
+    ((UIComponent)texts.get(0)).y = (height+menuY)+10;
+    ((UIComponent)texts.get(1)).y = (height+menuY)+36;
+    unitSelect.y = height+menuY+10;
+    loadcfg.y = height+menuY+10;
     //upperDefault.update();
     //lowerDefault.update();
     texts.update();
@@ -65,17 +65,17 @@ void updateMenu() {
 void updateViewArea() {
     // expand/contract fileTree view area
     if (Math.abs(tabs.x - tabsXTarget) < 0.1) tabs.x = tabsXTarget;
-    fileTree.w -= (tabs.x - tabsXTarget) * velocity;
+    fileTree.cWidth -= (tabs.x - tabsXTarget) * velocity;
     tabs.x -= (tabs.x - tabsXTarget) * velocity;
     ((LODDisplay)tabs.get(0).get(0)).x = tabs.x + 65;
-    ((LODDisplay)tabs.get(0).get(0)).w = -35;
+    ((LODDisplay)tabs.get(0).get(0)).cWidth = -35;
     ((ChrDisplay)tabs.get(1).get(0)).x = tabs.x + 25;
-    ((ChrDisplay)tabs.get(1).get(0)).w = -35;
+    ((ChrDisplay)tabs.get(1).get(0)).cWidth = -35;
     if (tabs.x != tabsXTarget) ((ChrDisplay)tabs.get(1).get(0)).update = true; // update the ChrDisplay if its width has changed
     
     // draw triangle for view select
     fill(0x55);
-    if (!exiting && mouseX > fileTree.x + fileTree.w && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
+    if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
         fill(0x00);
     }
     
@@ -91,10 +91,10 @@ void updateViewArea() {
     popMatrix();
     
     // update focus, activity settings based on whether or not the user is being prompted for exit
-    tabs.setFocus(!exiting && menuTargetY == 0.0);
-    tabs.setActive(!exiting && menuTargetY == 0.0);
+    tabs.focus = !exiting && menuTargetY == 0.0;
+    tabs.active = !exiting && menuTargetY == 0.0;
     tabs.update();
-    fileTree.setFocus(!exiting && menuTargetY == 0.0);
-    fileTree.setActive(!exiting && menuTargetY == 0.0);
+    fileTree.focus = !exiting && menuTargetY == 0.0;
+    fileTree.active = !exiting && menuTargetY == 0.0;
     fileTree.update();
 }

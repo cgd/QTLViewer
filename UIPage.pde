@@ -1,13 +1,14 @@
-class UIPage extends ArrayList<UIComponent> implements UIComponent {
+class UIPage extends UIComponent {
     
-    boolean focus = false, active = false;
     String title;
     int pindex;
+    ArrayList<UIComponent> components;
     
     UIPage(String t, int i) {
         super();
         title = t;
         pindex = i;
+        components = new ArrayList<UIComponent>();
     }
     
     boolean isFocused() { return focus; }
@@ -16,7 +17,7 @@ class UIPage extends ArrayList<UIComponent> implements UIComponent {
     void update() {
         updateComponents();
         for (int i = 0; i < size(); i++)
-            ((UIComponent)this.get(i)).setActive(this.active);
+            ((UIComponent)this.get(i)).active = this.active;
     }
     
     void addComponent(UIComponent c, int page, int index) {
@@ -46,11 +47,23 @@ class UIPage extends ArrayList<UIComponent> implements UIComponent {
             ((UIComponent)this.get(i)).keyAction(k, c, mods);
     }
     
-    void setX(double newx) { }
-    void setY(double newy) { }
-    double getX() { return 0.0; }
-    double getY() { return 0.0; }
-    String toString() { return title; }
-    void setActive(boolean a) { active = a; }
-    boolean isActive() { return active; }
+    UIComponent get(int index) {
+        return components.get(index);
+    }
+    
+    boolean add(UIComponent newComponent) {
+        return components.add(newComponent);
+    }
+    
+    void add(int newIndex, UIComponent newComponent) {
+        components.add(newIndex, newComponent);
+    }
+    
+    void remove(int index) {
+        components.remove(index);
+    }
+    
+    int size() {
+        return components.size();
+    }
 }

@@ -1,27 +1,33 @@
 /**
 * Class that handles the chromosome view.
 */
-class ChrDisplay implements UIComponent {
+class ChrDisplay extends UIComponent {
   
-    boolean focus = false, active = true, dragReady = true, dragging = false, chr_ready = true, update = false;
-    double x = 25.0, y = 25.0, w, h, legendX, legendY, legendW, legendH;
+    boolean dragReady = true, dragging = false, chr_ready = true, update = false;
+    float legendX, legendY, legendW, legendH;
     PFont legendFont = createFont("Arial", 16, true), normFont = createFont("Arial", 12, true);
     float legendOffsetX = -1, legendOffsetY = -1, legendA = 0x00, maxOffset = -1.0, chromosomeWidth, chromosomeHeight, multiplier;
 
     ChrOrganizer[] chrs = new ChrOrganizer[chrLengths.length];
     
-    public ChrDisplay(double ex, double why, double doubleu, double ache) {
+    public ChrDisplay(float newX, float newY, float newWidth, float newHeight) {
+        super(newX, newY, newWidth, newHeight);
         legendX = width-400.0;
         legendY = 400.0;
         for (int i = 0; i < chrs.length; i++) chrs[i] = new ChrOrganizer();
-        x = ex; y = why; w = doubleu; h = ache;
     }
     
     void update() {
-        if (w <= 0.0) w = (width-x)+w;
-        if (h <= 0.0) h = (height-y)+h;
-        chromosomeWidth = (float)w/chrColumns;
-        chromosomeHeight = (float)h/ceil(chrLengths.length/(float)chrColumns);
+        if (cWidth <= 0.0) {
+            cWidth = (width - x) + cWidth;
+        }
+        
+        if (cHeight <= 0.0) {
+            cHeight = (height - y) + cHeight;
+        }
+        
+        chromosomeWidth = cWidth/chrColumns;
+        chromosomeHeight = cHeight/ceil(chrLengths.length/(float)chrColumns);
         multiplier = (chromosomeHeight-24.0)/max(chrLengths);
         update = (update || fileTree.hasUpdated());
         stroke(0x00);
@@ -93,9 +99,9 @@ class ChrDisplay implements UIComponent {
                 legendX = mouseX - legendOffsetX;
                 legendY = mouseY - legendOffsetY;
                 if (legendX < x) legendX = x;
-                else if (legendX > (x+w)-legendW) legendX = (x+w)-legendW;
+                else if (legendX > (x + cWidth) - legendW) legendX = (x + cWidth) - legendW;
                 if (legendY < y) legendY = y;
-                else if (legendY > (y+h)-legendH) legendY = (y+h)-legendH;
+                else if (legendY > (y + cHeight) - legendH) legendY = (y + cHeight) - legendH;
             } if (!mousePressed || mouseButton != LEFT || !active) {
                 legendOffsetX = legendOffsetY = -1;
                 dragging = false;
@@ -120,7 +126,7 @@ class ChrDisplay implements UIComponent {
     }
     
     void mouseAction() {
-        if (mousePressed && mouseButton == LEFT && !dragging && chr_ready && mouseX > x && mouseX < (x+w) && mouseY > y && mouseY < (y+h)
+        if (mousePressed && mouseButton == LEFT && !dragging && chr_ready && mouseX > x && mouseX < (x + cWidth) && mouseY > y && mouseY < (y + cHeight)
             && !(mouseX > legendX && mouseX < legendX+legendW && mouseY > legendY && mouseY < legendY+legendH))
             if (floor((mouseX-(float)x)/chromosomeWidth)+(chrColumns*floor((mouseY-(float)y)/chromosomeHeight)) < chrLengths.length && floor((mouseX-(float)x)/chromosomeWidth)+(chrColumns*floor((mouseY-(float)y)/chromosomeHeight)) >= 0) {
                 int c = floor((mouseX-(float)x)/chromosomeWidth)+(chrColumns*floor((mouseY-(float)y)/chromosomeHeight));

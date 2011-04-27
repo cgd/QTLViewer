@@ -1,12 +1,14 @@
-class UITreeNode extends ArrayList<UITreeNode> {
+class UITreeNode extends UIComponent {
     String title;
     boolean checked = false, hasChildren = false, expanded = false;
     ArrayList<Boolean> c_expanded;
     color drawcolor = 0x00;
+    ArrayList<UITreeNode> items;
     UITreeNode(String t) {
         super();
         title = t;
         drawcolor = color(random(256), random(256), random(256));
+        items = new ArrayList<UITreeNode>();
     }
     
     UITreeNode(String t, boolean c) {
@@ -15,6 +17,7 @@ class UITreeNode extends ArrayList<UITreeNode> {
         hasChildren = c;
         if (hasChildren) c_expanded = new ArrayList<Boolean>();
         drawcolor = color(random(256), random(256), random(256));
+        items = new ArrayList<UITreeNode>();
     }
     
     void add(int i, UITreeNode o) {
@@ -26,16 +29,16 @@ class UITreeNode extends ArrayList<UITreeNode> {
             int iter = 1;
             while (!jmp) {
                 jmp = true;
-                for (int j = 0; j < super.size(); j++)
-                    if (((UITreeNode)super.get(j)).title.equalsIgnoreCase(newnode.title)) {
+                for (int j = 0; j < size(); j++)
+                    if (get(j).title.equalsIgnoreCase(newnode.title)) {
                         jmp = false;
                         break;
                     }
                 if (!jmp) newnode.title = oldname + "("+(iter++)+")";
             }
-            super.add(i, newnode);
+            items.add(i, newnode);
         }
-        super.add(i, o);
+        items.add(i, o);
     }
     
     boolean add(UITreeNode o) {
@@ -47,25 +50,29 @@ class UITreeNode extends ArrayList<UITreeNode> {
             int iter = 1;
             while (!jmp) {
                 jmp = true;
-                for (int i = 0; i < super.size(); i++)
-                    if (((UITreeNode)super.get(i)).title.equalsIgnoreCase(newnode.title)) {
+                for (int i = 0; i < size(); i++)
+                    if (get(i).title.equalsIgnoreCase(newnode.title)) {
                         jmp = false;
                         break;
                     }
                 if (!jmp) newnode.title = oldname + "("+(iter++)+")";
             }
-            return super.add(newnode);
+            return items.add(newnode);
         }
-        return super.add(o);
+        return items.add(o);
     }
     
     UITreeNode remove(int i) {
         if (hasChildren) c_expanded.remove(i);
-        return super.remove(i);
+        return items.remove(i);
+    }
+    
+    UITreeNode get(int i) {
+        return items.get(i);
     }
     
     Object last() {
-        return super.get(super.size() - 1);
+        return items.get(size() - 1);
     }
     
     boolean is(String ot) {
@@ -78,5 +85,9 @@ class UITreeNode extends ArrayList<UITreeNode> {
     
     void toggleChecked() {
         checked = !checked;
+    }
+    
+    int size() {
+        return items.size();
     }
 }

@@ -1,36 +1,31 @@
-interface UIComponent {
+abstract class UIComponent {
+    boolean active = true, focus = true;
+    float x = 0.0, y = 0.0, cWidth = 0.0, cHeight = 0.0;
     
-    void mouseAction();
+    UIComponent(float newX, float newY, float newWidth, float newHeight) {
+      x = newX;
+      y = newY;
+      cWidth = newWidth;
+      cHeight = newHeight;
+    }
     
-    void update(); // override this
+    UIComponent() { }
     
-    void updateComponents();
+    void mouseAction() { }
     
-    void keyAction(char k, int code, int mods);
+    void update() { } // override this
     
-    void setFocus(boolean focus);
+    void updateComponents() { }
     
-    boolean isFocused();
+    void keyAction(char k, int code, int mods) { }
     
-    void setActive(boolean active);
+    void addComponent(UIComponent c, int index, int index2) { }
     
-    boolean isActive();
+    void removeComponent(int index1, int index2) { }
     
-    void addComponent(UIComponent c, int index, int index2);
+    abstract int size();
     
-    void removeComponent(int index1, int index2);
-    
-    int size();
-    
-    double getX();
-    
-    double getY();
-    
-    void setX(double newx);
-    
-    void setY(double newy);
-    
-    String toString();
+    String toString() { return ""; }
 }
 
 interface UIAction {

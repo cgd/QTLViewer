@@ -1,18 +1,18 @@
-class UIButton implements UIComponent {
-    float w, h;
-    double x, y;
+class UIButton extends UIComponent {
     String data;
     PFont font = createFont("Arial", 16, true);
-    color bg = color(0xCC);
-    color border = color(0xFF);
-    color mouse = color(0x99);
-    color textc = color(0x33);
-    boolean ready = true, focus = false, active = true;
+    color bg = color(0xCC), border = color(0xFF), mouse = color(0x99), textc = color(0x33);
+    boolean ready = true;
     UIAction action = null;
     
-    UIButton(float ex, float why, String dee, UIAction aye) {
-        x = ex; y = why; w = textWidth(dee); h = 25; data = dee;
-        action = aye;
+    UIButton(float newX, float newY, String newData, UIAction newAction) {
+        super();
+        x = newX; 
+        y = newY; 
+        cWidth = textWidth(newData); 
+        cHeight = 25;
+        data = newData;
+        action = newAction;
     }
     
     /*UIButton(float ex, float why, float doubleu, float aech, String dee) {
@@ -29,29 +29,24 @@ class UIButton implements UIComponent {
         bg = newbg; border = newborder; mouse = newmouse; textc = newtext;
     }*/
     
-    double getX() { return x; }
-    double getY() { return y; }
-    void setX(double newx) { x = newx; }
-    void setY(double newy) { y = newy; }
-    
     void update() {
         textFont(font);
-        w = textWidth(data)+8;
+        cWidth = textWidth(data)+8;
         fill(bg);
         stroke(border);
-        if (mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h && active) {
+        if (mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight && active) {
             if (!mousePressed || mouseButton != LEFT && active)
                 ready = true;
             stroke(mouse);
         } else ready = !(mousePressed && mouseButton == LEFT && active);
         strokeWeight(1);
-        rect((float)x, (float)y, w, h);
+        rect(x, y, cWidth, cHeight);
         fill(textc);
-        text(data, (float)x+4, (float)y+18);
+        text(data, x + 4, y + 18);
     }
     
     void mouseAction() {
-        if (mousePressed && mouseButton == LEFT && ready && action != null && active && mouseX > x && mouseX < x+w && mouseY > y && mouseY < y+h)
+        if (mousePressed && mouseButton == LEFT && ready && action != null && active && mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight)
             action.doAction();
     }
     void updateComponents() { }
