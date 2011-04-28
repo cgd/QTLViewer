@@ -7,7 +7,8 @@ class ChrDisplay extends UIComponent {
     float legendX, legendY, legendW, legendH;
     PFont legendFont = createFont("Arial", 16, true), normFont = createFont("Arial", 12, true);
     float legendOffsetX = -1, legendOffsetY = -1, legendBorder = 0x00, maxOffset = -1.0, chromosomeWidth, chromosomeHeight, multiplier;
-
+    float maxLen = -1.0;
+    
     ChrOrganizer[] chrs = new ChrOrganizer[chrLengths.length];
     
     public ChrDisplay(float newX, float newY, float newWidth, float newHeight) {
@@ -30,7 +31,7 @@ class ChrDisplay extends UIComponent {
         }
         
         chromosomeWidth = cWidth/chrColumns;
-        chromosomeHeight = cHeight/ceil(chrLengths.length/chrColumns);
+        chromosomeHeight = cHeight/ceil(chrLengths.length/(float)chrColumns);
         multiplier = (chromosomeHeight - 24.0)/max(chrLengths);
         update = (update || fileTree.hasUpdated());
         
@@ -39,7 +40,6 @@ class ChrDisplay extends UIComponent {
         strokeWeight(1);
         textFont(normFont);
         ellipseMode(CENTER);
-        
         // draw chromosomes
         for (int i = 0; i < chrLengths.length; i++) {
             strokeWeight(1);
@@ -61,7 +61,6 @@ class ChrDisplay extends UIComponent {
         textFont(legendFont);
         int[] colors = new int[0];
         String[] names = new String[0];
-        float maxLen = -1.0;
         noStroke();
         fill(0x00);
         
@@ -139,73 +138,7 @@ class ChrDisplay extends UIComponent {
              
         // manipulate the legend
         if (names.length > 0 && colors.length > 0) {
-            if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH && active) {
-                legendBorder += (legendBorder < 0xFF) ? frameRate/5.0 : 0;
-                
-                if (legendBorder > 0xFF) {
-                    legendBorder = 0xFF;
-                }
-                
-                if (dragReady && mousePressed && mouseButton == LEFT) {
-                    dragging = true;
-                    if (legendOffsetX == -1 || legendOffsetY == -1) {
-                        legendOffsetX = mouseX - legendX;
-                        legendOffsetY = mouseY - legendY; 
-                    }
-                }
-            } else {
-                legendBorder -= (legendBorder > 0x00) ? frameRate/5.0 : 0;
-                
-                if (legendBorder < 0x00) {
-                    legendBorder = 0x00;
-                }
-            }
-            
-            if (dragging) {
-                legendX = mouseX - legendOffsetX;
-                legendY = mouseY - legendOffsetY;
-                
-                if (legendX < x) {
-                    legendX = x;
-                } else if (legendX > (x + cWidth) - legendW) {
-                    legendX = (x + cWidth) - legendW;
-                }
-                
-                if (legendY < y) {
-                    legendY = y;
-                } else if (legendY > (y + cHeight) - legendH) {
-                    legendY = (y + cHeight) - legendH;
-                }
-            }
-            
-            if (!mousePressed || mouseButton != LEFT || !active) {
-                legendOffsetX = legendOffsetY = -1;
-                dragging = false;
-            }
-            
-            fill(0x00, 0x2A);
-            stroke(0x00, legendBorder);
-            rect(legendX, legendY, (legendW=maxLen+18), (legendH=(names.length*16)+4));
-            stroke(0x00);
-            
-            for (int i = 0; i < names.length; i++) {
-                fill(colors[i]);
-                rect(legendX+4.0, legendY+((i+1)*16)-11, 10, 10);
-                fill(0x00);
-                text(names[i], legendX+16.0, legendY+((i+1)*16));
-            }
-            
-            if (mouseX > legendX && mouseX < legendX+legendW && mouseY > legendY && mouseY < legendY+legendH && active) {
-                dragReady = (!mousePressed || mouseButton != LEFT);
-            } else {
-                dragReady = !(mousePressed && mouseButton == LEFT && active);
-            }
-            
-            if (mouseX > x && mouseY > y && mouseX < width-50 && mouseY < height-100 && active) {
-                chr_ready = (!mousePressed || mouseButton != LEFT);
-            } else {
-                chr_ready = !(mousePressed && mouseButton == LEFT && active && dragging);
-            }
+            updateLegend(this, names, colors);
         }
     }
     
