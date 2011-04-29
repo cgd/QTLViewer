@@ -45,10 +45,12 @@ class UIContainer extends UIComponentContainer {
                 }
             }
             if (index == -1 && size() > 0) ((UIComponent)this.get(0)).focus = true;
-        } else
+        } else {
             for (int k = 0; k < size(); k++) {
-                if (((UIComponent)this.get(k)).focus && ((UIComponent)this.get(k)).active)
+                if (((UIComponent)this.get(k)).focus && ((UIComponent)this.get(k)).active) {
                     ((UIComponent)this.get(k)).keyAction(c, i, j);
+                }
+            }
         }
     }
 }

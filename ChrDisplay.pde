@@ -40,22 +40,9 @@ class ChrDisplay extends UIComponent {
         strokeWeight(1);
         textFont(normFont);
         ellipseMode(CENTER);
+        
         // draw chromosomes
-        for (int i = 0; i < chrLengths.length; i++) {
-            strokeWeight(1);
-            noStroke();
-            
-            text("chromosome " + chrNames[i], x+(chromosomeWidth*(i%chrColumns)) + 2, y + (chromosomeHeight*floor(i/chrColumns)) + 14); // draw the label
-            ellipse(x + (chromosomeWidth*(i%chrColumns)) + 8, y + (chromosomeHeight*floor(i/chrColumns)) + 20, 8, 8); // draw marker, usually at the base
-            
-            strokeWeight(2);
-            stroke(0x00);
-            
-            // (i % chrColumns) is the column that the chromosome is drawn in, chrColumns is defined in QTLViewer.pde and defaults to 7
-            // (multiplier) is the ratio of the length of the longest chromosome to its length on the screen
-            line(x + (chromosomeWidth*(i%chrColumns)) + 8, y + (chromosomeHeight*floor(i/chrColumns)) + 20 + (chrMarkerpos[i]*multiplier),
-                x + (chromosomeWidth*(i%chrColumns)) + 8, y + (chromosomeHeight*floor(i/chrColumns)) + 20 + (multiplier*chrLengths[i]));
-        }
+        drawChromosomes(this);
         
         strokeWeight(1);
         textFont(legendFont);
