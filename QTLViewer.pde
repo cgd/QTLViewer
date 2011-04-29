@@ -92,18 +92,18 @@ void draw() {
         noStroke();
         fill(0x00, 0x00, 0x00, 0xAA);
         rect(0, 0, width, height);
-        no.setFocus(true);
-        yes.setActive(true);
-        no.setActive(true);
+        no.focus = true;
+        yes.active = true;
+        no.active = true;
         no.update();
         yes.update();
         textFont(large);
         fill(0xCC);
         text("Exit?", (width/2.0)-textWidth("Exit?")/2.0, (height/2.0)-32.0);
     } else {
-        yes.setFocus(false);
-        yes.setActive(false);
-        no.setActive(false);
+        yes.active = false;
+        yes.active = false;
+        no.active = false;
     }
     
 }
