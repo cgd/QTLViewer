@@ -1,3 +1,9 @@
+/**
+* LOD display class.
+*
+* Draws the LOD curves, relies on Phenotype objects for data.
+*/
+
 class LODDisplay extends UIComponent {
   
     boolean dragReady = true, dragging = false, chr_ready = true;
@@ -62,7 +68,7 @@ class LODDisplay extends UIComponent {
         }
     
         int tempMaxLod = ceil(maxLod);
-        tempMaxLod = drawLODScale(this, maxLod, tempMaxLod); // se LODDisplayHelper module
+        tempMaxLod = drawLODScale(this, tempMaxLod); // see LODDisplayHelper module
         
         strokeWeight(1);
         fill(0x00);
@@ -160,50 +166,12 @@ class LODDisplay extends UIComponent {
                             line(xp, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0, xp + 10.0, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0);
                         }
                     }
-                    
-                    if (((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1]) <= tempMaxLod) {
-                        text("a="+(round(((current_chr == xNum) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1])*100)/100.0), 
-                            (x + cWidth) - textWidth("a=" + (round(((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1])*100)/100.0)), 
-                            (y + cHeight) - ((current_chr == xNum) ? y_offXU : y_offU) - 54.0);
-                    }
-                    
-                    if (((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0]) <= tempMaxLod) {
-                        text("a=" + (round(((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0])*100)/100.0), 
-                            (x + cWidth) - textWidth("a=" + (round(((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0])*100)/100.0)), 
-                            (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 54.0);
-                    }
                 }
                 
                 stroke(phenotypeNode.drawcolor);
                 strokeWeight(1);
-                float lastx = map(currentPhenotype.position[0] + chrOffsets[currentPhenotype.chromosome[0] - 1], 0.0, chrTotal, 0.0, cWidth), lasty = map(currentPhenotype.lodscores[0], 0.0, tempMaxLod, 0.0, cHeight - 50);
-                
-                if (current_chr != -1) {
-                    lastx = -1.0;
-                }
-                
-                for (int k = 1; k < currentPhenotype.position.length; k++) {
-                    try {
-                        if (current_chr != -1) {
-                            if (lastx == -1.0 && currentPhenotype.chromosome[k]-1 == current_chr) {
-                                lastx = map(currentPhenotype.position[k], 0.0, ceil(maxOffset), 0.0, cWidth);
-                                lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, cHeight - 50);
-                            } else if (currentPhenotype.chromosome[k]-1 == current_chr) {
-                                line(x + lastx, (y + cHeight) - lasty - 50.0, x + (lastx = map(currentPhenotype.position[k], 0.0, ceil(maxOffset), 0.0, cWidth)), (y + cHeight) - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, cHeight - 50)) - 50.0);
-                            }
-                            continue;
-                        } if (currentPhenotype.chromosome[k-1] != currentPhenotype.chromosome[k]) {
-                            lastx = map(currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, chrTotal, 0.0, cWidth);
-                            lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, cHeight - 50);
-                        } else {
-                            line(x + lastx, (y + cHeight) - lasty - 50.0, x + (lastx = map(currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, chrTotal, 0.0, cWidth)),
-                                (y + cHeight) - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, cHeight - 50)) - 50.0);
-                        }
-                    } catch (ArrayIndexOutOfBoundsException error) {
-                        println("EXCEPTION:");
-                        println(error.getLocalizedMessage());
-                    }
-                }
+
+                drawLODCurve(this, currentPhenotype, tempMaxLod);
             }
         }
         

@@ -1,11 +1,14 @@
+/**
+* Phenotype class: stores all the data for a certain phenotype
+*/
 class Phenotype {
     float[] lodscores, position, chr_peaks;
     float[][] thresholds;
     Range[] bayesintrange;
-    //float Aupper, Alower, Xupper, Xlower;
     int[] chromosome, chr_chrs;
     boolean useDefaults, useXDefaults;
     String name;
+    
     Phenotype(String n) {
         name = n;
         bayesintrange = new Range[0];
@@ -15,8 +18,6 @@ class Phenotype {
         chr_chrs = new int[0];
         chr_peaks = new float[0];
         thresholds = new float[][] { { 1.5, 3.0 } };
-        //Aupper = Xupper = 3.0;
-        //Alower = Xlower = 1.5;
         useDefaults = useXDefaults = true;
     }
 }
@@ -25,6 +26,9 @@ class Range {
     float upper, lower;
 }
 
+/**
+* Parent_File class: stores Phenotypes, represents a set of files loaded by the user
+*/
 class Parent_File extends ArrayList<Phenotype> {
     String name;
     boolean useModelThresholds = false;
@@ -47,13 +51,23 @@ class Parent_File extends ArrayList<Phenotype> {
     }
     
     void update() {
-        if (! useModelThresholds) return;
+        if (! useModelThresholds) {
+            return;
+        }
+        
         for (int i = 0; i < size(); i++) {
             Phenotype p = remove(i);
             p.thresholds = data;
             p.useDefaults = p.useXDefaults = true;
-            if (data.length > 0) p.useDefaults = false;
-            if (data.length > 1) p.useXDefaults = false;
+            
+            if (data.length > 0) {
+                p.useDefaults = false;
+            }
+            
+            if (data.length > 1) {
+                p.useXDefaults = false;
+            }
+            
             add(p);
         }
     }

@@ -1,3 +1,6 @@
+/**
+* The Page class represents a page in a UIHorizontalFolder or UITabFolder.
+*/
 class UIPage extends UIComponentContainer {
     
     String title;
@@ -27,10 +30,7 @@ class UIPage extends UIComponentContainer {
     
     void updateComponents() {
         for (int i = 0; i < size(); i++) {
-            //pushMatrix();
-            //translate(width * pindex, 0, 0);
             ((UIComponent)this.get(i)).update();
-            //popMatrix();
         }
     }
     

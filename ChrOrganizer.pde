@@ -1,3 +1,8 @@
+/**
+* ChrOrganizer class: organizes peak ranges so that they fit in the ChrDisplay efficiently.
+*
+* Unfortunately, any model seems to have similar ranges for each chromosome, so there is not usually a more efficient way.
+*/
 class ChrOrganizer {
     int[] colors, layers;
     Range[] ranges;
@@ -32,39 +37,87 @@ class ChrOrganizer {
     
     void organize() {
         boolean sorted = false;
+        
         for (int i = 1; i < peaks.length; i++) {
             if (peaks[i] < peaks[i-1]) {
-                float t1 = peaks[i]; Range t2 = ranges[i]; color t3 = colors[i]; Point t4 = uppers[i]; float t5 = heights[i]; float t6 = peakYs[i];
-                peaks[i] = peaks[i-1]; ranges[i] = ranges[i-1]; colors[i] = colors[i-1]; uppers[i] = uppers[i-1]; heights[i] = heights[i-1]; peakYs[i] = peakYs[i-1];
-                peaks[i-1] = t1; ranges[i-1] = t2; colors[i-1] = t3; uppers[i-1] = t4; heights[i-1] = t5; peakYs[i-1] = t6;
+                float t1 = peaks[i]; // temp vars
+                Range t2 = ranges[i]; 
+                color t3 = colors[i]; 
+                Point t4 = uppers[i]; 
+                float t5 = heights[i]; 
+                float t6 = peakYs[i];
+                peaks[i] = peaks[i-1]; 
+                ranges[i] = ranges[i-1]; 
+                colors[i] = colors[i-1]; 
+                uppers[i] = uppers[i-1]; 
+                heights[i] = heights[i-1]; 
+                peakYs[i] = peakYs[i-1];
+                peaks[i-1] = t1; 
+                ranges[i-1] = t2; 
+                colors[i-1] = t3; 
+                uppers[i-1] = t4; 
+                heights[i-1] = t5; 
+                peakYs[i-1] = t6;
+                
                 sorted = false;
-            } else sorted = true;
-            if (!sorted) i = 0;
+            } else {
+                sorted = true;
+            }
+            
+            if (!sorted) {
+                i = 0; // start back at index 1
+            }
         }
+        
         layers = new int[0];
-        if (peaks.length == 0) return;
         layers = append(layers, 0);
+        
+        if (peaks.length == 0) {
+            return;
+        }
+        
+        
         for (int i = 1; i < peaks.length; i++) {
             boolean canFit = false;
+            
             for (int j = 0; j < layers.length; j++) {
-                if (ranges[i].lower > ranges[j].upper || ranges[i].upper < ranges[j].lower) {
+                if (ranges[i].lower > ranges[j].upper || ranges[i].upper < ranges[j].lower) { // range i can fit either above or below range j
                     canFit = true;
-                    for (int k = j+1; k < layers.length; k++) {
-                        if (layers[k] != layers[j]) continue;
-                        if (ranges[i].lower > ranges[k].upper || ranges[i].upper < ranges[k].lower)
+                    
+                    for (int k = j + 1; k < layers.length; k++) { // look through the rest of the layers
+                        if (layers[k] != layers[j]) {
+                            continue;
+                        }
+                        
+                        if (ranges[i].lower > ranges[k].upper || ranges[i].upper < ranges[k].lower) {
                             canFit = true;
-                        else { canFit = false; break; }
-                    } if (canFit) {
+                        } else {
+                            canFit = false;
+                            break;
+                        }
+                    }
+                    
+                    if (canFit) {
                         layers = append(layers, layers[j]);
                         break;
                     }
                 }
             }
-            if (!canFit) layers = append(layers, max(layers)+1);
+            
+            if (!canFit) {
+                layers = append(layers, max(layers) + 1); // add a new layer to accomodate the range
+            }
         }
     }
 }
 
+/**
+* Updates the legend for a ChrDisplay.
+*
+* @param display the ChrDisplay on which to draw the legend
+* @param names a String array containing the names of the phenotypes
+* @param colors an int array containing the colors of the phenotypes
+*/
 void updateLegend(ChrDisplay display, String[] names, int[] colors) {
     if (mouseX > display.legendX && mouseX < display.legendX + display.legendW && mouseY > display.legendY && mouseY < display.legendY + display.legendH && display.active) {
         display.legendBorder += (display.legendBorder < 0xFF) ? frameRate/5.0 : 0;
@@ -135,6 +188,11 @@ void updateLegend(ChrDisplay display, String[] names, int[] colors) {
     }
 }
 
+/**
+* Draws the blank chromosomes on a ChrDisplay
+*
+* @param display the ChrDisplay on which to draw chromosomes
+*/
 void drawChromosomes(ChrDisplay display) {
     for (int i = 0; i < chrLengths.length; i++) {
         strokeWeight(1);

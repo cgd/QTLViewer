@@ -27,22 +27,31 @@ String getModifiedPath(String path) {
     return modifiedPath;
 }
 
+/**
+* Associates threshold data with a phenotype.
+*
+* @param currentPhenotype the Phenotype object to add data to.
+* @param thresholdData the data from readThresholds
+* @return true or false, whether or not the operation was successful
+*/
 boolean addThresholdData(Phenotype currentPhenotype, ArrayList<HashMap<String, float[]>> thresholdData) {
     try {
         currentPhenotype.thresholds = new float[1][0];
-        float[] th = thresholdData.get(0).get(currentPhenotype.name);
+        float[] threshArray = thresholdData.get(0).get(currentPhenotype.name);
         
-        for (float thf : th) {
-            currentPhenotype.thresholds[0] = append(currentPhenotype.thresholds[0], thf);
+        for (float threshValue : threshArray) {
+            currentPhenotype.thresholds[0] = append(currentPhenotype.thresholds[0], threshValue);
         }
         
         if (thresholdData.size() > 1) {
-            float[] thx = thresholdData.get(1).get(currentPhenotype.name);
+            float[] threshXArray = thresholdData.get(1).get(currentPhenotype.name);
             if (thresholdData.get(1).get(currentPhenotype.name) != null) {
                 currentPhenotype.thresholds = (float[][])append(currentPhenotype.thresholds, new float[0]);
-                for (float thf : thx) {
-                    currentPhenotype.thresholds[1] = append(currentPhenotype.thresholds[1], thf);
+                
+                for (float threshXValue : threshXArray) {
+                    currentPhenotype.thresholds[1] = append(currentPhenotype.thresholds[1], threshXValue);
                 }
+                
                 currentPhenotype.useXDefaults = false;
             }
         } else {
@@ -55,9 +64,18 @@ boolean addThresholdData(Phenotype currentPhenotype, ArrayList<HashMap<String, f
         println(error.getLocalizedMessage());
         return false;
     }
+    
     return true;
 }
 
+/**
+* Associates threshold data with a phenotype.
+*
+* @param currentPhenotype the Phenotype object to add data to.
+* @param csvThresh the CSV data from readCSV
+* @param alphaCol the index of the alpha column
+* @return true or false, whether or not the operation was successful
+*/
 boolean addThresholdData(Phenotype currentPhenotype, String[][] csvThresh, int alphaCol) {
     try {
         String mark = (alphaCol >= 0) ? csvThresh[1][alphaCol] : "";
@@ -101,6 +119,13 @@ boolean addThresholdData(Phenotype currentPhenotype, String[][] csvThresh, int a
     return true;
 }
 
+/**
+* Associates threshold data with a phenotype.
+*
+* @param currentPhenotype the Phenotype object to add data to.
+* @param threshCSVFile the InputStreamReader representing the CSV file
+* @return true or false, whether or not the operation was successful
+*/
 boolean addThreshCSVFile(Phenotype currentPhenotype, InputStreamReader threshCSVFile) {
     try {
         String[][] csvData = readCSV(threshCSVFile);
@@ -126,6 +151,13 @@ boolean addThreshCSVFile(Phenotype currentPhenotype, InputStreamReader threshCSV
     return true;
 }
 
+/**
+* Associates peak data with a phenotype.
+*
+* @param currentPhenotype the Phenotype object to add data to.
+* @param values the float matrix of peak ranges
+* @return true or false, whether or not the operation was successful
+*/
 void addPeakData(Phenotype currentPhenotype, float[][] values) {
     for (int j = 0; j < values.length; j++) {
         if (values[j].length == 0) {
@@ -141,6 +173,13 @@ void addPeakData(Phenotype currentPhenotype, float[][] values) {
     }
 }
 
+/**
+* Associates peak data with a phenotype.
+*
+* @param currentPhenotype the Phenotype object to add data to.
+* @param csvData the data from readCSV
+* @return true or false, whether or not the operation was successful
+*/
 boolean addPeakData(Phenotype currentPhenotype, String[][] csvData) {
     try {
         for (int j = 1; j < csvData.length; j++) {
@@ -161,6 +200,13 @@ boolean addPeakData(Phenotype currentPhenotype, String[][] csvData) {
     return true;
 }
 
+/**
+* Associates peak data with a phenotype.
+*
+* @param currentPhenotype the Phenotype object to add data to.
+* @param peakCSVFile the InputStreamReader to read CSV data from
+* @return true or false, whether or not the operation was successful
+*/
 boolean addPeakCSVFile(Phenotype currentPhenotype, InputStreamReader peakCSVFile) {
     try {
         String[][] csvData = readCSV(peakCSVFile);

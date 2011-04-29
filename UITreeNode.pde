@@ -4,6 +4,7 @@ class UITreeNode extends UIComponent {
     ArrayList<Boolean> c_expanded;
     color drawcolor = 0x00;
     ArrayList<UITreeNode> items;
+    
     UITreeNode(String t) {
         super();
         title = t;
@@ -21,20 +22,28 @@ class UITreeNode extends UIComponent {
     }
     
     void add(int i, UITreeNode o) {
-        if (hasChildren) c_expanded.add(i, Boolean.FALSE);
+        if (hasChildren) {
+            c_expanded.add(i, Boolean.FALSE);
+        }
+        
         if (o instanceof UITreeNode) {
             UITreeNode newnode = (UITreeNode)o;
             String oldname = newnode.title;
             boolean jmp = false;
             int iter = 1;
-            while (!jmp) {
+            
+            while (!jmp) { // append (num) to the name if one with that name already exists
                 jmp = true;
-                for (int j = 0; j < size(); j++)
+                for (int j = 0; j < size(); j++) {
                     if (get(j).title.equalsIgnoreCase(newnode.title)) {
                         jmp = false;
                         break;
                     }
-                if (!jmp) newnode.title = oldname + "("+(iter++)+")";
+                }
+                
+                if (!jmp) {
+                    newnode.title = oldname + "("+(iter++)+")";
+                }
             }
             items.add(i, newnode);
         }
@@ -42,20 +51,28 @@ class UITreeNode extends UIComponent {
     }
     
     boolean add(UITreeNode o) {
-        if (hasChildren) c_expanded.add(Boolean.FALSE);
+        if (hasChildren) {
+            c_expanded.add(Boolean.FALSE);
+        }
+        
         if (o instanceof UITreeNode) {
             UITreeNode newnode = (UITreeNode)o;
             String oldname = newnode.title;
             boolean jmp = false;
             int iter = 1;
+            
             while (!jmp) {
                 jmp = true;
-                for (int i = 0; i < size(); i++)
+                for (int i = 0; i < size(); i++) {
                     if (get(i).title.equalsIgnoreCase(newnode.title)) {
                         jmp = false;
                         break;
                     }
-                if (!jmp) newnode.title = oldname + "("+(iter++)+")";
+                }
+                
+                if (!jmp) {
+                    newnode.title = oldname + "("+(iter++)+")";
+                }
             }
             return items.add(newnode);
         }
@@ -63,7 +80,10 @@ class UITreeNode extends UIComponent {
     }
     
     UITreeNode remove(int i) {
-        if (hasChildren) c_expanded.remove(i);
+        if (hasChildren) {
+            c_expanded.remove(i);
+        }
+        
         return items.remove(i);
     }
     
