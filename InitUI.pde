@@ -18,14 +18,20 @@ void initMenuBar() {
     MenuItem openFolderItem = new MenuItem("Open Folder...", new MenuShortcut(KeyEvent.VK_O, true));
     openFolderItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
+            if (exiting) {
+                return;
+            }
+            
             loadFolder();
         }
     });
     MenuItem loadConfigItem = new MenuItem("Load config...", new MenuShortcut(KeyEvent.VK_E));
     loadConfigItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if(exiting) return;
+            if(exiting) {
+                return;
+            }
+            
             loadConfig();
         }
     });
@@ -36,40 +42,54 @@ void initMenuBar() {
     fileMenu.add(loadConfigItem);
     
     Menu viewMenu = new Menu("View");
-    MenuItem menuup = new MenuItem("Show Menu", new MenuShortcut(KeyEvent.VK_UP, true));
+    MenuItem menuup = new MenuItem("Show Menu", new MenuShortcut(KeyEvent.VK_UP));
     menuup.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
+            if (exiting) {
+                return;
+            }
+            
             menuTargetY = -100.0;
             tabs.focus = false;
         }
     });
-    MenuItem menudown = new MenuItem("Hide Menu", new MenuShortcut(KeyEvent.VK_DOWN, true));
+    MenuItem menudown = new MenuItem("Hide Menu", new MenuShortcut(KeyEvent.VK_DOWN));
     menudown.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
+            if (exiting) {
+                return;
+            }
             menuTargetY = 0.0;
             tabs.focus = true;
         }
     });
-    MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(KeyEvent.VK_PERIOD));
+    MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(KeyEvent.VK_RIGHT));
     nextchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
+            if (exiting) {
+                return;
+            }
+            
             loddisplay.nextChr();
         }
     });
-    MenuItem prevchr = new MenuItem("Previous Chromosome", new MenuShortcut(KeyEvent.VK_COMMA));
+    MenuItem prevchr = new MenuItem("Previous Chromosome", new MenuShortcut(KeyEvent.VK_LEFT));
     prevchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
+            if (exiting) {
+                return;
+            }
+            
             loddisplay.prevChr();
         }
     });
     MenuItem showall = new MenuItem("Show All", new MenuShortcut(KeyEvent.VK_BACK_SPACE));
     showall.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) return;
+            if (exiting) {
+                return;
+            }
+            
             loddisplay.allChr();
         }
     });
@@ -123,6 +143,20 @@ void initConstants() {
     }
     
     chrNames[chrLengths.length-1] = "X";
+    
+    try {
+        MouseMapParser mouseMapParser = new MouseMapParser();
+        
+        BufferedReader bufferedReader = new BufferedReader(
+            new InputStreamReader(createInput("average_SNP.txt")));
+                
+        unitConverter = mouseMapParser.parseMouseMap(
+            MouseMapType.SEX_AVERAGED_MAP,
+            bufferedReader);
+    } catch (IOException error) {
+        println("ERROR:");
+        println(error.getLocalizedMessage());
+    }
 }
 
 void initMenu() {

@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JColorChooser;
+import org.jax.mousemap.*;
+import org.jax.mousemap.MouseMap.*;
+import org.jax.util.datastructure.SequenceUtilities;
 
 boolean exiting = false;
 float menuY, menuTargetY;
@@ -30,6 +33,7 @@ UITabFolder tabs;
 UIButton loadcfg;
 LODDisplay loddisplay;
 int chrColumns = 7;
+MouseMap unitConverter;
 
 void setup() {
   
@@ -48,15 +52,23 @@ void setup() {
     initMenu();
     
     // set up exit prompt, fonts
-    yes = new UIButton((width/2.0)-40, (height/2.0)-24, "Yes", new UIAction() {
-        public void doAction() { exit(); }
+    yes = new UIButton((width/2.0) - 40, (height/2.0) - 24, "Yes", new UIAction() {
+        public void doAction() {
+            exit();
+        }
     });
-    no = new UIButton((width/2.0)+8, (height/2.0)-24, "No", new UIAction() { public void doAction() { exiting = false; } } );
+    
+    no = new UIButton((width/2.0) + 8, (height/2.0) - 24, "No", new UIAction() {
+        public void doAction() {
+            exiting = false;
+         }
+    });
+    
     large = createFont("Arial", 32, true);
     textFont(large, 32);
     
     parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
-    fileTree = new UITree(10, 10, 315, height-20, new UIListener() { // remove file
+    fileTree = new UITree(10, 10, 315, height - 20, new UIListener() { // remove file
         public int eventHeard(int i, int j) {
             parentFiles.remove(i);
             return i;
@@ -280,12 +292,26 @@ void loadFile(String path) {
             ((UITreeNode)fileTree.last()).add(new UITreeNode(data[0][i].trim()));
             Phenotype currentPhenotype = new Phenotype(data[0][i]);
             
+            boolean useBP = false;
+            
+            if (float(data[1][2]) > 2000) { // cM should be less than this, bP _should_ be more
+                useBP = true;
+            }
+                
+            
             // load LOD scores
             for (int j = 1; j < data.length; j++) {
                 if (data[j].length-1 >= i) {
                     currentPhenotype.lodscores = append(currentPhenotype.lodscores, float(data[j][i]));
-                    currentPhenotype.position = append(currentPhenotype.position, float(data[j][2]));
-                    currentPhenotype.chromosome = append(currentPhenotype.chromosome, getChr(data[j][1]));
+                    int posChr = getChr(data[j][1]);
+                    
+                    if (useBP) {
+                        currentPhenotype.position = append(currentPhenotype.position, (float)unitConverter.basePairsToCentimorgans(posChr, (long)Double.parseDouble(data[j][2])));
+                    } else {
+                        currentPhenotype.position = append(currentPhenotype.position, float(data[j][2]));
+                    }
+                    
+                    currentPhenotype.chromosome = append(currentPhenotype.chromosome, posChr);
                 }
             }
             
@@ -332,6 +358,7 @@ void loadFile(String path) {
         println("EXCEPTION:");
         println(error.getLocalizedMessage());
     }
+    
     parent.update();
     
 }
@@ -350,10 +377,14 @@ void loadFolder() {
     System.setProperty("apple.awt.fileDialogForDirectories", "true"); // how would anyone ever know to do this??
     folderPrompt.setVisible(true);
     System.setProperty("apple.awt.fileDialogForDirectories", "false");
-    if (folderPrompt.getDirectory() != null && folderPrompt.getFile() != null && new File(folderPrompt.getDirectory() + folderPrompt.getFile()).isDirectory())
-        for (String path : new File(folderPrompt.getDirectory() + folderPrompt.getFile()).list())
-            if (path.toLowerCase().endsWith(".lod.csv") && !(new File(folderPrompt.getDirectory() + folderPrompt.getFile() + "/" + path).isDirectory()))
+    
+    if (folderPrompt.getDirectory() != null && folderPrompt.getFile() != null && new File(folderPrompt.getDirectory() + folderPrompt.getFile()).isDirectory()) {
+        for (String path : new File(folderPrompt.getDirectory() + folderPrompt.getFile()).list()) {
+            if (path.toLowerCase().endsWith(".lod.csv") && !(new File(folderPrompt.getDirectory() + folderPrompt.getFile() + "/" + path).isDirectory())) {
                 loadFile(folderPrompt.getDirectory() + folderPrompt.getFile() + "/" + path);
+            }
+        }
+    }
                 
 }
 
