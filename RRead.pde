@@ -42,12 +42,20 @@ public HashMap<String, float[][]> readPeaks(InputStreamReader threshFileReader) 
         
         while (i < total.length && total[i] != '\n') {
             String text1 = "";
-            while (i < total.length && total[i++] != '\n') text1 += total[i];
+            
+            while (i < total.length && total[i++] != '\n') {
+                text1 += total[i];
+            }
+            
             String[] cols = splitNoDupes(text1);
             values[getChr(cols[1]) - 1] = new float[3];
             
             for (int j = 0; j < 3; j++) {
-                values[getChr(cols[1]) - 1][j] = float(cols[j + 2]);
+                if (float(cols[j + 2]) > unitThreshold) {
+                    values[getChr(cols[1]) - 1][j] = (float)unitConverter.basePairsToCentimorgans(getChr(cols[1]), Long.parseLong(cols[j + 2]));
+                } else {
+                    values[getChr(cols[1]) - 1][j] = float(cols[j + 2]);
+                }
             }
         }
         data.put(label, values);
@@ -135,12 +143,17 @@ ArrayList<HashMap<String, float[]>> getThresholdData(InputStreamReader pathInput
         HashMap<String, float[]> h = threshData.get(i);
         Iterator it = h.keySet().iterator();
         String[] tnames = new String[0];
-        while (it.hasNext()) tnames = (String[])append(tnames, it.next());
+        
+        while (it.hasNext()) {
+            tnames = (String[])append(tnames, it.next());
+        }
+        
         if (tnames.length == 1 && names.length > 1) {
             String n = tnames[0];
             parent.useModelThresholds = true;
             float[] th = threshData.get(0).get("*");
             parent.data[0] = th;
+            
             if (threshData.size() > 1) {
                 parent.data = (float[][])append(parent.data, new float[0]);
                 float[] thx = threshData.get(1).get("*");

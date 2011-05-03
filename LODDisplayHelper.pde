@@ -20,7 +20,7 @@ int lastChr() {
 }
 
 /**
-* Stores tha max LOD score and max position from the base
+* Stores the max LOD score and max position from the base
 *
 * @param display the LODDisplay object
 */

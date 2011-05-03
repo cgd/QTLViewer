@@ -33,5 +33,7 @@ class UIRadioGroup extends UIComponent {
         }
     }
     
-    int size() { return titles.length; }
+    int size() {
+        return titles.length;
+    }
 }

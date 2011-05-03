@@ -51,14 +51,26 @@ class LODDisplay extends UIComponent {
         if (current_chr == -1) {
             for (int i = 0; i < chrLengths.length; i++) {
                 float pos = map(chrOffsets[i] + (chrLengths[i]/2.0), 0.0, chrTotal, 0.0, cWidth);
-                text(chrNames[i], x + pos-(textWidth(chrNames[i])/2.0), (y + cHeight) - 14);
+                text(chrNames[i], x + pos - (textWidth(chrNames[i])/2.0), (y + cHeight) - 14);
                 line(x + pos, (y + cHeight) - 50, x + pos, (y + cHeight) - 34);
             }
         } else {
             for (int i = 1; i <= 4; i++) {
                 int value = round((i*ceil(maxOffset))/4.0);
                 float x_off = map(value, 0.0, ceil(maxOffset), 0.0, cWidth);
-                text(str(value) + ((i == 1) ? "cM" : ""), x + x_off-(textWidth(str(value) + ((i == 1) ? "cM" : ""))/2.0), (y + cHeight) - 14);
+                String valueText = str(value), unit = "cM";
+                
+                if (unitSelect.selected == 1) {
+                    unit = "bP";
+                    valueText = str(Math.round(unitConverter.centimorgansToBasePairs(current_chr + 1, (double)value)/10000.0)*10000.0);
+                }
+                
+                if (x + x_off + (textWidth(valueText + ((i == 1) ? unit : ""))/2.0) > x + cWidth) {
+                    text(valueText + ((i == 1) ? unit : ""), x + 16.0 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + cHeight) - 14);
+                } else {
+                    text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : ""))/2.0), (y + cHeight) - 14);
+                }
+                
                 line(x + x_off, (y + cHeight) - 50, x + x_off, (y + cHeight) - 34);
             }
         } 
@@ -116,7 +128,9 @@ class LODDisplay extends UIComponent {
                 if (currentPhenotype.useDefaults) {
                     currentPhenotype.thresholds[0][0] = autoLower;
                     currentPhenotype.thresholds[0][1] = autoUpper;
-                } if (currentPhenotype.useXDefaults && currentPhenotype.thresholds.length > 1) {
+                }
+                
+                if (currentPhenotype.useXDefaults && currentPhenotype.thresholds.length > 1) {
                     currentPhenotype.thresholds[1][0] = autoLower;
                     currentPhenotype.thresholds[1][1] = autoUpper;
                 }

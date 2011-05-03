@@ -107,6 +107,8 @@ void initMenuBar() {
 }
 
 void initConstants() {
+    unitThreshold = 2000;
+    
     // init chr position information, all stored as centimorgans
     chrLengths = new float[20];
     chrNames = new String[chrLengths.length]; // human-readable representations of chromosomes (e.g. "X"->chr 20)

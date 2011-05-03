@@ -164,7 +164,7 @@ void addPeakData(Phenotype currentPhenotype, float[][] values) {
             continue;
         }
         
-        currentPhenotype.chr_chrs = append(currentPhenotype.chr_chrs, j+1);
+        currentPhenotype.chr_chrs = append(currentPhenotype.chr_chrs, j + 1);
         currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, values[j][0]);
         Range r = new Range();
         r.upper = values[j][2];
@@ -183,18 +183,30 @@ void addPeakData(Phenotype currentPhenotype, float[][] values) {
 boolean addPeakData(Phenotype currentPhenotype, String[][] csvData) {
     try {
         for (int j = 1; j < csvData.length; j++) {
+            if (csvData[j].length <= 1) {
+                continue;
+            }
             if (csvData[j][0].startsWith(currentPhenotype.name)) {
-                currentPhenotype.chr_chrs = (int[])append(currentPhenotype.chr_chrs, getChr(csvData[j][1]));
-                currentPhenotype.chr_peaks = (float[])append(currentPhenotype.chr_peaks, csvData[j][2]);
+                currentPhenotype.chr_chrs = append(currentPhenotype.chr_chrs, getChr(csvData[j][1]));
                 Range r = new Range();
-                r.lower = float(csvData[j][3]);
-                r.upper = float(csvData[j][4]);
+
+                if (float(csvData[j][2]) > unitThreshold) {
+                     currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, (float)unitConverter.basePairsToCentimorgans(getChr(csvData[j][1]), Long.parseLong(csvData[j][2])));
+                     r.lower = (float)unitConverter.basePairsToCentimorgans(getChr(csvData[j][1]), Long.parseLong(csvData[j][3]));
+                     r.upper = (float)unitConverter.basePairsToCentimorgans(getChr(csvData[j][1]), Long.parseLong(csvData[j][4]));
+                } else {
+                    currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, float(csvData[j][2]));
+                    r.lower = float(csvData[j][3]);
+                    r.upper = float(csvData[j][4]);
+                }
+                
                 currentPhenotype.bayesintrange = (Range[])append(currentPhenotype.bayesintrange, r);
             }
         }
     } catch (Exception error) {
         println("EXCEPTION:");
         println(error.getLocalizedMessage());
+        error.printStackTrace();
         return false;
     }
     return true;
@@ -216,12 +228,21 @@ boolean addPeakCSVFile(Phenotype currentPhenotype, InputStreamReader peakCSVFile
             }
             
             currentPhenotype.chr_chrs = append(currentPhenotype.chr_chrs, getChr(csvData[j][1]));
-            currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, float(csvData[j][2]));
             String range = csvData[j][6];
             Range r = new Range();
-            r.upper = float(range.split("-")[1].trim());
-            r.lower = float(range.split("-")[0].trim());
-            currentPhenotype.bayesintrange = (Range[])append(currentPhenotype.bayesintrange, r);
+            String rangeUpper = range.split("-")[1].trim();
+            String rangeLower = range.split("-")[0].trim();
+            
+            if (float(csvData[j][2]) > unitThreshold) {
+                currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, (float)unitConverter.basePairsToCentimorgans(getChr(csvData[j][1]), Long.parseLong(csvData[j][2])));
+                 r.lower = (float)unitConverter.basePairsToCentimorgans(getChr(csvData[j][1]), Long.parseLong(rangeLower));
+                 r.upper = (float)unitConverter.basePairsToCentimorgans(getChr(csvData[j][1]), Long.parseLong(rangeUpper));
+            } else {
+                currentPhenotype.chr_peaks = append(currentPhenotype.chr_peaks, float(csvData[j][2]));
+                r.upper = float(rangeUpper);
+                r.lower = float(rangeLower);
+                currentPhenotype.bayesintrange = (Range[])append(currentPhenotype.bayesintrange, r);
+            }
         }
     } catch (Exception error) {
         println("EXCEPTION:");

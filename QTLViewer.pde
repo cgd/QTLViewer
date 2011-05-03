@@ -34,6 +34,7 @@ UIButton loadcfg;
 LODDisplay loddisplay;
 int chrColumns = 7;
 MouseMap unitConverter;
+int unitThreshold;
 
 void setup() {
   
@@ -91,7 +92,6 @@ void setup() {
 }
 
 void draw() {
-  
     background(0xAA);
     
     // see module UpdateUI for update* methods
@@ -255,19 +255,23 @@ void loadFile(String path) {
         ArrayList<HashMap<String, float[]>> thresholdData = new ArrayList<HashMap<String, float[]>>();
         String[][] csvPeaks = new String[0][0], csvThresh = new String[0][0];
         int alphaCol = -1;
+        
         if (new File(modifiedPath + ".peaks.txt").exists()) {
             FileReader peaksFileReader = new FileReader(modifiedPath + ".peaks.txt");
             chrData = readPeaks(peaksFileReader);
             peaksFileReader.close();
             Iterator it = chrData.keySet().iterator();
+            
             while (it.hasNext()) {
                 names = (String[])append(names, it.next());
             }
         } else if (new File(modifiedPath + ".peaks.csv").exists()) {
-            FileReader peaksCSVReader = new FileReader(modifiedPath + ".peaks.csv");
-            chrData = readPeaks(peaksCSVReader);
-            peaksCSVReader.close();
-        } if (new File(modifiedPath + ".thresh.txt").exists()) {
+            InputStreamReader csvFile = new InputStreamReader(new FileInputStream(modifiedPath + ".peaks.csv"));
+            csvPeaks = readCSV(csvFile);
+            csvFile.close();
+        }
+        
+        if (new File(modifiedPath + ".thresh.txt").exists()) {
             FileReader threshFileReader = new FileReader(modifiedPath + ".thresh.txt");
             thresholdData = getThresholdData(threshFileReader, names, parent);
             threshFileReader.close();
@@ -283,6 +287,7 @@ void loadFile(String path) {
             for (int i = 3; i < data[0].length; i++) {
                 names = (String[])append(names, data[0][i].trim());
             }
+            
             FileReader threshFileReader = new FileReader(modifiedPath + ".thresh.txt");
             thresholdData = getThresholdData(threshFileReader, names, parent);
             threshFileReader.close();
@@ -294,7 +299,7 @@ void loadFile(String path) {
             
             boolean useBP = false;
             
-            if (float(data[1][2]) > 2000) { // cM should be less than this, bP _should_ be more
+            if (float(data[1][2]) > unitThreshold) { // cM should be less than this, bP _should_ be more
                 useBP = true;
             }
                 
