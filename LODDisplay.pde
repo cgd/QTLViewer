@@ -154,17 +154,6 @@ class LODDisplay extends UIComponent {
                         endX = map(chrOffsets[xNum], 0.0, chrTotal, x, (x + cWidth));
                     }
                     
-                    for (float xp = x; xp < endX - 10; xp += 20.0) {
-                      
-                        if (currentPhenotype.thresholds[0][1] <= tempMaxLod) {
-                            line(xp, (y + cHeight) - 50 - y_offU, xp + 10.0, (y + cHeight) - 50 - y_offU);
-                        }
-                        
-                        if (currentPhenotype.thresholds[0][0] <= tempMaxLod) {
-                            line(xp, (y + cHeight) - 50 - y_offL, xp + 10.0, (y + cHeight) - 50 - y_offL);
-                        }
-                    }
-                    
                     if ((currentPhenotype.thresholds.length > 1 && !thresholdsEqual(currentPhenotype.thresholds)) || currentPhenotype.thresholds.length > 0) {
                         drawThresholdLabelsX(this, currentPhenotype, endX, tempMaxLod);
                     } else {
@@ -179,6 +168,22 @@ class LODDisplay extends UIComponent {
                         if (((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0]) <= tempMaxLod) {
                             line(xp, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0, xp + 10.0, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0);
                         }
+                    }
+                                            
+                    float upperThresh = (current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1];
+                    float upperOffset = (current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXU : y_offU;
+                    float lowerThresh = (current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0];
+                    float lowerOffset = (current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL;
+                    
+                    float roundedUpper = round(upperThresh*100)/100.0;
+                    float roundedLower = round(lowerThresh*100)/100.0;
+                    
+                    if (upperThresh < tempMaxLod) {
+                        text("a=" + roundedUpper, (x + cWidth) - textWidth("a=" + roundedUpper), (y + cHeight) - upperOffset - 54.0);
+                    }
+                    
+                    if (lowerThresh < tempMaxLod) {
+                        text("a=" + roundedLower, (x + cWidth) - textWidth("a=" + roundedLower), (y + cHeight) - lowerOffset - 54.0);
                     }
                 }
                 

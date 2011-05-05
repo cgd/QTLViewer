@@ -110,15 +110,24 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
     float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
     
     if (currentPhenotype.thresholds.length > 1) {
-        for (float i = endX; i < (display.x + display.cWidth) - 10; i += 20.0) {
-                              
+        for (float i = endX; i < (display.x + display.cWidth) - 10; i += 20.0) {                 
             if (currentPhenotype.thresholds[1][0] <= tempMaxLod) {
-                line(i, (display.y +display. cHeight) - 50 - y_offXL, i + 10.0, (display.y + display.cHeight) - 50 - y_offXL);
+                line(i, (display.y + display. cHeight) - 50 - y_offXL, i + 10.0, (display.y + display.cHeight) - 50 - y_offXL);
             }
             
             if (currentPhenotype.thresholds[1][1] <= tempMaxLod) {
                 line(i, (display.y + display.cHeight) - 50 - y_offXU, i + 10.0, (display.y + display.cHeight) - 50 - y_offXU);
             }
+        }
+    }
+    
+    for (float xp = display.x; xp < endX - 10; xp += 20.0) {           
+        if (currentPhenotype.thresholds[0][1] <= tempMaxLod) {
+            line(xp, (display.y + display.cHeight) - 50 - y_offU, xp + 10.0, (display.y + display.cHeight) - 50 - y_offU);
+        }
+        
+        if (currentPhenotype.thresholds[0][0] <= tempMaxLod) {
+            line(xp, (display.y + display.cHeight) - 50 - y_offL, xp + 10.0, (display.y + display.cHeight) - 50 - y_offL);
         }
     }
                         
