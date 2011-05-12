@@ -15,8 +15,6 @@ void updateMenu() {
         unitSelect.focus = !exiting;
         loadcfg.focus = !exiting;
         loadcfg.active = !exiting;
-        //upperDefault.active = true);
-        //lowerDefault.active = true);
     } else { // menu is hidden
         texts.active = false;
         texts.focus = false;
@@ -24,22 +22,28 @@ void updateMenu() {
         unitSelect.focus = false;
         loadcfg.focus = false;
         loadcfg.active = false;
-        //upperDefault.active = false;
-        //lowerDefault.active = false;
     }
     
-    translate(0.0, (float)menuY, 0);
+    translate(0.0, menuY, 0);
     menuY += (menuTargetY - menuY) * velocity; // this moves the menu up or down in a non-linear way
-    if (abs((float)(menuTargetY - menuY)) < 0.25)
+    
+    if (abs(menuTargetY - menuY) < 0.25) {
         menuY = menuTargetY;
+    }
 
-    // draw the menu outline, taking cues from the sine function
+    // draw the menu outline
     beginShape();
-    for (int i = 0; i < 20; i+=2)
+    
+    for (int i = 0; i < 20; i+=2) {
         vertex(i+10, (-sin((i*HALF_PI)/20.0)*20.0)+height);
+    }
+    
     vertex(75, height-20);
-    for (int i = 20; i >= 0; i -= 2)
+    
+    for (int i = 20; i >= 0; i -= 2) {
         vertex(95-i, (-sin((abs(i)*HALF_PI)/20.0)*20.0)+height);
+    }
+    
     vertex(width-10, height);
     vertex(width-10, height+100);
     vertex(10, height+100);
@@ -49,14 +53,10 @@ void updateMenu() {
     // update, draw menu components
     fill(0xFF);
     popMatrix();
-    //upperDefault.y = (height+menuY)+10);
-    //lowerDefault.y = (height+menuY)+36);
     ((UIComponent)texts.get(0)).y = (height+menuY)+10;
     ((UIComponent)texts.get(1)).y = (height+menuY)+36;
     unitSelect.y = height+menuY+10;
     loadcfg.y = height+menuY+10;
-    //upperDefault.update();
-    //lowerDefault.update();
     texts.update();
     unitSelect.update();
     loadcfg.update();
@@ -64,14 +64,20 @@ void updateMenu() {
 
 void updateViewArea() {
     // expand/contract fileTree view area
-    if (Math.abs(tabs.x - tabsXTarget) < 0.1) tabs.x = tabsXTarget;
+    if (Math.abs(tabs.x - tabsXTarget) < 0.1) {
+        tabs.x = tabsXTarget;
+    }
+    
     fileTree.cWidth -= (tabs.x - tabsXTarget) * velocity;
     tabs.x -= (tabs.x - tabsXTarget) * velocity;
     ((LODDisplay)tabs.get(0).get(0)).x = tabs.x + 65;
     ((LODDisplay)tabs.get(0).get(0)).cWidth = -35;
     ((ChrDisplay)tabs.get(1).get(0)).x = tabs.x + 25;
     ((ChrDisplay)tabs.get(1).get(0)).cWidth = -35;
-    if (tabs.x != tabsXTarget) ((ChrDisplay)tabs.get(1).get(0)).update = true; // update the ChrDisplay if its width has changed
+    
+    if (tabs.x != tabsXTarget) {
+        ((ChrDisplay)tabs.get(1).get(0)).update = true; // update the ChrDisplay if its width has changed
+    }
     
     // draw triangle for view select
     fill(0x55);
@@ -81,12 +87,12 @@ void updateViewArea() {
     
     noStroke();
     pushMatrix();
-    translate((float)tabs.x - 6, height / 2.0);
-    rotate(PI * (float)((tabs.x - 110.0) / (335.0 - 110.0)));
+    translate(tabs.x - 6, height/2.0);
+    rotate(PI * (tabs.x - 110.0)/(335.0 - 110.0));
     beginShape();
     vertex(3.0, 0);
-    vertex(-3.0, -(3.0 / cos(PI / 6.0)));
-    vertex(-3.0, (3.0 / cos(PI / 6.0)));
+    vertex(-3.0, -(3.0/cos(PI/6.0)));
+    vertex(-3.0, (3.0/cos(PI/6.0)));
     endShape();
     popMatrix();
     

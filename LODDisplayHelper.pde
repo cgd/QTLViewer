@@ -241,8 +241,7 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
                     (display.y + display.cHeight) - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50.0);
             }
         } catch (ArrayIndexOutOfBoundsException error) {
-            println("EXCEPTION:");
-            println(error.getLocalizedMessage());
+            error.printStackTrace();
         }
     }
 }

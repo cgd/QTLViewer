@@ -207,8 +207,9 @@ void openFile() {
     FileDialog fd = new FileDialog((Frame)null, "Select .lod.csv file...", FileDialog.LOAD); // annoying work-around; selectInput was hanging
     fd.setVisible(true); // http://code.google.com/p/processing/issues/detail?id=445
     path = fd.getDirectory() + fd.getFile();
-    if (fd.getDirectory() != null && fd.getFile() != null) // ^^ details
+    if (fd.getDirectory() != null && fd.getFile() != null) {// ^^ details
         loadFile(path);
+    }
     // </OPTION 1>
     
     // <OPTION 2> (works on lab desktop):
@@ -241,9 +242,8 @@ void loadFile(String path) {
     try {
         autoLower = float(((UITextInput)texts.get(0)).getText());
         autoUpper = float(((UITextInput)texts.get(1)).getText());
-    } catch (Exception error3) {
-        println("EXCEPTION:");
-        println(error3.getLocalizedMessage());
+    } catch (Exception error) {
+        error.printStackTrace();
     }
     
     try {
@@ -360,8 +360,7 @@ void loadFile(String path) {
         parentFiles.add(parent);
     } catch (Exception error) {
         fileTree.remove(fileTree.size() - 1);
-        println("EXCEPTION:");
-        println(error.getLocalizedMessage());
+        error.printStackTrace();
     }
     
     parent.update();
@@ -406,8 +405,67 @@ float getButtonWidth(String text) {
     
 }
 
+/**
+* This method loads a configuration file in the Java Properties (java.util.Properties) format.
+* The key "chromosome_list" contains a comma-separated list of chromosome numbers
+* The other keys are:
+*   chromosome_c -- name
+*   chromosome_c_length -- length in cM or bp
+*   chromosome_c_centromere -- position of the centromere in cM or bp
+* where c is a chromosome number
+*/
 void loadConfig() {
-    
+    FileDialog fd = new FileDialog((Frame)null, "Select config file...", FileDialog.LOAD);
+    fd.setVisible(true);
+    if (fd.getDirectory() != null && fd.getFile() != null) {
+        try {
+            FileInputStream inputConfig = new FileInputStream(fd.getDirectory() + fd.getFile());
+            
+            Properties configFile = new Properties();
+            configFile.load(inputConfig);
+            String[] chrNumbers = ((String)configFile.get("chromosome_list")).split(",");
+            
+            // prepare arrays to be loaded with new data
+            chrLengths = new float[0];
+            chrNames = new String[0];
+            chrMarkerpos = new float[0];
+            chrOffsets = new float[0];
+            chrTotal = 0.0;
+
+            // update the arrays
+            for (String number : chrNumbers) {
+                chrNames = append(chrNames, (String)configFile.get("chromosome_" + number.trim()));
+                String newLength = (String)configFile.get("chromosome_" + number.trim() + "_length");
+                String newPos = (String)configFile.get("chromosome_" + number.trim() + "_centromere");
+                
+                if (float(newLength) > unitThreshold) {
+                    chrLengths = append(chrLengths, (float)unitConverter.basePairsToCentimorgans(int(number.trim()), Long.parseLong(newLength)));
+                } else {
+                    chrLengths = append(chrLengths, float(newLength));
+                }
+                
+                if (float(newPos) > unitThreshold) {
+                    chrMarkerpos = append(chrMarkerpos, (float)unitConverter.basePairsToCentimorgans(int(number.trim()), Long.parseLong(newPos)));
+                } else {
+                    chrMarkerpos = append(chrMarkerpos, float(newPos)); 
+                }
+            }
+            
+            chrOffsets = new float[chrLengths.length];
+            chrTotal = chrLengths[0];
+            
+            // recalculate the offsets and total length (see initConstants in the InitUI module)
+            for (int i = 1; i < chrLengths.length; i++) {
+                chrOffsets[i] = chrOffsets[i-1] + chrLengths[i-1];
+                chrTotal += chrLengths[i];
+            }
+
+            inputConfig.close();
+        } catch (Exception error) {
+            initConstants(); // reload the old settings if the above fails
+            error.printStackTrace();
+        }
+    }
 }
 
 /**

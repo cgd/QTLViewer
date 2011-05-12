@@ -91,9 +91,8 @@ class LODDisplay extends UIComponent {
         try { // attempt to use user-specified default thresholds
             autoLower = float(((UITextInput)texts.get(0)).getText());
             autoUpper = float(((UITextInput)texts.get(1)).getText());
-        } catch (Exception error3) {
-            println("EXCEPTION:");
-            println(error3.getLocalizedMessage());
+        } catch (Exception error) {
+            error.printStackTrace();
         }
         
         fill(0xAA);

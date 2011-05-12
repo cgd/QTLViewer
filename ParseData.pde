@@ -60,8 +60,7 @@ boolean addThresholdData(Phenotype currentPhenotype, ArrayList<HashMap<String, f
         
         currentPhenotype.useDefaults = false;
     } catch (Exception error) {
-        println("EXCEPTION:");
-        println(error.getLocalizedMessage());
+        error.printStackTrace();
         return false;
     }
     
@@ -112,8 +111,7 @@ boolean addThresholdData(Phenotype currentPhenotype, String[][] csvThresh, int a
         
         currentPhenotype.useDefaults = false;
     } catch (Exception error) {
-        println("EXCEPTION:");
-        println(error.getLocalizedMessage());
+        error.printStackTrace();
         return false;
     }
     return true;
@@ -144,8 +142,7 @@ boolean addThreshCSVFile(Phenotype currentPhenotype, InputStreamReader threshCSV
         
         currentPhenotype.useDefaults = false;
     } catch (Exception error) {
-        println("EXCEPTION:");
-        println(error.getLocalizedMessage());
+        error.printStackTrace();
         return false;
     }
     return true;
@@ -204,8 +201,6 @@ boolean addPeakData(Phenotype currentPhenotype, String[][] csvData) {
             }
         }
     } catch (Exception error) {
-        println("EXCEPTION:");
-        println(error.getLocalizedMessage());
         error.printStackTrace();
         return false;
     }
@@ -245,8 +240,7 @@ boolean addPeakCSVFile(Phenotype currentPhenotype, InputStreamReader peakCSVFile
             }
         }
     } catch (Exception error) {
-        println("EXCEPTION:");
-        println(error.getLocalizedMessage());
+        error.printStackTrace();
         return false;
     }
     return true;

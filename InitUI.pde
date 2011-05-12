@@ -113,7 +113,7 @@ void initConstants() {
     chrLengths = new float[20];
     chrNames = new String[chrLengths.length]; // human-readable representations of chromosomes (e.g. "X"->chr 20)
     chrOffsets = new float[chrLengths.length]; // chromosome offset from beginning of genome
-    chrMarkerpos = new float[chrLengths.length]; // marker positions, used in chromsome display
+    chrMarkerpos = new float[chrLengths.length]; // centromere positions, used in chromsome display
     chrLengths[0] = 112.0;
     chrLengths[1] = 114.0;
     chrLengths[2] = 95.0;
@@ -156,8 +156,7 @@ void initConstants() {
             MouseMapType.SEX_AVERAGED_MAP,
             bufferedReader);
     } catch (IOException error) {
-        println("ERROR:");
-        println(error.getLocalizedMessage());
+        error.printStackTrace();
     }
 }
 
@@ -174,6 +173,10 @@ void initMenu() {
     
     loadcfg = new UIButton(425, height, "Load config", new UIAction() {
         public void doAction() {
+            if (exiting) {
+                return;
+            }
+            
             loadConfig();
         }
     });
@@ -181,6 +184,7 @@ void initMenu() {
     texts = new UIContainer();
     texts.add(lowerDefault);
     texts.add(upperDefault);
+    texts.add(loadcfg);
     
     menuY = menuTargetY = 0.0;
 }
