@@ -195,7 +195,10 @@ class LODDisplay extends UIComponent {
         
         if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH && active) {
             legendA += (legendA < 0xFF) ? frameRate/5.0 : 0;
-            if (legendA > 0xFF) legendA = 0xFF;
+            if (legendA > 0xFF) {
+                legendA = 0xFF;
+            }
+            
             if (dragReady && mousePressed && mouseButton == LEFT) {
                 dragging = true;
                 if (legendOffsetX == -1 || legendOffsetY == -1) {
@@ -205,25 +208,28 @@ class LODDisplay extends UIComponent {
             }
         } else {
             legendA -= (legendA > 0x00) ? frameRate/5.0 : 0;
-            if (legendA < 0x00) legendA = 0x00;
-        } 
+            
+            if (legendA < 0x00) {
+                legendA = 0x00;
+            }
+        }
         
         if (dragging) {
             legendX = mouseX - legendOffsetX;
             legendY = mouseY - legendOffsetY;
-            
-            if (legendX < x) {
-                legendX = x;
-            } else if (legendX > (x + cWidth) - legendW) {
-                legendX = (x + cWidth)-legendW;
-            }
-            
-            if (legendY < y) {
-                legendY = y;
-            } else if (legendY > (y + cHeight) - legendH) {
-                legendY = (y + cHeight)-legendH;
-            }
         } 
+        
+        if (legendX < x) {
+            legendX = x;
+        } else if (legendX > (x + cWidth) - legendW) {
+            legendX = (x + cWidth) - legendW;
+        }
+                
+        if (legendY < y) {
+            legendY = y;
+        } else if (legendY > (y + cHeight) - legendH) {
+            legendY = (y + cHeight) - legendH;
+        }
         
         if (!mousePressed || mouseButton != LEFT || !active) {
             legendOffsetX = legendOffsetY = -1;

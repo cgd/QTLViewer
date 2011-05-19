@@ -144,18 +144,18 @@ void updateLegend(ChrDisplay display, String[] names, int[] colors) {
     if (display.dragging) {
         display.legendX = mouseX - display.legendOffsetX;
         display.legendY = mouseY - display.legendOffsetY;
-        
-        if (display.legendX < display.x) {
-            display.legendX = display.x;
-        } else if (display.legendX > (display.x + display.cWidth) - display.legendW) {
-            display.legendX = (display.x + display.cWidth) - display.legendW;
-        }
-        
-        if (display.legendY < display.y) {
-            display.legendY = display.y;
-        } else if (display.legendY > (display.y + display.cHeight) - display.legendH) {
-            display.legendY = (display.y + display.cHeight) - display.legendH;
-        }
+    }
+    
+    if (display.legendX < display.x) {
+        display.legendX = display.x;
+    } else if (display.legendX > (display.x + display.cWidth) - display.legendW) {
+        display.legendX = (display.x + display.cWidth) - display.legendW;
+    }
+    
+    if (display.legendY < display.y) {
+        display.legendY = display.y;
+    } else if (display.legendY > (display.y + display.cHeight) - display.legendH) {
+        display.legendY = (display.y + display.cHeight) - display.legendH;
     }
     
     if (!mousePressed || mouseButton != LEFT || !display.active) {
