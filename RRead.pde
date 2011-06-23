@@ -193,9 +193,9 @@ String[][] getThresholdData(InputStreamReader threshFileReader, Parent_File pare
                     parent.data = (float[][])append(parent.data, new float[0]);
                 }
                 
-                parent.data[1] = (float[])append(parent.data, float(csvThresh[i][2]));
+                parent.data[1] = (float[])append(parent.data[1], float(csvThresh[i][2]));
             } else {
-                parent.data[0] = (float[])append(parent.data, float(csvThresh[i][2]));
+                parent.data[0] = (float[])append(parent.data[0], float(csvThresh[i][2]));
             }
         }
         
