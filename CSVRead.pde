@@ -15,7 +15,7 @@ String[][] readCSV(InputStreamReader reader) throws IOException, Exception {
 * @return the matrix (two-dimensional array) of table entries in the file
 */
 String[][] readCSV(InputStreamReader reader, char delim) throws IOException, Exception {
-    char[] cbuf = new char[10], total = new char[0];
+    char[] cbuf = new char[2048], total = new char[0];
     int readLen, oldLen;
     String[][] returnData = new String[1][0]; // String matrix to be returned
     boolean inQuotes = false; // whether or not a quoted entry is being parsed

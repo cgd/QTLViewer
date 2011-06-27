@@ -10,7 +10,7 @@
 */
 public HashMap<String, float[][]> readPeaks(InputStreamReader threshFileReader) throws IOException, Exception {
     HashMap<String, float[][]> data = new HashMap<String, float[][]>();
-    char[] cbuf = new char[10], total = new char[0];
+    char[] cbuf = new char[2048], total = new char[0];
     int len, oldLen;
     
     while ((len = threshFileReader.read(cbuf, 0, cbuf.length)) != -1) {
@@ -73,7 +73,7 @@ public HashMap<String, float[][]> readPeaks(InputStreamReader threshFileReader) 
 */
 public ArrayList<HashMap<String, float[]>> readThresholds(InputStreamReader threshFileReader, String[] phenos) throws IOException, Exception {
     ArrayList<HashMap<String, float[]>> data = new ArrayList<HashMap<String, float[]>>();
-    char[] cbuf = new char[10], total = new char[0];
+    char[] cbuf = new char[2048], total = new char[0];
     int len, oldLen;
     
     while ((len = threshFileReader.read(cbuf, 0, cbuf.length)) != -1) {
