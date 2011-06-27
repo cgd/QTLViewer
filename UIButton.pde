@@ -44,7 +44,7 @@ class UIButton extends UIComponent {
     }
     
     void keyAction(char k, int c, int mods) {
-        if ((key == ENTER || key == RETURN) && active && focus) {
+        if ((k == ENTER || k == RETURN) && active && focus) {
             action.doAction();
         }
     }

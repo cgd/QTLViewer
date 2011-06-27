@@ -78,9 +78,9 @@ class UITextInput extends UIComponent {
     
     void keyAction(char c, int i, int j) {
         if (active && focus && c != CODED) {
-            if (key == BACKSPACE && data.length() > 0) {
+            if (c == BACKSPACE && data.length() > 0) {
                 data = data.substring(0, data.length()-1);
-            } else if (key != ESC && key != DELETE && key != RETURN && key != ENTER) {
+            } else if (c != ESC && c != DELETE && c != RETURN && c != ENTER) {
                 data += c;
             }
         }
