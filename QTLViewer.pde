@@ -18,23 +18,36 @@ import org.jax.mousemap.MouseMap.*;
 import org.jax.util.datastructure.SequenceUtilities;
 
 boolean exiting = false;
-float menuY, menuTargetY;
+boolean dragReady = true, dragging = false;
+
+int chrColumns = 7;
+int unitThreshold;
+
 long lastFrame = 0;
-UIButton yes, no;
-PFont large, buttonfont = createFont("Arial", 16, true);
-UITree fileTree;
-ArrayList<Parent_File> parentFiles;
-float[] chrLengths, chrOffsets, chrMarkerpos;
-String[] chrNames;
+
+float menuY, menuTargetY;
+float legendOffsetX = -1, legendOffsetY = -1, legendBorder = 0x00;
+float legendX, legendY, legendW, legendH;
 float chrTotal, maxLod = -1.0, velocity = 0.1, tabsXTarget = 335.0;
+float[] chrLengths, chrOffsets, chrMarkerpos;
+
+String[] chrNames;
+
+ArrayList<Parent_File> parentFiles;
+
+PFont legendFont = createFont("Arial", 16, true);
+PFont large, buttonfont = createFont("Arial", 16, true);
+
+UITree fileTree;
 UIContainer texts;
 UIRadioGroup unitSelect;
 UITabFolder tabs;
+UIButton yes, no;
 UIButton loadcfg;
 LODDisplay loddisplay;
-int chrColumns = 7;
+ChrDisplay chrdisplay;
+
 MouseMap unitConverter;
-int unitThreshold;
 
 void setup() {
   
@@ -66,7 +79,7 @@ void setup() {
     });
     
     large = createFont("Arial", 32, true);
-    textFont(large, 32);
+    textFont(large);
     
     parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
     fileTree = new UITree(10, 10, 315, height - 20, new UIListener() { // remove file
@@ -87,8 +100,10 @@ void setup() {
     String[] titles = {"LOD Score view", "Chromosome view"};
     tabs = new UITabFolder(335, 30, 10, 10, titles);
     tabs.addComponent(loddisplay = new LODDisplay(400, 40, -35, -25), 0, 0);
-    tabs.addComponent(new ChrDisplay(360, 40, -35, -25), 1, 0);
+    tabs.addComponent(chrdisplay = new ChrDisplay(360, 40, -35, -25), 1, 0);
     
+    legendX = width - 400.0;
+    legendY = 250.0;
 }
 
 void draw() {
@@ -98,6 +113,8 @@ void draw() {
     updateViewArea();
     
     updateMenu();
+    
+    updateLegend();
     
     // display exit prompt, buttons if appropriate
     if (exiting) {
@@ -111,7 +128,7 @@ void draw() {
         yes.update();
         textFont(large);
         fill(0xCC);
-        text("Exit?", (width/2.0)-textWidth("Exit?")/2.0, (height/2.0)-32.0);
+        text("Exit?", (width - textWidth("Exit?")) / 2.0, (height / 2.0) - 32.0);
     } else {
         yes.active = false;
         yes.active = false;
@@ -146,19 +163,21 @@ void keyReleased() {
 }
 
 void mousePressed() {
-  
-    if (mouseX > 10 && mouseX < 95 && mouseY < menuY + height && mouseY > menuY + height - 20 && !exiting) {
+    if (mouseX > 10 && mouseX < 95 && mouseY < menuY + height && mouseY > menuY + height - 20 && !exiting && !dragging) {
         menuTargetY = (menuY == 0.0) ? -100.0 : 0.0;
         tabs.focus = (menuY == 0.0);
     }
     
-    if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
-        if (tabsXTarget == 110) tabsXTarget = 335;
-        else tabsXTarget = 110;
+    if (!exiting && !dragging && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
+        if (tabsXTarget == 110) {
+            tabsXTarget = 335;
+        } else {
+            tabsXTarget = 110;
+        }
     } else if (exiting) {
         yes.mouseAction();
         no.mouseAction();
-    } else if (mouseY < height+menuTargetY) {
+    } else if (mouseY < height + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
         tabs.mouseAction();
     } else {
         texts.mouseAction();
@@ -167,7 +186,7 @@ void mousePressed() {
 }
 
 void mouseMoved() {
-    if (! exiting) {
+    if (!exiting && !dragging) {
         tabs.mouseAction();
         texts.mouseAction();
     } else {
@@ -177,7 +196,7 @@ void mouseMoved() {
 }
 
 void mouseReleased() {
-    if (! exiting) {
+    if (!exiting && !dragging) {
         tabs.mouseAction();
         texts.mouseAction();
     } else {
@@ -232,7 +251,6 @@ void loadFile(String path) {
     }
     
     String pathName = path.split("/")[path.split("/").length - 1];
-    // see module FileIO
     String modifiedPath = getModifiedPath(path);
     
     fileTree.add(new UITreeNode(pathName, true));

@@ -6,16 +6,13 @@
 
 class LODDisplay extends UIComponent {
   
-    boolean dragReady = true, dragging = false, chr_ready = true;
-    float legendX, legendY, legendW, legendH;
-    PFont font = createFont("Arial", 24, true), legendFont = createFont("Arial", 16, true), smallFont = createFont("Arial", 12, true);
-    float legendOffsetX = -1, legendOffsetY = -1, legendA = 0x00, maxOffset = -1.0;
+    boolean chr_ready = true;
+    PFont font = createFont("Arial", 24, true), smallFont = createFont("Arial", 12, true);
+    float maxOffset = -1.0;
     int current_chr = -1;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
         super(newX, newY, newWidth, newHeight);
-        legendX = width - 400.0;
-        legendY = 250.0;
     }
     
     void update() {
@@ -192,84 +189,18 @@ class LODDisplay extends UIComponent {
                 drawLODCurve(this, currentPhenotype, tempMaxLod);
             }
         }
-        
-        if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH && active) {
-            legendA += (legendA < 0xFF) ? frameRate/5.0 : 0;
-            if (legendA > 0xFF) {
-                legendA = 0xFF;
-            }
-            
-            if (dragReady && mousePressed && mouseButton == LEFT) {
-                dragging = true;
-                if (legendOffsetX == -1 || legendOffsetY == -1) {
-                    legendOffsetX = mouseX - legendX;
-                    legendOffsetY = mouseY - legendY; 
-                }
-            }
-        } else {
-            legendA -= (legendA > 0x00) ? frameRate/5.0 : 0;
-            
-            if (legendA < 0x00) {
-                legendA = 0x00;
-            }
-        }
-        
-        if (dragging) {
-            legendX = mouseX - legendOffsetX;
-            legendY = mouseY - legendOffsetY;
-        } 
-        
-        if (legendX < x) {
-            legendX = x;
-        } else if (legendX > (x + cWidth) - legendW) {
-            legendX = (x + cWidth) - legendW;
-        }
-                
-        if (legendY < y) {
-            legendY = y;
-        } else if (legendY > (y + cHeight) - legendH) {
-            legendY = (y + cHeight) - legendH;
-        }
-        
-        if (!mousePressed || mouseButton != LEFT || !active) {
-            legendOffsetX = legendOffsetY = -1;
-            dragging = false;
-        }
-        
-        fill(0x00, 0x2A);
-        stroke(0x00, legendA);
-        rect(legendX, legendY, (legendW = maxLen + 18), (legendH = (names.length*16) + 4));
-        stroke(0x00);
-        textFont(legendFont);
-        
-        for (int i = 0; i < names.length; i++) {
-            fill(colors[i]);
-            rect(legendX + 4.0, legendY + ((i + 1)*16) - 11, 10, 10);
-            fill(0x00);
-            text(names[i], legendX + 16.0, legendY + ((i + 1)*16));
-        }
-        
-        dragReady = !(mousePressed && mouseButton == LEFT) && active;
-        
-        if (mouseX > x && mouseY > y && mouseX < cWidth - 50 && mouseY < height-100 && active) {
-            chr_ready = (!mousePressed || mouseButton != LEFT);
-        } else {
-            chr_ready = !(mousePressed && mouseButton == LEFT && active && dragging);
-        }
     }
     
     void mouseAction() {
-        if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH) {
-            return;
-        } else if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && !dragging && chr_ready && current_chr == -1) {
-                for (int i = 0; i < chrOffsets.length; i++) {
-                    if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
-                        if (i == chrOffsets.length - 1) {
-                            current_chr = i;
-                        } else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
-                            current_chr = i;
-                        }
+        if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
+            for (int i = 0; i < chrOffsets.length; i++) {
+                if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
+                    if (i == chrOffsets.length - 1) {
+                        current_chr = i;
+                    } else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
+                        current_chr = i;
                     }
+                }
              }
         }
     }

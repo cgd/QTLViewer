@@ -104,3 +104,104 @@ void updateViewArea() {
     fileTree.active = !exiting && menuTargetY == 0.0;
     fileTree.update();
 }
+
+/**
+* Updates the legend for a ChrDisplay.
+*
+* @param display the ChrDisplay on which to draw the legend
+* @param names a String array containing the names of the phenotypes
+* @param colors an int array containing the colors of the phenotypes
+*/
+void updateLegend() {
+    textFont(legendFont);
+    
+    String[] names = new String[0];
+    int[] colors = new int[0];
+    float maxLen = -1.0;
+    
+    for (int i = 0; i < fileTree.size(); i++) {
+        for (int j = 0; j < fileTree.get(i).size(); j++) {
+            if (fileTree.get(i).get(j).checked) {
+                names = (String[])append(names, fileTree.get(i).get(j).title);
+                
+                if (textWidth(fileTree.get(i).get(j).title) > maxLen) {
+                    maxLen = textWidth(fileTree.get(i).get(j).title);
+                }
+                
+                colors = append(colors, fileTree.get(i).get(j).drawcolor);
+            }
+        }
+    }
+    
+    if (names.length == 0 || colors.length == 0) {
+        return;
+    }
+    
+    if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH && !exiting) {
+        legendBorder += (legendBorder < 0xFF) ? frameRate / 5.0 : 0;
+                
+        if (legendBorder > 0xFF) {
+            legendBorder = 0xFF;
+        }
+        
+        if (dragReady && mousePressed && mouseButton == LEFT) {
+            dragging = true;
+            if (legendOffsetX == -1 || legendOffsetY == -1) {
+                legendOffsetX = mouseX - legendX;
+                legendOffsetY = mouseY - legendY;
+            }
+        }
+    } else {
+        legendBorder -= (legendBorder > 0x00) ? frameRate/5.0 : 0;
+        
+        if (legendBorder < 0x00) {
+            legendBorder = 0x00;
+        }
+    }
+    
+    if (dragging) {
+        legendX = mouseX - legendOffsetX;
+        legendY = mouseY - legendOffsetY;
+    }
+    
+    if (legendX < tabs.x) {
+        legendX = tabs.x;
+    } else if (legendX > (tabs.x + tabs.cWidth) - legendW) {
+        legendX = (tabs.x + tabs.cWidth) - legendW;
+    }
+    
+    if (legendY < tabs.y) {
+        legendY = tabs.y;
+    } else if (legendY > (tabs.y + tabs.cHeight) - legendH) {
+        legendY = (tabs.y + tabs.cHeight) - legendH;
+    }
+    
+    if (!mousePressed || mouseButton != LEFT) {
+        legendOffsetX = legendOffsetY = -1;
+        dragging = false;
+    }
+    
+    fill(0x00, 0x2A);
+    stroke(0x00, legendBorder);
+    rect(legendX, legendY, (legendW = maxLen + 18), (legendH = (names.length * 16) + 4));
+    stroke(0x00);
+    
+    for (int i = 0; i < names.length; i++) {
+        fill(colors[i]);
+        rect(legendX + 4, legendY+((i + 1) * 16) - 11, 10, 10);
+        fill(0x00);
+        text(names[i], legendX + 16, legendY + ((i + 1) * 16));
+    }
+    
+    if (mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH) {
+        dragReady = (!mousePressed || mouseButton != LEFT);
+    } else {
+        dragReady = !(mousePressed && mouseButton == LEFT);
+    }
+    
+    if (mouseX > tabs.x && mouseY > tabs.y && mouseX < width - 50 && mouseY < height - 100) {
+        loddisplay.chr_ready = chrdisplay.chr_ready = (!mousePressed || mouseButton != LEFT);
+    } else {
+        loddisplay.chr_ready = chrdisplay.chr_ready = !(mousePressed && mouseButton == LEFT && dragging);
+    }
+}

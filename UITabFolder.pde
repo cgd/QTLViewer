@@ -11,6 +11,8 @@ class UITabFolder extends UIComponent {
         y = newY;
         xLowerMargin = newxLowerMargin;
         yLowerMargin = newyLowerMargin;
+        cWidth = width - xLowerMargin - x;
+        cHeight = height - yLowerMargin - y;
         sfont = createFont("Arial", 16, true);
         pages = new ArrayList<UIPage>();
         

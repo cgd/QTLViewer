@@ -3,18 +3,15 @@
 */
 class ChrDisplay extends UIComponent {
   
-    boolean dragReady = true, dragging = false, chr_ready = true, update = false;
-    float legendX, legendY, legendW, legendH;
-    PFont legendFont = createFont("Arial", 16, true), normFont = createFont("Arial", 12, true);
-    float legendOffsetX = -1, legendOffsetY = -1, legendBorder = 0x00, maxOffset = -1.0, chromosomeWidth, chromosomeHeight, multiplier;
+    boolean chr_ready = true, update = false;
+    PFont normFont = createFont("Arial", 12, true);
+    float maxOffset = -1.0, chromosomeWidth, chromosomeHeight, multiplier;
     float maxLen = -1.0;
     
     ChrOrganizer[] chrs = new ChrOrganizer[chrLengths.length];
     
     public ChrDisplay(float newX, float newY, float newWidth, float newHeight) {
         super(newX, newY, newWidth, newHeight);
-        legendX = width-400.0;
-        legendY = 400.0;
         
         for (int i = 0; i < chrs.length; i++) {
             chrs[i] = new ChrOrganizer();
@@ -45,9 +42,6 @@ class ChrDisplay extends UIComponent {
         drawChromosomes(this);
         
         strokeWeight(1);
-        textFont(legendFont);
-        int[] colors = new int[0];
-        String[] names = new String[0];
         noStroke();
         fill(0x00);
         
@@ -64,13 +58,7 @@ class ChrDisplay extends UIComponent {
                 UITreeNode jTreeNode = ((UITreeNode)((UITreeNode)fileTree.get(i)).get(j));
                 
                 if (jTreeNode.checked) {
-                    names = append(names, currentPhenotype.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
-                    colors = append(colors, jTreeNode.drawcolor);
-                    
-                    if (textWidth(currentPhenotype.name+" ("+((UITreeNode)fileTree.get(i)).title+")") > maxLen) {
-                        maxLen = textWidth(currentPhenotype.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
-                    }
-                    
+                  
                     if (!update) {
                         continue;
                     }
@@ -122,17 +110,11 @@ class ChrDisplay extends UIComponent {
         }
         
         update = false;
-             
-        // manipulate the legend
-        if (names.length > 0 && colors.length > 0) {
-            updateLegend(this, names, colors);
-        }
     }
     
     void mouseAction() {
         // switch to LOD view if a chromosome is selected
-        if (mousePressed && mouseButton == LEFT && !dragging && chr_ready && mouseX > x && mouseX < (x + cWidth) && mouseY > y && mouseY < (y + cHeight)
-            && !(mouseX > legendX && mouseX < legendX + legendW && mouseY > legendY && mouseY < legendY + legendH)) {
+        if (mousePressed && mouseButton == LEFT && chr_ready && mouseX > x && mouseX < (x + cWidth) && mouseY > y && mouseY < (y + cHeight)) {
               
             if (floor((mouseX - x)/chromosomeWidth) + (chrColumns*floor((mouseY - y)/chromosomeHeight)) < chrLengths.length &&
                 floor((mouseX - x)/chromosomeWidth) + (chrColumns*floor((mouseY - y)/chromosomeHeight)) >= 0) {
