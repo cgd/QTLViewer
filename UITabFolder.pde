@@ -90,6 +90,9 @@ class UITabFolder extends UIComponent {
             xOff += 40.0 + textWidth(get(j).title);
         }
         
+        cWidth = width - xLowerMargin - x;
+        cHeight = height - yLowerMargin - y;
+        
         get(currentpage).update();
     }
     
