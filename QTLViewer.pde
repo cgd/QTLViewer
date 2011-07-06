@@ -49,8 +49,9 @@ ChrDisplay chrdisplay;
 
 MouseMap unitConverter;
 
+PGraphics icon;
+
 void setup() {
-  
     // set up base UI
     size(1100, 700, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
     smooth(); // enable Processing 2x AA
@@ -104,6 +105,28 @@ void setup() {
     
     legendX = width - 400.0;
     legendY = 250.0;
+    
+    int dim;
+    if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0)
+    {
+      dim = 128;
+    } else if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
+      dim = 32;
+    } else {
+      dim = 64;
+    }
+    
+    icon = createGraphics(dim, dim, JAVA2D);
+    icon.beginDraw();
+    icon.background(0x00, 0x55);
+    icon.smooth();
+    icon.textFont(createFont("Arial", dim / 2, true));
+    icon.fill(0xFF, 0x00, 0x00);
+    icon.text("QTL", 0, (dim / 2) + (dim / 8));
+    icon.textFont(createFont("Arial", dim / 4, true));
+    icon.text("VIEWER", 0, (dim / 2) + (dim / 8) + (dim / 4));
+    icon.endDraw();
+    frame.setIconImage(icon.image);
 }
 
 void draw() {
