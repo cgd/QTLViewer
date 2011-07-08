@@ -11,4 +11,11 @@ class KinectUser {
     PVector shoulder; // shoulder middle coords, used for hand depth
     long lefthandDown; // time held
     long righthandDown;
+    float leftvelocity;
+    float rightvelocity
+    
+    void update(PVector newleft, PVector newright, long lastFrame) {
+        float seconds = (System.currentTimeMillis() - lastFrame);
+        
+    }
 }

@@ -37,6 +37,7 @@ float[] chrLengths, chrOffsets, chrMarkerpos;
 String[] chrNames;
 
 ArrayList<Parent_File> parentFiles;
+ArrayList<KinectUser> users;
 
 PFont legendFont = createFont("Arial", 16, true);
 PFont large, buttonfont = createFont("Arial", 16, true);
