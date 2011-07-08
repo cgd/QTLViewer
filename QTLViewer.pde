@@ -8,6 +8,8 @@
 * @since 1.6
 */
 
+public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
+
 import processing.opengl.*;
 import java.util.ArrayList;
 import java.awt.*;
@@ -16,6 +18,7 @@ import javax.swing.JColorChooser;
 import org.jax.mousemap.*;
 import org.jax.mousemap.MouseMap.*;
 import org.jax.util.datastructure.SequenceUtilities;
+import SimpleOpenNI.*;
 
 boolean exiting = false;
 boolean dragReady = true, dragging = false;
@@ -51,11 +54,18 @@ MouseMap unitConverter;
 
 PGraphics icon;
 
+SimpleOpenNI context;
+
 void setup() {
     // set up base UI
-    size(1100, 700, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
+    if (ENABLE_KINECT) {
+         size(1100, 700); // SimpleOpenNI is apparently not compatible with OpenGL
+    } else {
+        size(1100, 700, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
+        hint(ENABLE_OPENGL_4X_SMOOTH); // enable OPENGL 4x AA
+    }
+    
     smooth(); // enable Processing 2x AA
-    hint(ENABLE_OPENGL_4X_SMOOTH); // enable OPENGL 4x AA
     frameRate(60);
     frame.setTitle("QTL Viewer");
     
@@ -65,6 +75,10 @@ void setup() {
     initConstants();
     
     initMenu();
+    
+    if (ENABLE_KINECT) {
+        initKinect();
+    }
     
     // set up exit prompt, fonts
     yes = new UIButton((width/2.0) - 40, (height/2.0) - 24, "Yes", new UIAction() {
