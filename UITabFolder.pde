@@ -13,7 +13,7 @@ class UITabFolder extends UIComponent {
         yLowerMargin = newyLowerMargin;
         cWidth = drawWidth - xLowerMargin - x;
         cHeight = drawHeight - yLowerMargin - y;
-        sfont = createFont("Arial", 16, true);
+        sfont = createFont("Arial", (ENABLE_KINECT) ? 24 : 16, true);
         pages = new ArrayList<UIPage>();
         
         for (int i = 0; i < titles.length; i++) {
@@ -59,16 +59,18 @@ class UITabFolder extends UIComponent {
                 c_tab = 0xFF;
             }
             
+            float tabHeight = (ENABLE_KINECT) ? 30.0 : 20.0;
+            
             fill(c_tab);
             beginShape();
             vertex(xOff + x, y);
             
             for (int i = 0; i < 20; i += 2) {
-                vertex(xOff + i + x, y + (-sin((i*HALF_PI)/20.0)*20.0));
+                vertex(xOff + i + x, y + (-sin((i * HALF_PI) / 20.0) * tabHeight));
             }
             
             for (int i = 20; i >= 0; i -= 2) {
-                vertex(xOff + 40.0 + x + textWidth(get(j).title) - i, y + (-sin((abs(i)*HALF_PI)/20.0)*20.0));
+                vertex(xOff + 40.0 + x + textWidth(get(j).title) - i, y + (-sin((abs(i) * HALF_PI) / 20.0) * tabHeight));
             }
             
             if (currentpage == j) {
