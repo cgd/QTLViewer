@@ -6,6 +6,8 @@ class KinectUser {
     int ID;
     PVector lefthand = null; // hand coords
     PVector righthand = null;
+    PVector plefthand; // previous hand coords
+    PVector prighthand;
     PVector CoM; // center of mass coords, used for hand depth
     long lefthandDown; // time held
     long righthandDown;
@@ -13,6 +15,11 @@ class KinectUser {
     float rightvelocity;
     float leftangle; // hand angle in degrees
     float rightangle;
+    PVector cursorPos;
+    
+    public KinectUser() {
+        cursorPos = new PVector(drawWidth / 2.0, drawHeight / 2.0);
+    }
     
     void update(PVector newleft, PVector newright, PVector newCoM) {
         float seconds = (System.currentTimeMillis() - lastTime) / 1000.0;
@@ -20,14 +27,25 @@ class KinectUser {
 
         if (lefthand != null) {
             leftvelocity = (float)dist(newleft.x, newleft.y, lefthand.x, lefthand.y) / seconds;
+            
+            if (plefthand != null) {
+            }
         }
-    
+        
+        plefthand = lefthand;
         lefthand = newleft;
         
         if (righthand != null) {
             rightvelocity = (float)dist(newright.x, newright.y, righthand.x, righthand.y) / seconds;
+            
+            if (prighthand != null && newCoM.z - righthand.z > 300) {
+                float coef = map(800 - (newCoM.z - righthand.z), 0, 500, 0.1, 2);
+                cursorPos.x += coef * (righthand.x - prighthand.x);
+                cursorPos.y += coef * (righthand.y - prighthand.y);
+            }
         }
         
+        prighthand = righthand;
         righthand = newright;
         
         rightangle = getAngle(newCoM, righthand);
@@ -47,8 +65,7 @@ class KinectUser {
         stroke(0x00);
         strokeWeight(1);
         ellipseMode(CENTER);
-        ellipse(righthand.x, righthand.y, 25.0, 25.0);
-        ellipse(lefthand.x, lefthand.y, 25.0, 25.0);
+        ellipse(cursorPos.x, cursorPos.y, 25.0, 25.0);
     }
     
     float getAngle(PVector center, PVector pt) {
