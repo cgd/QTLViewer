@@ -12,13 +12,13 @@ void initKinect() {
 }
 
 void updateKinect() {
-    noCursor();
+    // CHANGE THIS
+    //noCursor();
     
     context.update();
-    
-    float controlWidth = height * (4.0 / 3.0); // maintain source 4:3 ratio
-    float imgHeight = (width - controlWidth) / (4.0 / 3.0);
-    image(context.sceneImage(), controlWidth, height - imgHeight, width - controlWidth, height - imgHeight);
+
+    float imgHeight = (width - drawWidth) / (4.0 / 3.0);
+    image(context.sceneImage(), drawWidth, height - imgHeight, width - drawWidth, imgHeight);
 }
 
 // callbacks

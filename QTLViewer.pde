@@ -8,7 +8,7 @@
 * @since 1.6
 */
 
-public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
+public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ float menuY, menuTargetY;
 float legendOffsetX = -1, legendOffsetY = -1, legendBorder = 0x00;
 float legendX, legendY, legendW, legendH;
 float chrTotal, maxLod = -1.0, velocity = 0.1, tabsXTarget = 335.0;
+int drawWidth, drawHeight;
 float[] chrLengths, chrOffsets, chrMarkerpos;
 
 String[] chrNames;
@@ -60,9 +61,10 @@ SimpleOpenNI context;
 void setup() {
     // set up base UI
     if (ENABLE_KINECT) {
-         size(1100, 700); // SimpleOpenNI is apparently not compatible with OpenGL
+         size(screen.width, drawHeight = screen.height); // SimpleOpenNI is apparently not compatible with OpenGL
+         drawWidth = (int)((4.0 / 3.0) * drawHeight);
     } else {
-        size(1100, 700, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
+        size(drawWidth = 1100, drawHeight = 700, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
         hint(ENABLE_OPENGL_4X_SMOOTH); // enable OPENGL 4x AA
     }
     
@@ -82,13 +84,13 @@ void setup() {
     }
     
     // set up exit prompt, fonts
-    yes = new UIButton((width/2.0) - 40, (height/2.0) - 24, "Yes", new UIAction() {
+    yes = new UIButton((drawWidth / 2.0) - 40, (drawHeight / 2.0) - 24, "Yes", new UIAction() {
         public void doAction() {
             exit();
         }
     });
     
-    no = new UIButton((width/2.0) + 8, (height/2.0) - 24, "No", new UIAction() {
+    no = new UIButton((drawWidth / 2.0) + 8, (drawHeight / 2.0) - 24, "No", new UIAction() {
         public void doAction() {
             exiting = false;
          }
@@ -114,9 +116,9 @@ void setup() {
     
     // set up tab container
     String[] titles = {"LOD Score view", "Chromosome view"};
-    tabs = new UITabFolder(335, 30, 10, 10, titles);
-    tabs.addComponent(loddisplay = new LODDisplay(400, 40, -35, -25), 0, 0);
-    tabs.addComponent(chrdisplay = new ChrDisplay(360, 40, -35, -25), 1, 0);
+    tabs = new UITabFolder((!ENABLE_KINECT) ? 335 : 10, 30, 10, 10, titles);
+    tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, -35, -25), 0, 0);
+    tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), 1, 0);
     
     legendX = width - 400.0;
     legendY = 250.0;
@@ -147,6 +149,10 @@ void setup() {
 void draw() {
     background(0xAA);
     
+    if (ENABLE_KINECT) {
+        updateKinect();
+    }
+    
     // see module UpdateUI for update* methods
     updateViewArea();
     
@@ -158,7 +164,7 @@ void draw() {
     if (exiting) {
         noStroke();
         fill(0x00, 0x00, 0x00, 0xAA);
-        rect(0, 0, width, height);
+        rect(0, 0, drawWidth, drawHeight);
         no.focus = true;
         yes.active = true;
         no.active = true;
@@ -166,13 +172,12 @@ void draw() {
         yes.update();
         textFont(large);
         fill(0xCC);
-        text("Exit?", (width - textWidth("Exit?")) / 2.0, (height / 2.0) - 32.0);
+        text("Exit?", (drawWidth - textWidth("Exit?")) / 2.0, (drawHeight / 2.0) - 32.0);
     } else {
         yes.active = false;
         yes.active = false;
         no.active = false;
-    }
-    
+    } 
 }
 
 void keyPressed() { // most key events are handled by the MenuBar
@@ -206,7 +211,7 @@ void mousePressed() {
         tabs.focus = (menuY == 0.0);
     }
     
-    if (!exiting && !dragging && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
+    if (!ENABLE_KINECT && !exiting && !dragging && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
         if (tabsXTarget == 110) {
             tabsXTarget = 335;
         } else {

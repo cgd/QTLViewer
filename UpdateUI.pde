@@ -79,30 +79,38 @@ void updateViewArea() {
         ((ChrDisplay)tabs.get(1).get(0)).update = true; // update the ChrDisplay if its width has changed
     }
     
-    // draw triangle for view select
-    fill(0x55);
-    if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
-        fill(0x00);
+    if (!ENABLE_KINECT) {
+        // draw triangle for view select
+        fill(0x55);
+        if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
+            fill(0x00);
+        }
+        
+        noStroke();
+        pushMatrix();
+        translate(tabs.x - 6, height / 2.0);
+        rotate(PI * (tabs.x - 110.0) / (335.0 - 110.0));
+        beginShape();
+        vertex(3, 0);
+        vertex(-3, -(3.0 / cos(PI / 6.0)));
+        vertex(-3, (3.0 / cos(PI / 6.0)));
+        endShape();
+        popMatrix();
+    } else {
+        tabs.x = 10;
     }
-    
-    noStroke();
-    pushMatrix();
-    translate(tabs.x - 6, height / 2.0);
-    rotate(PI * (tabs.x - 110.0) / (335.0 - 110.0));
-    beginShape();
-    vertex(3, 0);
-    vertex(-3, -(3.0 / cos(PI / 6.0)));
-    vertex(-3, (3.0 / cos(PI / 6.0)));
-    endShape();
-    popMatrix();
     
     // update focus, activity settings based on whether or not the user is being prompted for exit
     tabs.focus = !exiting && menuTargetY == 0.0;
     tabs.active = !exiting && menuTargetY == 0.0;
     tabs.update();
-    fileTree.focus = !exiting && menuTargetY == 0.0;
-    fileTree.active = !exiting && menuTargetY == 0.0;
-    fileTree.update();
+    
+    if (!ENABLE_KINECT) {
+        fileTree.focus = !exiting && menuTargetY == 0.0;
+        fileTree.active = !exiting && menuTargetY == 0.0;
+        
+        fileTree.update();
+    }
 }
 
 /**

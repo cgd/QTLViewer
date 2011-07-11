@@ -20,16 +20,16 @@ class ChrDisplay extends UIComponent {
     
     void update() {
         if (cWidth <= 0.0) {
-            cWidth = (width - x) + cWidth;
+            cWidth = (drawWidth - x) + cWidth;
         }
         
         if (cHeight <= 0.0) {
-            cHeight = (height - y) + cHeight;
+            cHeight = (drawHeight - y) + cHeight;
         }
         
-        chromosomeWidth = cWidth/chrColumns;
-        chromosomeHeight = cHeight/ceil(chrLengths.length/(float)chrColumns);
-        multiplier = (chromosomeHeight - 24.0)/max(chrLengths);
+        chromosomeWidth = cWidth / chrColumns;
+        chromosomeHeight = cHeight / ceil(chrLengths.length / (float)chrColumns);
+        multiplier = (chromosomeHeight - 24) / max(chrLengths);
         update = (update || fileTree.hasUpdated());
         
         stroke(0x00);

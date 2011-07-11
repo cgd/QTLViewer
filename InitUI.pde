@@ -209,7 +209,7 @@ void initMouseWheelListener() {
                 }
             }
             
-            if ((mouseX < tabsXTarget || loddisplay.current_chr == -1 || tabs.currentpage != 0) && e.getModifiers() == 1 && !exiting) {
+            if ((mouseX < tabsXTarget || loddisplay.current_chr == -1 || tabs.currentpage != 0) && e.getModifiers() == 1 && !exiting && !ENABLE_KINECT) {
                 if (e.getWheelRotation() < 0) {
                   tabsXTarget = 110; // X coordinate
                 } else if (e.getWheelRotation() > 0) {

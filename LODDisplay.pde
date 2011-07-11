@@ -17,11 +17,11 @@ class LODDisplay extends UIComponent {
     
     void update() {
         if (cWidth <= 0.0) {
-            cWidth = (width - x) + cWidth;
+            cWidth = (drawWidth - x) + cWidth;
         }
         
         if (cHeight <= 0.0) {
-            cHeight = (height - y) + cHeight;
+            cHeight = (drawHeight - y) + cHeight;
         }
         
         findMax(this);
@@ -194,10 +194,10 @@ class LODDisplay extends UIComponent {
     void mouseAction() {
         if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
             for (int i = 0; i < chrOffsets.length; i++) {
-                if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
+                if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, drawWidth - 50 - x) + x) {
                     if (i == chrOffsets.length - 1) {
                         current_chr = i;
-                    } else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, width - 50 - x) + x) {
+                    } else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, drawWidth - 50 - x) + x) {
                         current_chr = i;
                     }
                 }

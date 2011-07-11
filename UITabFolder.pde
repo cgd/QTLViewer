@@ -11,8 +11,8 @@ class UITabFolder extends UIComponent {
         y = newY;
         xLowerMargin = newxLowerMargin;
         yLowerMargin = newyLowerMargin;
-        cWidth = width - xLowerMargin - x;
-        cHeight = height - yLowerMargin - y;
+        cWidth = drawWidth - xLowerMargin - x;
+        cHeight = drawHeight - yLowerMargin - y;
         sfont = createFont("Arial", 16, true);
         pages = new ArrayList<UIPage>();
         
@@ -37,7 +37,7 @@ class UITabFolder extends UIComponent {
         
         if (! mousePressed) {
             ready = true;
-        } else if (!(mouseY < y && mouseY > y - 20 && mouseX > x && mouseX < width - xLowerMargin)) {
+        } else if (!(mouseY < y && mouseY > y - 20 && mouseX > x && mouseX < drawWidth - xLowerMargin)) {
             ready = false;
         }
         
@@ -72,9 +72,9 @@ class UITabFolder extends UIComponent {
             }
             
             if (currentpage == j) {
-                vertex(width - xLowerMargin, y);
-                vertex(width-xLowerMargin, height - yLowerMargin);
-                vertex(x, height - yLowerMargin);
+                vertex(drawWidth - xLowerMargin, y);
+                vertex(drawWidth - xLowerMargin, drawHeight - yLowerMargin);
+                vertex(x, drawHeight - yLowerMargin);
                 vertex(x, y);
             }
             
@@ -90,8 +90,8 @@ class UITabFolder extends UIComponent {
             xOff += 40.0 + textWidth(get(j).title);
         }
         
-        cWidth = width - xLowerMargin - x;
-        cHeight = height - yLowerMargin - y;
+        cWidth = drawWidth - xLowerMargin - x;
+        cHeight = drawHeight - yLowerMargin - y;
         
         get(currentpage).update();
     }

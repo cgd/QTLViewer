@@ -12,7 +12,7 @@ class KinectUser {
     long lefthandDown; // time held
     long righthandDown;
     float leftvelocity;
-    float rightvelocity
+    float rightvelocity;
     
     void update(PVector newleft, PVector newright, long lastFrame) {
         float seconds = (System.currentTimeMillis() - lastFrame);
