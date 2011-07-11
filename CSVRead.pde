@@ -69,7 +69,7 @@ String[][] readCSV(InputStreamReader reader, char delim) throws IOException, Exc
         data += total[i]; // just another character to be added
     }
     
-    if (returnData[returnData.length-1].length == 0) {
+    if (returnData[returnData.length - 1].length == 0) {
         returnData = (String[][])shorten(returnData);
     }
     

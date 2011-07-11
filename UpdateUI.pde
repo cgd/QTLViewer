@@ -35,28 +35,28 @@ void updateMenu() {
     beginShape();
     
     for (int i = 0; i < 20; i+=2) {
-        vertex(i + 10, (-sin((i * HALF_PI) / 20.0) * 20.0) + height);
+        vertex(i + 10, (-sin((i * HALF_PI) / 20.0) * 20.0) + drawHeight);
     }
     
-    vertex(75, height-20);
+    vertex(75, drawHeight - 20);
     
     for (int i = 20; i >= 0; i -= 2) {
-        vertex(95 - i, (-sin((abs(i) * HALF_PI) / 20.0) * 20.0) + height);
+        vertex(95 - i, (-sin((abs(i) * HALF_PI) / 20.0) * 20.0) + drawHeight);
     }
     
-    vertex(width - 10, height);
-    vertex(width - 10, height + 100);
-    vertex(10, height + 100);
-    vertex(10, height);
+    vertex(drawWidth - 10, drawHeight);
+    vertex(drawWidth - 10, drawHeight + 100);
+    vertex(10, drawHeight + 100);
+    vertex(10, drawHeight);
     endShape();
     
     // update, draw menu components
     fill(0xFF);
     popMatrix();
-    ((UIComponent)texts.get(0)).y = (height + menuY) + 10;
-    ((UIComponent)texts.get(1)).y = (height + menuY) + 36;
-    unitSelect.y = height+menuY+10;
-    loadcfg.y = height+menuY+10;
+    ((UIComponent)texts.get(0)).y = (drawHeight + menuY) + 10;
+    ((UIComponent)texts.get(1)).y = (drawHeight + menuY) + 36;
+    unitSelect.y = drawHeight + menuY+10;
+    loadcfg.y = drawHeight+menuY+10;
     texts.update();
     unitSelect.update();
     loadcfg.update();
@@ -82,13 +82,13 @@ void updateViewArea() {
     if (!ENABLE_KINECT) {
         // draw triangle for view select
         fill(0x55);
-        if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY) {
+        if (!exiting && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < drawHeight + menuTargetY) {
             fill(0x00);
         }
         
         noStroke();
         pushMatrix();
-        translate(tabs.x - 6, height / 2.0);
+        translate(tabs.x - 6, drawHeight / 2.0);
         rotate(PI * (tabs.x - 110.0) / (335.0 - 110.0));
         beginShape();
         vertex(3, 0);
@@ -209,7 +209,7 @@ void updateLegend() {
         dragReady = !(mousePressed && mouseButton == LEFT);
     }
     
-    if (mouseX > tabs.x && mouseY > tabs.y && mouseX < width - 50 && mouseY < height - 100) {
+    if (mouseX > tabs.x && mouseY > tabs.y && mouseX < drawWidth - 50 && mouseY < drawHeight - 100) {
         loddisplay.chr_ready = chrdisplay.chr_ready = (!mousePressed || mouseButton != LEFT);
     } else {
         loddisplay.chr_ready = chrdisplay.chr_ready = !(mousePressed && mouseButton == LEFT && dragging);

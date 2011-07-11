@@ -27,6 +27,7 @@ int chrColumns = 7;
 int unitThreshold;
 
 long lastFrame = 0;
+long lastTime;
 
 float menuY, menuTargetY;
 float legendOffsetX = -1, legendOffsetY = -1, legendBorder = 0x00;
@@ -100,7 +101,7 @@ void setup() {
     textFont(large);
     
     parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
-    fileTree = new UITree(10, 10, 315, height - 20, new UIListener() { // remove file
+    fileTree = new UITree(10, 10, 315, drawHeight - 20, new UIListener() { // remove file
         public int eventHeard(int i, int j) {
             parentFiles.remove(i);
             return i;
@@ -120,12 +121,13 @@ void setup() {
     tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, -35, -25), 0, 0);
     tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), 1, 0);
     
-    legendX = width - 400.0;
+    legendX = drawWidth - 400.0;
     legendY = 250.0;
     
+    lastTime = System.currentTimeMillis();
+    
     int dim;
-    if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0)
-    {
+    if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
       dim = 128;
     } else if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
       dim = 32;
@@ -149,16 +151,16 @@ void setup() {
 void draw() {
     background(0xAA);
     
-    if (ENABLE_KINECT) {
-        updateKinect();
-    }
-    
     // see module UpdateUI for update* methods
     updateViewArea();
     
     updateMenu();
     
     updateLegend();
+    
+    if (ENABLE_KINECT) {
+        updateKinect();
+    }
     
     // display exit prompt, buttons if appropriate
     if (exiting) {
@@ -206,12 +208,12 @@ void keyReleased() {
 }
 
 void mousePressed() {
-    if (mouseX > 10 && mouseX < 95 && mouseY < menuY + height && mouseY > menuY + height - 20 && !exiting && !dragging) {
+    if (mouseX > 10 && mouseX < 95 && mouseY < menuY + drawHeight && mouseY > menuY + drawHeight - 20 && !exiting && !dragging) {
         menuTargetY = (menuY == 0.0) ? -100.0 : 0.0;
         tabs.focus = (menuY == 0.0);
     }
     
-    if (!ENABLE_KINECT && !exiting && !dragging && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < height + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
+    if (!ENABLE_KINECT && !exiting && !dragging && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < drawHeight + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
         if (tabsXTarget == 110) {
             tabsXTarget = 335;
         } else {
@@ -220,7 +222,7 @@ void mousePressed() {
     } else if (exiting) {
         yes.mouseAction();
         no.mouseAction();
-    } else if (mouseY < height + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
+    } else if (mouseY < drawHeight + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
         tabs.mouseAction();
     } else {
         texts.mouseAction();

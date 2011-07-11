@@ -157,6 +157,8 @@ void initConstants() {
             bufferedReader);
     } catch (IOException error) {
         error.printStackTrace();
+    } catch (NullPointerException error) {
+        error.printStackTrace();
     }
 }
 
@@ -169,9 +171,9 @@ void initMenu() {
     lowerDefault.setText("1.5");
     
     String[] groupNames = {"Centimorgans", "Base pairs"};
-    unitSelect = new UIRadioGroup(275, height, groupNames);
+    unitSelect = new UIRadioGroup(275, drawHeight, groupNames);
     
-    loadcfg = new UIButton(425, height, "Load config", new UIAction() {
+    loadcfg = new UIButton(425, drawHeight, "Load config", new UIAction() {
         public void doAction() {
             if (exiting) {
                 return;
