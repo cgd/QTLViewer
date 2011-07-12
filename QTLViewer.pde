@@ -160,10 +160,6 @@ void draw() {
     
     updateLegend();
     
-    if (ENABLE_KINECT) {
-        updateKinect();
-    }
-    
     // display exit prompt, buttons if appropriate
     if (exiting) {
         noStroke();
@@ -182,10 +178,13 @@ void draw() {
         yes.active = false;
         no.active = false;
     } 
+        
+    if (ENABLE_KINECT) {
+        updateKinect();
+    }
 }
 
 void keyPressed() { // most key events are handled by the MenuBar
-
     if (key == ESC) {
         exiting = !exiting;
         key = 0; // nullify the key, preventing Processing from closing automatically
@@ -198,7 +197,6 @@ void keyPressed() { // most key events are handled by the MenuBar
     } else {
         texts.keyAction(key, keyCode, keyEvent.getModifiersEx());
     }
-    
 }
 
 void keyReleased() {

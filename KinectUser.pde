@@ -12,8 +12,8 @@ class KinectUser {
     PVector plefthand; // previous hand coords
     PVector prighthand;
     PVector CoM; // center of mass coords, used for hand depth
-    long lefthandDown; // time held
-    long righthandDown;
+    long lefthandDown = -1; // time hold start
+    long righthandDown = -1;
     float leftvelocity; // pixels/second
     float rightvelocity;
     float leftangle; // hand angle in degrees
@@ -66,13 +66,45 @@ class KinectUser {
             leftangle = Float.NaN;
         }
         
+        if (rightvelocity < 5.0 && newCoM.z - righthand.z > DEPTH_LOWER) {
+            if (righthandDown == -1) {
+                righthandDown = System.currentTimeMillis();
+            }
+        } else {
+            righthandDown = -1;
+        }
+        
+        if (righthandDown != -1 && System.currentTimeMillis() - righthandDown >= 3000) {
+            righthandDown = -1;
+            mousePressed = true;
+            mouseButton = LEFT;
+            mouseX = round(cursorPos.x);
+            mouseY = round(cursorPos.y);
+            
+            mousePressed();
+        }
+        
+        if (leftvelocity < 5.0) {
+            if (lefthandDown == -1) {
+                lefthandDown = System.currentTimeMillis();
+            }
+        } else {
+            lefthandDown = -1;
+        }
+        
         CoM = newCoM;
         
-        fill(0xFF, 0x00, 0x00);
         stroke(0x00);
         strokeWeight(1);
         ellipseMode(CENTER);
-        ellipse(cursorPos.x, cursorPos.y, 25.0, 25.0);
+        
+        if (System.currentTimeMillis() - righthandDown > 1000 && newCoM.z - righthand.z > DEPTH_LOWER && righthandDown != -1) {
+            fill(0x00, 0x00, 0xFF);
+            arc(cursorPos.x, cursorPos.y, 30.0, 30.0, 0.0, map(System.currentTimeMillis() - righthandDown, 1000, 3000, 0, TWO_PI));
+        }
+        
+        fill(0xFF, 0x00, 0x00, (newCoM.z - righthand.z > DEPTH_LOWER) ? 0xFF : 0x7F);
+        ellipse(cursorPos.x, cursorPos.y, 20.0, 20.0);
     }
     
     float getAngle(PVector center, PVector pt) {
