@@ -9,6 +9,7 @@
 */
 
 public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
+public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ boolean dragReady = true, dragging = false;
 
 int chrColumns = 7;
 int unitThreshold;
+int mouseId = -1;
 
 long lastFrame = 0;
 long lastTime;
@@ -227,7 +229,6 @@ void mousePressed() {
     } else {
         texts.mouseAction();
     }
-    
 }
 
 void mouseMoved() {

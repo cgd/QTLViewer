@@ -3,15 +3,31 @@
 */
 
 void initKinect() {
+    users = new ArrayList<KinectUser>();
+    
+    if (ENABLE_KINECT_SIMULATE) {
+        return;
+    }
+    
     context = new SimpleOpenNI(this);
     context.enableScene(); // enable user color display
     context.enableDepth(); // enable depth map display, necessary for everything
     context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL); // track full body
-    
-    users = new ArrayList<KinectUser>();
 }
 
 void updateKinect() {
+    if (ENABLE_KINECT_SIMULATE) {
+        if (users.size() == 0) {
+            KinectUser fake = new KinectUser(mouseX, mouseY);
+            fake.ID = 0;
+            users.add(fake);
+        }
+        
+        users.get(0).update(new PVector(0, 0, 0), new PVector(mouseX, mouseY, 0), new PVector(0, 0,  563.16));
+        
+        return;
+    }
+    
     noCursor();
     
     context.update();
