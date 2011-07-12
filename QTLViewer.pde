@@ -200,11 +200,9 @@ void keyPressed() { // most key events are handled by the MenuBar
 }
 
 void keyReleased() {
-  
     if (! exiting && tabs.active && tabs.focus) {
         tabs.keyAction(key, keyCode, keyEvent.getModifiersEx());
     }
-    
 }
 
 void mousePressed() {

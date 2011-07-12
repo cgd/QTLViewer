@@ -18,6 +18,7 @@ class KinectUser {
     float rightvelocity;
     float leftangle; // hand angle in degrees
     float rightangle;
+    boolean ready = true;
     PVector cursorPos;
     
     public KinectUser() {
@@ -28,8 +29,9 @@ class KinectUser {
         cursorPos = new PVector(x, y);
     }
     
-    void update(PVector newleft, PVector newright, PVector newCoM) {
+    boolean update(PVector newleft, PVector newright, PVector newCoM) {
         float seconds = (System.currentTimeMillis() - lastTime) / 1000.0;
+        boolean retVal = false;
         lastTime = System.currentTimeMillis();
 
         if (lefthand != null) {
@@ -72,11 +74,11 @@ class KinectUser {
             }
         } else {
             righthandDown = -1;
+            ready = true;
         }
         
-        if (righthandDown != -1 && System.currentTimeMillis() - righthandDown >= 3000) {
-            righthandDown = -1;
-            mousePressed = true;
+        if (righthandDown != -1 && System.currentTimeMillis() - righthandDown >= 2000 && System.currentTimeMillis() - righthandDown < 2500 && ready) {
+            mousePressed = retVal = true;
             mouseButton = LEFT;
             mouseX = round(cursorPos.x);
             mouseY = round(cursorPos.y);
@@ -98,13 +100,15 @@ class KinectUser {
         strokeWeight(1);
         ellipseMode(CENTER);
         
-        if (System.currentTimeMillis() - righthandDown > 1000 && newCoM.z - righthand.z > DEPTH_LOWER && righthandDown != -1) {
+        if (System.currentTimeMillis() - righthandDown > 1000 && System.currentTimeMillis() - righthandDown < 2500 && newCoM.z - righthand.z > DEPTH_LOWER && righthandDown != -1) {
             fill(0x00, 0x00, 0xFF);
-            arc(cursorPos.x, cursorPos.y, 30.0, 30.0, 0.0, map(System.currentTimeMillis() - righthandDown, 1000, 3000, 0, TWO_PI));
+            arc(cursorPos.x, cursorPos.y, 30.0, 30.0, 0.0, map(System.currentTimeMillis() - righthandDown, 1000, 2000, 0, TWO_PI));
         }
         
         fill(0xFF, 0x00, 0x00, (newCoM.z - righthand.z > DEPTH_LOWER) ? 0xFF : 0x7F);
         ellipse(cursorPos.x, cursorPos.y, 20.0, 20.0);
+        
+        return retVal;
     }
     
     float getAngle(PVector center, PVector pt) {

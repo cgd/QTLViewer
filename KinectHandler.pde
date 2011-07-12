@@ -23,7 +23,7 @@ void updateKinect() {
             users.add(fake);
         }
         
-        users.get(0).update(new PVector(0, 0, 0), new PVector(mouseX, mouseY, 0), new PVector(0, 0,  563.16));
+        mousePressed = users.get(0).update(new PVector(0, 0, 0), new PVector(mouseX, mouseY, 0), new PVector(0, 0,  563.16));
         
         return;
     }
@@ -34,6 +34,8 @@ void updateKinect() {
 
     float imgHeight = (width - drawWidth) / (4.0 / 3.0);
     image(context.sceneImage(), drawWidth, height - imgHeight, width - drawWidth, imgHeight);
+    
+    boolean isAnyPressed = false;
     
     for (int i = 0; i < users.size(); i++) {
         PVector _right = new PVector(), right = new PVector();
@@ -57,8 +59,12 @@ void updateKinect() {
         newCoM.x = drawWidth - map(newCoM.x, 0, 640, 0, drawWidth) - (width - drawWidth);
         newCoM.y = map(newCoM.y, 0, 640, 0, drawWidth);
         
-        users.get(i).update(right, left, newCoM); // NOTICE: left and right are switched because input is NOT mirrored
+        if (users.get(i).update(right, left, newCoM)) { // NOTICE: left and right are switched because input is NOT mirrored
+            isAnyPressed = true;
+        }
     }
+    
+    mousePressed = isAnyPressed;
 }
 
 // callbacks
