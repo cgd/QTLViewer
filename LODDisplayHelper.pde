@@ -223,11 +223,12 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
     for (int k = 1; k < currentPhenotype.position.length; k++) { // draw LOD curves
         try {
             if (display.current_chr != -1) {
-                if (lastx == -1.0 && currentPhenotype.chromosome[k]-1 == display.current_chr) {
+                if (lastx == -1.0 && currentPhenotype.chromosome[k] - 1 == display.current_chr) {
                     lastx = map(currentPhenotype.position[k], 0.0, ceil(display.maxOffset), 0.0, display.cWidth);
                     lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
                 } else if (currentPhenotype.chromosome[k]-1 == display.current_chr) {
-                    line(display.x + lastx, (display.y + display.cHeight) - lasty - 50.0, display.x + (lastx = map(currentPhenotype.position[k], 0.0, ceil(display.maxOffset), 0.0, display.cWidth)), (display.y + display.cHeight) - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50.0);
+                    line(display.x + lastx, (display.y + display.cHeight) - lasty - 50, display.x + (lastx = map(currentPhenotype.position[k], 0.0, 
+                        ceil(display.maxOffset), 0.0, display.cWidth)), display.y + display.cHeight - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50);
                 }
                 
                 continue;
@@ -237,8 +238,8 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
                 lastx = map(currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, chrTotal, 0.0, display.cWidth);
                 lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
             } else {
-                line(display.x + lastx, (display.y + display.cHeight) - lasty - 50.0, display.x + (lastx = map(currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, chrTotal, 0.0, display.cWidth)),
-                    (display.y + display.cHeight) - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50.0);
+                line(display.x + lastx, display.y + display.cHeight - lasty - 50, display.x + (lastx = map(currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, chrTotal, 0.0, display.cWidth)),
+                    display.y + display.cHeight - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50);
             }
         } catch (ArrayIndexOutOfBoundsException error) {
             error.printStackTrace();

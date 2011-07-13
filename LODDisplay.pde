@@ -47,13 +47,13 @@ class LODDisplay extends UIComponent {
         
         if (current_chr == -1) {
             for (int i = 0; i < chrLengths.length; i++) {
-                float pos = map(chrOffsets[i] + (chrLengths[i]/2.0), 0.0, chrTotal, 0.0, cWidth);
-                text(chrNames[i], x + pos - (textWidth(chrNames[i])/2.0), (y + cHeight) - 14);
+                float pos = map(chrOffsets[i] + (chrLengths[i] / 2.0), 0.0, chrTotal, 0.0, cWidth);
+                text(chrNames[i], x + pos - (textWidth(chrNames[i]) / 2.0), (y + cHeight) - 14);
                 line(x + pos, (y + cHeight) - 50, x + pos, (y + cHeight) - 34);
             }
         } else {
             for (int i = 1; i <= 4; i++) {
-                int value = round((i*ceil(maxOffset))/4.0);
+                int value = round((i * ceil(maxOffset)) / 4.0);
                 float x_off = map(value, 0.0, ceil(maxOffset), 0.0, cWidth);
                 String valueText = str(value), unit = "cM";
                 
@@ -62,10 +62,10 @@ class LODDisplay extends UIComponent {
                     valueText = str(Math.round(unitConverter.centimorgansToBasePairs(current_chr + 1, (double)value)/10000.0)*10000.0);
                 }
                 
-                if (x + x_off + (textWidth(valueText + ((i == 1) ? unit : ""))/2.0) > x + cWidth) {
-                    text(valueText + ((i == 1) ? unit : ""), x + 16.0 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + cHeight) - 14);
+                if (x + x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) > x + cWidth) {
+                    text(valueText + ((i == 1) ? unit : ""), x + 16 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + cHeight) - 14);
                 } else {
-                    text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : ""))/2.0), (y + cHeight) - 14);
+                    text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0), (y + cHeight) - 14);
                 }
                 
                 line(x + x_off, (y + cHeight) - 50, x + x_off, (y + cHeight) - 34);
@@ -110,11 +110,11 @@ class LODDisplay extends UIComponent {
                 }
                 
                 textFont(legendFont);
-                names = append(names, currentPhenotype.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
+                names = append(names, currentPhenotype.name + " (" + ((UITreeNode)fileTree.get(i)).title + ")");
                 colors = append(colors, phenotypeNode.drawcolor);
                 
-                if (textWidth(currentPhenotype.name+" ("+((UITreeNode)fileTree.get(i)).title+")") > maxLen) { // find maximum phenotype name length
-                    maxLen = textWidth(currentPhenotype.name+" ("+((UITreeNode)fileTree.get(i)).title+")");
+                if (textWidth(currentPhenotype.name + " (" + ((UITreeNode)fileTree.get(i)).title + ")") > maxLen) { // find maximum phenotype name length
+                    maxLen = textWidth(currentPhenotype.name + " (" + ((UITreeNode)fileTree.get(i)).title + ")");
                 }
                 
                 stroke(phenotypeNode.drawcolor, 0x7F);

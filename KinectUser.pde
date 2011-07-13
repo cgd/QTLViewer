@@ -7,18 +7,26 @@ class KinectUser {
     public static final float DEPTH_UPPER = 800.0;
     
     int ID;
+    
     PVector lefthand = null; // hand coords
     PVector righthand = null;
     PVector plefthand; // previous hand coords
     PVector prighthand;
     PVector CoM; // center of mass coords, used for hand depth
-    long lefthandDown = -1; // time hold start
-    long righthandDown = -1;
-    float leftvelocity; // pixels/second
-    float rightvelocity;
+    
+    long righthandDown = -1; // time hold start
+    long lefthandDown = -1; // same, but for angle
+    long sameDistTime = -1; // time that the hand distance has been the same
+    
+    float rightvelocity; // pixels/second
     float leftangle; // hand angle in degrees
-    float rightangle;
+    float handDiff; // hand horizontal distance
+    float phandDiff = -1.0;
+    
     boolean ready = true;
+    boolean leftReady = true;
+    boolean dragZoom = false;
+    
     PVector cursorPos;
     
     public KinectUser() {
@@ -33,13 +41,6 @@ class KinectUser {
         float seconds = (System.currentTimeMillis() - lastTime) / 1000.0;
         boolean retVal = false;
         lastTime = System.currentTimeMillis();
-
-        if (lefthand != null) {
-            leftvelocity = (float)dist(newleft.x, newleft.y, lefthand.x, lefthand.y) / seconds;
-            
-            if (plefthand != null) {
-            }
-        }
         
         plefthand = lefthand;
         lefthand = newleft;
@@ -57,65 +58,129 @@ class KinectUser {
         prighthand = righthand;
         righthand = newright;
         
-        rightangle = getAngle(newCoM, righthand);
-        leftangle = getAngle(newCoM, lefthand);
+        phandDiff = handDiff;
+        handDiff = abs(newright.x - newleft.x);
         
-        if (Float.toString(rightangle).equals("NaN")) {
-            rightangle = Float.NaN;
-        }
+        CoM = newCoM;
+        
+        leftangle = getAngle(newCoM, lefthand);
         
         if (Float.toString(leftangle).equals("NaN")) {
             leftangle = Float.NaN;
         }
         
-        if (rightvelocity < 5.0 && newCoM.z - righthand.z > DEPTH_LOWER) {
+        // right hand down
+        if (rightvelocity < 5.0 && newCoM.z - righthand.z > DEPTH_LOWER && !dragZoom) {
             if (righthandDown == -1) {
                 righthandDown = System.currentTimeMillis();
             }
+            
+            leftReady = false;
         } else {
             righthandDown = -1;
             ready = true;
+            leftReady = true;
         }
         
-        if (righthandDown != -1 && System.currentTimeMillis() - righthandDown >= 2000 && System.currentTimeMillis() - righthandDown < 2500 && ready) {
+        // left and right hands down
+        if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER) {
+            dragZoom = true;
+            righthandDown = -1;
+            leftReady = false; // don't register angles while zooming
+        } else if (leftangle > 45.0 && leftangle < 60.0) { // left hand in angle region
+            if (lefthandDown == -1) {
+                lefthandDown = System.currentTimeMillis();
+            }
+            
+            dragZoom = false;
+        } else {
+            lefthandDown = -1;
+            dragZoom = false;
+            leftReady = true;
+        }
+        
+        // right hand has been held down
+        if (!dragZoom && righthandDown != -1 && System.currentTimeMillis() - righthandDown >= 2000 && System.currentTimeMillis() - righthandDown < 2500 && ready) {
             mousePressed = retVal = true;
             mouseButton = LEFT;
             mouseX = round(cursorPos.x);
             mouseY = round(cursorPos.y);
             
+            mouseId = ID;
+            
             mousePressed();
+            
+            ready = false;
+            leftReady = true;
         }
         
-        if (leftvelocity < 5.0) {
-            if (lefthandDown == -1) {
-                lefthandDown = System.currentTimeMillis();
+        // left hand has been held at an angle
+        if (lefthandDown != -1 && System.currentTimeMillis() - lefthandDown >= 2500 && System.currentTimeMillis() - lefthandDown < 3000 && leftReady) {
+            
+            leftReady = false;
+        }
+        
+        // start timer if hand distance changes less than 5.0 pixels
+        if (dragZoom && phandDiff != -1.0 && CoM.z - lefthand.z > DEPTH_LOWER && abs(phandDiff - handDiff) < 5.0) {
+            if (sameDistTime == -1) {
+                sameDistTime = System.currentTimeMillis();
             }
         } else {
-            lefthandDown = -1;
+            sameDistTime = -1;
         }
         
-        CoM = newCoM;
+        // both hands have been held in place, zooming stops
+        if (sameDistTime != -1 && System.currentTimeMillis() - sameDistTime > 2000) {
+            dragZoom = false;
+            leftReady = true;
+            ready = true;
+            sameDistTime = -1;
+        }
         
         stroke(0x00);
         strokeWeight(1);
         ellipseMode(CENTER);
         
-        if (System.currentTimeMillis() - righthandDown > 1000 && System.currentTimeMillis() - righthandDown < 2500 && newCoM.z - righthand.z > DEPTH_LOWER && righthandDown != -1) {
-            fill(0x00, 0x00, 0xFF);
-            arc(cursorPos.x, cursorPos.y, 30.0, 30.0, 0.0, map(System.currentTimeMillis() - righthandDown, 1000, 2000, 0, TWO_PI));
+        if (lefthandDown != -1 && System.currentTimeMillis() - lefthandDown > 1000 && System.currentTimeMillis() - lefthandDown < 3000) {
+            float radius = 30.0;
+            
+            if (righthandDown != -1 && System.currentTimeMillis() - righthandDown > 1000 && System.currentTimeMillis() - righthandDown < 2500) {
+                radius = 40.0;
+            }
+            
+            if (System.currentTimeMillis() - lefthandDown > 2500) {
+               fill(0x00, 0xFF, 0x00, map(System.currentTimeMillis() - lefthandDown, 2500, 3000, 0x00, 0xFF));
+            } else {
+                fill(0x00, 0xFF, 0x00);
+            }
+            
+            arc(cursorPos.x, cursorPos.y, radius, radius, TWO_PI - map(System.currentTimeMillis() - lefthandDown, 1000, 2500, 0.0, TWO_PI), TWO_PI);
         }
         
-        fill(0xFF, 0x00, 0x00, (newCoM.z - righthand.z > DEPTH_LOWER) ? 0xFF : 0x7F);
-        ellipse(cursorPos.x, cursorPos.y, 20.0, 20.0);
+        if (righthandDown != -1 && System.currentTimeMillis() - righthandDown > 1000 && System.currentTimeMillis() - righthandDown < 2500) {
+            if (System.currentTimeMillis() - righthandDown > 2000) {
+                fill(0x00, 0x00, 0xFF, map(System.currentTimeMillis() - righthandDown, 2000, 2500, 0x00, 0xFF));
+            } else {
+                fill(0x00, 0x00, 0xFF);
+            }
+            
+            arc(cursorPos.x, cursorPos.y, 30.0, 30.0, 0.0, map(System.currentTimeMillis() - righthandDown, 1000, 2000, 0.0, TWO_PI));
+        }
+
+        if (!dragZoom) {
+            fill(0xFF, 0x00, 0x00, (newCoM.z - righthand.z > DEPTH_LOWER) ? 0xFF : 0x7F);
+            ellipse(cursorPos.x, cursorPos.y, 20.0, 20.0);
+        } else {
+        }
         
         return retVal;
     }
     
     float getAngle(PVector center, PVector pt) {
         if (pt.y < center.y) {
-            return (180.0 / PI) * atan(abs(center.x - pt.x) / abs(center.y - pt.y));
-        } else if (pt.y > center.y) {
             return 90.0 + ((180.0 / PI) * atan(abs(center.x - pt.x) / abs(center.y - pt.y)));
+        } else if (pt.y > center.y) {
+            return (180.0 / PI) * atan(abs(center.x - pt.x) / abs(center.y - pt.y));
         } else {
             return 90.0;
         }

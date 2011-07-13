@@ -2,6 +2,8 @@
 * Contains methods for receiving input from the Kinect.
 */
 
+PVector leftHand = new PVector(0, 0, 563.16);
+
 void initKinect() {
     users = new ArrayList<KinectUser>();
     
@@ -23,7 +25,21 @@ void updateKinect() {
             users.add(fake);
         }
         
-        mousePressed = users.get(0).update(new PVector(0, 0, 0), new PVector(mouseX, mouseY, 0), new PVector(0, 0,  563.16));
+        if (keyPressed && key == CODED && keyCode == LEFT) {
+            leftHand.x -= 5;
+        } else if (keyPressed && key == CODED && keyCode == RIGHT) {
+            leftHand.x += 5;
+        } else if (keyPressed && key == CODED && keyCode == UP) {
+            leftHand.y -= 5;
+        } else if (keyPressed && key == CODED && keyCode == DOWN) {
+            leftHand.y += 5;
+        }
+        stroke(0x00);
+        strokeWeight(1);
+        fill(0xFF, 0x00, 0x00);
+        ellipseMode(CENTER);
+        ellipse(leftHand.x, leftHand.y, 20.0, 20.0);
+        mousePressed = users.get(0).update(leftHand, new PVector(mouseX, mouseY, 0), new PVector(width / 2.0, height / 2.0,  563.16));
         
         return;
     }
