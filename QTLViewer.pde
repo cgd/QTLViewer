@@ -87,19 +87,33 @@ void setup() {
     }
     
     // set up exit prompt, fonts
-    yes = new UIButton((drawWidth / 2.0) - 40, (drawHeight / 2.0) - 24, "Yes", new UIAction() {
-        public void doAction() {
-            exit();
-        }
-    });
+    if (ENABLE_KINECT) {
+        yes = new UIButton((drawWidth / 2.0) - 80, (drawHeight / 2.0) - 24, "Yes", 72, 48, 32, new UIAction() {
+            public void doAction() {
+                exit();
+            }
+        });
+        
+        no = new UIButton((drawWidth / 2.0) + 8, (drawHeight / 2.0) - 24, "No", 72, 48, 32, new UIAction() {
+            public void doAction() {
+                exiting = false;
+             }
+        });
+    } else {
+        yes = new UIButton((drawWidth / 2.0) - 40, (drawHeight / 2.0) - 24, "Yes", new UIAction() {
+            public void doAction() {
+                exit();
+            }
+        });
+        
+        no = new UIButton((drawWidth / 2.0) + 8, (drawHeight / 2.0) - 24, "No", new UIAction() {
+            public void doAction() {
+                exiting = false;
+             }
+        });
+    }
     
-    no = new UIButton((drawWidth / 2.0) + 8, (drawHeight / 2.0) - 24, "No", new UIAction() {
-        public void doAction() {
-            exiting = false;
-         }
-    });
-    
-    large = createFont("Arial", 32, true);
+    large = createFont("Arial", (ENABLE_KINECT) ? 64 : 32, true);
     textFont(large);
     
     parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
@@ -118,10 +132,27 @@ void setup() {
     initMouseWheelListener();
     
     // set up tab container
-    String[] titles = {"LOD Score view", "Chromosome view"};
+    String[] titles;
+    
+    if (ENABLE_KINECT) {
+        titles = new String[] {"File Management", "LOD Score view", "Chromosome view", "Genome Browser", "User Management"};
+    } else {
+        titles = new String[] {"LOD Score view", "Chromosome view", "Genome Browser"};
+    }
+    
     tabs = new UITabFolder((!ENABLE_KINECT) ? 335 : 10, 30, 10, 10, titles);
-    tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, -35, -25), 0, 0);
-    tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), 1, 0);
+    tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, -35, -25), (ENABLE_KINECT) ? 1 : 0, 0);
+    tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), (ENABLE_KINECT) ? 2 : 1, 0);
+    
+    if (ENABLE_KINECT) {
+        tabs.addComponent(new UIButton((drawWidth / 2.0) - 128, (drawHeight / 2.0) - 64, "Stop Tracking", 256, 128, 32, new UIAction() {
+            public void doAction() {
+                if (!ENABLE_KINECT_SIMULATE) {
+                    context.stopTrackingSkeleton(mouseId);
+                }
+            }
+        }), 4, 0);
+    }
     
     legendX = drawWidth - 400.0;
     legendY = 250.0;

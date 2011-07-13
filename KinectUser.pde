@@ -22,18 +22,21 @@ class KinectUser {
     float leftangle; // hand angle in degrees
     float handDiff; // hand horizontal distance
     float phandDiff = -1.0;
+    float firsthandDiff = -1.0;
     
     boolean ready = true;
     boolean leftReady = true;
     boolean dragZoom = false;
+    boolean zoomReady = true;
+    boolean pressed;
     
     PVector cursorPos;
     
-    public KinectUser() {
+    KinectUser() {
         cursorPos = new PVector(drawWidth / 2.0, drawHeight / 2.0);
     }
     
-    public KinectUser(float x, float y) {
+    KinectUser(float x, float y) {
         cursorPos = new PVector(x, y);
     }
     
@@ -53,6 +56,18 @@ class KinectUser {
                 cursorPos.x += coef * (righthand.x - prighthand.x);
                 cursorPos.y += coef * (righthand.y - prighthand.y);
             }
+            
+            if (cursorPos.x > drawWidth) {
+                cursorPos.x = drawWidth;
+            } else if (cursorPos.x < 0) {
+                cursorPos.x = 0;
+            }
+            
+             if (cursorPos.y > drawHeight) {
+                 cursorPos.y = drawHeight;
+             } else if (cursorPos.y < 0) {
+                 cursorPos.y = 0;
+             }
         }
         
         prighthand = righthand;
@@ -83,20 +98,31 @@ class KinectUser {
         }
         
         // left and right hands down
-        if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER) {
+        if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady) {
+            if (!dragZoom) {
+                firsthandDiff = abs(lefthand.x - righthand.x);
+            }
+            
             dragZoom = true;
             righthandDown = -1;
+            lefthandDown = -1;
             leftReady = false; // don't register angles while zooming
+            ready = false;
         } else if (leftangle > 45.0 && leftangle < 60.0) { // left hand in angle region
             if (lefthandDown == -1) {
                 lefthandDown = System.currentTimeMillis();
             }
             
             dragZoom = false;
+            zoomReady = false;
         } else {
             lefthandDown = -1;
             dragZoom = false;
             leftReady = true;
+            
+            if (!(CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER)) {
+                zoomReady = true;
+            }
         }
         
         // right hand has been held down
@@ -133,8 +159,10 @@ class KinectUser {
         if (sameDistTime != -1 && System.currentTimeMillis() - sameDistTime > 2000) {
             dragZoom = false;
             leftReady = true;
-            ready = true;
+            ready = false;
             sameDistTime = -1;
+            zoomReady = false;
+            println(map(handDiff, 0, firsthandDiff, 0, 100));
         }
         
         stroke(0x00);
@@ -171,6 +199,19 @@ class KinectUser {
             fill(0xFF, 0x00, 0x00, (newCoM.z - righthand.z > DEPTH_LOWER) ? 0xFF : 0x7F);
             ellipse(cursorPos.x, cursorPos.y, 20.0, 20.0);
         } else {
+            if (sameDistTime != -1) {
+                stroke(0x00, map(System.currentTimeMillis() - sameDistTime, 0, 2000, 0xFF, 0x00));
+            } else {
+                stroke(0x00);
+            }
+            
+            strokeWeight(3);
+            
+            line(lefthand.x, (drawHeight / 2.0) - 32, lefthand.x, (drawHeight / 2.0) + 32);
+            line(righthand.x, (drawHeight / 2.0) - 32, righthand.x, (drawHeight / 2.0) + 32);
+            line(lefthand.x, drawHeight / 2.0, righthand.x, drawHeight / 2.0);
+            
+            strokeWeight(1);
         }
         
         return retVal;

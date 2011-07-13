@@ -2,7 +2,7 @@
 * Contains methods for receiving input from the Kinect.
 */
 
-PVector leftHand = new PVector(0, 0, 563.16);
+PVector leftHand = new PVector(0, 0, 565);
 
 void initKinect() {
     users = new ArrayList<KinectUser>();
@@ -33,7 +33,12 @@ void updateKinect() {
             leftHand.y -= 5;
         } else if (keyPressed && key == CODED && keyCode == DOWN) {
             leftHand.y += 5;
+        } else if (keyPressed && key == 'w') {
+            leftHand.z = 0;
+        } else if (keyPressed && key == 's') {
+            leftHand.z = 565;
         }
+        
         stroke(0x00);
         strokeWeight(1);
         fill(0xFF, 0x00, 0x00);

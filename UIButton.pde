@@ -1,8 +1,9 @@
 class UIButton extends UIComponent {
     String data;
-    PFont font = createFont("Arial", 16, true);
+    float fsize;
+    PFont font = createFont("Arial", fsize = 16, true);
     color bg = color(0xCC), border = color(0xFF), mouse = color(0x99), textc = color(0x33);
-    boolean ready = true;
+    boolean ready = true, custom = false;
     UIAction action = null;
     
     UIButton(float newX, float newY, String newData, UIAction newAction) {
@@ -14,10 +15,26 @@ class UIButton extends UIComponent {
         data = newData;
         action = newAction;
     }
+    
+    UIButton(float newX, float newY, String newData, float newW, float newH, float fontSize, UIAction newAction) {
+        super();
+        x = newX;
+        y = newY;
+        cWidth = newW;
+        cHeight = newH;
+        data = newData;
+        action = newAction;
+        font = createFont("Arial", fsize = fontSize, true);
+        custom = true;
+    }
 
     void update() {
         textFont(font);
-        cWidth = textWidth(data) + 8;
+        
+        if (!custom) {
+            cWidth = textWidth(data) + 8;
+        }
+        
         fill(bg);
         stroke(border);
         
@@ -34,7 +51,7 @@ class UIButton extends UIComponent {
         strokeWeight(1);
         rect(x, y, cWidth, cHeight);
         fill(textc);
-        text(data, x + 4, y + 18);
+        text(data, x + ((cWidth - textWidth(data)) / 2.0), y + ((cHeight - fsize) / 2.0) + fsize - 4);
     }
     
     void mouseAction() {
