@@ -98,9 +98,14 @@ class KinectUser {
         }
         
         // left and right hands down
-        if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady) {
+        if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady && tabs.currentpage == 1) {
             if (!dragZoom) {
                 firsthandDiff = abs(lefthand.x - righthand.x);
+                ((LODDisplay)tabs.get(1).get(0)).oldzoomFactor = ((LODDisplay)tabs.get(1).get(0)).zoomFactor;
+            }
+                        
+            if (tabs.currentpage == 1) {
+                ((LODDisplay)tabs.get(1).get(0)).zoomFactor = ((LODDisplay)tabs.get(1).get(0)).oldzoomFactor * (100.0 / map(handDiff, 0, firsthandDiff, 0, 100));
             }
             
             dragZoom = true;
@@ -162,7 +167,10 @@ class KinectUser {
             ready = false;
             sameDistTime = -1;
             zoomReady = false;
-            println(map(handDiff, 0, firsthandDiff, 0, 100));
+            
+            if (tabs.currentpage == 1) {
+                ((LODDisplay)tabs.get(1).get(0)).oldzoomFactor = ((LODDisplay)tabs.get(1).get(0)).zoomFactor;
+            }
         }
         
         stroke(0x00);

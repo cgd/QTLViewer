@@ -9,6 +9,9 @@ class LODDisplay extends UIComponent {
     boolean chr_ready = true;
     PFont font = createFont("Arial", 24, true), smallFont = createFont("Arial", 12, true);
     float maxOffset = -1.0;
+    float zoomFactor = 1.0;
+    float oldzoomFactor = 1.0;
+    float offset = 0.0; // measured in pixels
     int current_chr = -1;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
@@ -16,6 +19,10 @@ class LODDisplay extends UIComponent {
     }
     
     void update() {
+        if (zoomFactor > 1.0) {
+            zoomFactor = 1.0;
+        }
+        
         if (cWidth <= 0.0) {
             cWidth = (drawWidth - x) + cWidth;
         }
@@ -47,7 +54,12 @@ class LODDisplay extends UIComponent {
         
         if (current_chr == -1) {
             for (int i = 0; i < chrLengths.length; i++) {
-                float pos = map(chrOffsets[i] + (chrLengths[i] / 2.0), 0.0, chrTotal, 0.0, cWidth);
+                float pos = offset + map(chrOffsets[i] + (chrLengths[i] / 2.0), 0.0, chrTotal * zoomFactor, 0.0, cWidth);
+                
+                if (pos >= cWidth || pos <= 0.0) {
+                    continue;
+                }
+                
                 text(chrNames[i], x + pos - (textWidth(chrNames[i]) / 2.0), (y + cHeight) - 14);
                 line(x + pos, (y + cHeight) - 50, x + pos, (y + cHeight) - 34);
             }
@@ -156,7 +168,7 @@ class LODDisplay extends UIComponent {
                         drawThresholdLabels(this, currentPhenotype, tempMaxLod);
                     }
                 } else {
-                    for (float xp = x; xp < (x + cWidth) - 10; xp += 20.0) {
+                    for (float xp = x; xp < x + cWidth - 10; xp += 20.0) {
                         if (((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1]) <= tempMaxLod) {
                             line(xp, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXU : y_offU) - 50.0, xp + 10.0, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXU : y_offU) - 50.0);
                         }
