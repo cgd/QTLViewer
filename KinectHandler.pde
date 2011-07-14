@@ -98,6 +98,13 @@ void onNewUser(int userId) {
 
 void onLostUser(int userId) {
   println("onLostUser - userId: " + userId);
+  
+  for (int i = 0; i < users.size(); i++) {
+      if (users.get(i).ID == userId) {
+          users.remove(i);
+          break;
+      }
+  }
 }
 
 void onStartCalibration(int userId) {

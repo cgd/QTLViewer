@@ -11,7 +11,7 @@ class LODDisplay extends UIComponent {
     float maxOffset = -1.0;
     float zoomFactor = 1.0;
     float oldzoomFactor = 1.0;
-    float offset = 0.0; // measured in pixels
+    float offset = 0.0; // measured in cM
     int current_chr = -1;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {

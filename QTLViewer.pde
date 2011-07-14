@@ -54,6 +54,7 @@ UIButton yes, no;
 UIButton loadcfg;
 LODDisplay loddisplay;
 ChrDisplay chrdisplay;
+UIKFileBrowser filebrowser;
 
 MouseMap unitConverter;
 
@@ -149,9 +150,12 @@ void setup() {
             public void doAction() {
                 if (!ENABLE_KINECT_SIMULATE) {
                     context.stopTrackingSkeleton(mouseId);
+                    context.startPoseDetection("Psi", mouseId);
                 }
             }
         }), 4, 0);
+        
+        tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
     }
     
     legendX = drawWidth - 400.0;
@@ -187,7 +191,9 @@ void draw() {
     // see module UpdateUI for update* methods
     updateViewArea();
     
-    updateMenu();
+    if (!ENABLE_KINECT) {
+        updateMenu();
+    }
     
     updateLegend();
     
@@ -581,4 +587,67 @@ int getChr(String stringChr) {
     }
     return chr;
     
+}
+
+boolean mouseInRect(float x1, float y1, float x2, float y2) {
+    for (int i = 0; i < users.size(); i++) {
+        PVector mouse = users.get(i).cursorPos;
+        if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+boolean mousePressedInRect(float x1, float y1, float x2, float y2) {
+    for (int i = 0; i < users.size(); i++) {
+        PVector mouse = users.get(i).cursorPos;
+        if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2 && users.get(i).pressed) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+PVector addAngle(PVector p, float angle) {
+    PVector newp = new PVector();
+    
+    float a = atan(-p.y / p.x);
+    
+    if (p.x < 0.0) {
+        a = PI + a;
+    } else if (a < 0.0) {
+        a = TWO_PI + a;
+    } else if (a == -0.0) {
+        a = 0.0;
+    }
+    
+    a += angle;
+    
+    while (a > TWO_PI) {
+        a -= TWO_PI;
+    }
+    
+    while (a < 0.0) {
+        a += TWO_PI;
+    }
+    
+    float m = dist(0, 0, p.x, p.y);
+    
+    newp.x = cos(a) * m;
+    newp.y = -sin(a) * m;
+    
+    return newp;
+}
+
+PVector[] addAngleBatch(PVector[] p, float angle) {
+    PVector[] ret = new PVector[p.length];
+    
+    for (int i = 0; i < p.length; i++) {
+        ret[i] = addAngle(p[i], angle);
+    }
+    
+    return ret;
 }

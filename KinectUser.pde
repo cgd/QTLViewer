@@ -12,7 +12,22 @@ class KinectUser {
     PVector righthand = null;
     PVector plefthand; // previous hand coords
     PVector prighthand;
+    PVector dragstart = null;
     PVector CoM; // center of mass coords, used for hand depth
+    
+    PVector[] arrow = new PVector[] {
+        new PVector(-16, 0),
+        new PVector(-16, -8),
+        new PVector(-8, -8),
+        new PVector(-8, -32),
+        new PVector(-32, -32),
+        new PVector(0, -sin(PI / 3.0) * 64.0),
+        new PVector(32, -32),
+        new PVector(8, -32),
+        new PVector(8, -8),
+        new PVector(16, -8),
+        new PVector(16, 0)
+    };
     
     long righthandDown = -1; // time hold start
     long lefthandDown = -1; // same, but for angle
@@ -28,9 +43,12 @@ class KinectUser {
     boolean leftReady = true;
     boolean dragZoom = false;
     boolean zoomReady = true;
-    boolean pressed;
+    boolean dragReady = true;
+    boolean pressed = false;
     
     PVector cursorPos;
+    
+    PFont big = createFont("Arial", 64.0, true);
     
     KinectUser() {
         cursorPos = new PVector(drawWidth / 2.0, drawHeight / 2.0);
@@ -41,6 +59,10 @@ class KinectUser {
     }
     
     boolean update(PVector newleft, PVector newright, PVector newCoM) {
+        if (pressed) {
+            pressed = false;
+        }
+        
         float seconds = (System.currentTimeMillis() - lastTime) / 1000.0;
         boolean retVal = false;
         lastTime = System.currentTimeMillis();
@@ -85,7 +107,7 @@ class KinectUser {
         }
         
         // right hand down
-        if (rightvelocity < 5.0 && newCoM.z - righthand.z > DEPTH_LOWER && !dragZoom) {
+        if (rightvelocity < 250.0 && newCoM.z - righthand.z > DEPTH_LOWER && !dragZoom) {
             if (righthandDown == -1) {
                 righthandDown = System.currentTimeMillis();
             }
@@ -96,6 +118,9 @@ class KinectUser {
             ready = true;
             leftReady = true;
         }
+        
+        textFont(big);
+        //text(leftangle, drawWidth, 128);
         
         // left and right hands down
         if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady && tabs.currentpage == 1) {
@@ -113,16 +138,25 @@ class KinectUser {
             lefthandDown = -1;
             leftReady = false; // don't register angles while zooming
             ready = false;
-        } else if (leftangle > 45.0 && leftangle < 60.0) { // left hand in angle region
+            dragstart = null;
+        } else if (leftangle > 100.0 && leftangle < 120.0 && dragstart == null) { // left hand in angle region
+            // NOTE: using center of mass (CoM) only provides one other point to use in calculating the angle
+            // for this reason, angles are larger than they otherwise would be
             if (lefthandDown == -1) {
                 lefthandDown = System.currentTimeMillis();
             }
             
             dragZoom = false;
             zoomReady = false;
+            dragstart = null;
+        } else if (CoM.z - lefthand.z > ((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + DEPTH_LOWER) {
+            if (dragstart == null) {
+                dragstart = lefthand;
+            }
         } else {
             lefthandDown = -1;
             dragZoom = false;
+            dragstart = null;
             leftReady = true;
             
             if (!(CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER)) {
@@ -132,7 +166,7 @@ class KinectUser {
         
         // right hand has been held down
         if (!dragZoom && righthandDown != -1 && System.currentTimeMillis() - righthandDown >= 2000 && System.currentTimeMillis() - righthandDown < 2500 && ready) {
-            mousePressed = retVal = true;
+            mousePressed = retVal = pressed = true;
             mouseButton = LEFT;
             mouseX = round(cursorPos.x);
             mouseY = round(cursorPos.y);
@@ -152,7 +186,7 @@ class KinectUser {
         }
         
         // start timer if hand distance changes less than 5.0 pixels
-        if (dragZoom && phandDiff != -1.0 && CoM.z - lefthand.z > DEPTH_LOWER && abs(phandDiff - handDiff) < 5.0) {
+        if (dragZoom && phandDiff != -1.0 && CoM.z - lefthand.z > DEPTH_LOWER && abs(phandDiff - handDiff) < 10.0) {
             if (sameDistTime == -1) {
                 sameDistTime = System.currentTimeMillis();
             }
@@ -177,11 +211,61 @@ class KinectUser {
         strokeWeight(1);
         ellipseMode(CENTER);
         
+        if (dragstart != null) {
+            pushStyle();
+            noStroke();
+            fill(0x00);
+            
+            float angle = 0.0;
+            
+            if (lefthand.y - dragstart.y > 0) { // point down
+                angle = PI;
+                
+                if (lefthand.x - dragstart.x > 0) { // point right
+                    angle = (5 * PI) / 4.0;
+                } else if (lefthand.x - dragstart.x < 0) { // point left
+                    angle = (3 * PI) / 4.0;
+                }
+            } else if (lefthand.y - dragstart.y < 0) { // point up
+                angle = 0;
+                
+                if (lefthand.x - dragstart.x > 0) { // point right
+                    angle = (7 * PI) / 4.0;
+                } else if (lefthand.x - dragstart.x < 0) { // point left
+                    angle = PI / 4.0;
+                }
+            } else if (lefthand.x - dragstart.x > 0) { // point right
+                angle = 3 * HALF_PI;
+            } else if (lefthand.x - dragstart.x < 0) { // point left
+                angle = HALF_PI;
+            } else {
+                //fill(0xFF, 0x00); // don't draw
+            }
+            
+            if (tabs.currentpage == 0) { // file management
+                if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
+                    filebrowser.pan(new PVector(righthand.x - dragstart.x, lefthand.y - dragstart.y));
+                }
+            }
+            
+            dragstart = lefthand;
+            
+            beginShape();
+            
+            for (PVector _p : addAngleBatch(arrow, angle)) {
+                vertex(lefthand.x + _p.x, lefthand.y + _p.y);
+            }
+            
+            endShape(CLOSE);
+            
+            popStyle();
+        }
+        
         if (lefthandDown != -1 && System.currentTimeMillis() - lefthandDown > 1000 && System.currentTimeMillis() - lefthandDown < 3000) {
-            float radius = 30.0;
+            float radius = 50.0;
             
             if (righthandDown != -1 && System.currentTimeMillis() - righthandDown > 1000 && System.currentTimeMillis() - righthandDown < 2500) {
-                radius = 40.0;
+                radius = 70.0;
             }
             
             if (System.currentTimeMillis() - lefthandDown > 2500) {
@@ -200,12 +284,12 @@ class KinectUser {
                 fill(0x00, 0x00, 0xFF);
             }
             
-            arc(cursorPos.x, cursorPos.y, 30.0, 30.0, 0.0, map(System.currentTimeMillis() - righthandDown, 1000, 2000, 0.0, TWO_PI));
+            arc(cursorPos.x, cursorPos.y, 50.0, 50.0, 0.0, map(System.currentTimeMillis() - righthandDown, 1000, 2000, 0.0, TWO_PI));
         }
 
         if (!dragZoom) {
             fill(0xFF, 0x00, 0x00, (newCoM.z - righthand.z > DEPTH_LOWER) ? 0xFF : 0x7F);
-            ellipse(cursorPos.x, cursorPos.y, 20.0, 20.0);
+            ellipse(cursorPos.x, cursorPos.y, 30.0, 30.0);
         } else {
             if (sameDistTime != -1) {
                 stroke(0x00, map(System.currentTimeMillis() - sameDistTime, 0, 2000, 0xFF, 0x00));
@@ -227,7 +311,7 @@ class KinectUser {
     
     float getAngle(PVector center, PVector pt) {
         if (pt.y < center.y) {
-            return 90.0 + ((180.0 / PI) * atan(abs(center.x - pt.x) / abs(center.y - pt.y)));
+            return 180 - ((180.0 / PI) * atan(abs(center.x - pt.x) / abs(center.y - pt.y)));
         } else if (pt.y > center.y) {
             return (180.0 / PI) * atan(abs(center.x - pt.x) / abs(center.y - pt.y));
         } else {

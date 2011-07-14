@@ -26,6 +26,10 @@ abstract class UIComponent {
     abstract int size();
     
     String toString() { return ""; }
+    
+    void pan(PVector vec) { }
+    
+    void zoom(PVector vec) { }
 }
 
 abstract class UIComponentContainer extends UIComponent {
