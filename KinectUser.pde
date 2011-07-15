@@ -59,6 +59,7 @@ class KinectUser {
     }
     
     boolean update(PVector newleft, PVector newright, PVector newCoM) {
+        textFont(big);
         if (pressed) {
             pressed = false;
         }
@@ -119,8 +120,15 @@ class KinectUser {
             leftReady = true;
         }
         
-        textFont(big);
-        //text(leftangle, drawWidth, 128);
+        if (dragstart != null && !(CoM.z - lefthand.z > ((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + DEPTH_LOWER)) { // dragstart is about to be set to null, tell components to stop panning
+            switch (tabs.currentpage) {
+                case 0:
+                    if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
+                        filebrowser.panEnd(ID);
+                    }
+                    break;
+            }
+        }
         
         // left and right hands down
         if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady && tabs.currentpage == 1) {
@@ -152,7 +160,17 @@ class KinectUser {
         } else if (CoM.z - lefthand.z > ((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + DEPTH_LOWER) {
             if (dragstart == null) {
                 dragstart = lefthand;
+                
+                switch (tabs.currentpage) {
+                    case 0:
+                        if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
+                            filebrowser.panStart(ID);
+                        }
+                        break;
+                }
             }
+            
+            lefthandDown = -1;
         } else {
             lefthandDown = -1;
             dragZoom = false;
@@ -216,36 +234,29 @@ class KinectUser {
             noStroke();
             fill(0x00);
             
-            float angle = 0.0;
+            float hyp = dist(lefthand.x, lefthand.y, dragstart.x, dragstart.y);
+            float angle = acos((lefthand.x - dragstart.x) / hyp);
             
-            if (lefthand.y - dragstart.y > 0) { // point down
-                angle = PI;
-                
-                if (lefthand.x - dragstart.x > 0) { // point right
-                    angle = (5 * PI) / 4.0;
-                } else if (lefthand.x - dragstart.x < 0) { // point left
-                    angle = (3 * PI) / 4.0;
-                }
-            } else if (lefthand.y - dragstart.y < 0) { // point up
-                angle = 0;
-                
-                if (lefthand.x - dragstart.x > 0) { // point right
-                    angle = (7 * PI) / 4.0;
-                } else if (lefthand.x - dragstart.x < 0) { // point left
-                    angle = PI / 4.0;
-                }
-            } else if (lefthand.x - dragstart.x > 0) { // point right
-                angle = 3 * HALF_PI;
-            } else if (lefthand.x - dragstart.x < 0) { // point left
-                angle = HALF_PI;
-            } else {
-                //fill(0xFF, 0x00); // don't draw
+            if (lefthand.y - dragstart.y < 0.0) {
+                angle = TWO_PI - angle;
             }
             
-            if (tabs.currentpage == 0) { // file management
-                if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
-                    filebrowser.pan(new PVector(righthand.x - dragstart.x, lefthand.y - dragstart.y));
-                }
+            angle += HALF_PI;
+            
+            while (angle > TWO_PI) {
+                angle = TWO_PI - angle;
+            }
+            
+            while (angle < 0.0) {
+                angle += TWO_PI;
+            }
+            
+            switch (tabs.currentpage) {
+                case 0: // file management
+                    if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
+                        filebrowser.pan(new PVector(righthand.x - dragstart.x, lefthand.y - dragstart.y));
+                    }
+                    break;
             }
             
             dragstart = lefthand;

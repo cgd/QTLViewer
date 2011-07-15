@@ -29,6 +29,10 @@ abstract class UIComponent {
     
     void pan(PVector vec) { }
     
+    void panStart(int userId) { }
+    
+    void panEnd(int userId) { }
+    
     void zoom(PVector vec) { }
 }
 

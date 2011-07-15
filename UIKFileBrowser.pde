@@ -1,9 +1,9 @@
 class UIKFileBrowser extends UIComponent {
-    float x = 0.0, y = 0.0, cWidth = 0.0, cHeight = 0.0;
+    float x = 0.0, y = 0.0, cWidth = 0.0, cHeight = 0.0, panAmount = 0.0;
     String path;
     String pathText[];
     PFont main = createFont("Arial", 48, true);
-    int page = 0;
+    int page = 0, panId = -1;
     
     UIButton open;
     
@@ -21,18 +21,20 @@ class UIKFileBrowser extends UIComponent {
         
         pathText = path.split("/");
         float w;
+        int startIndex = 0;
         
         do {
             w = 0.0;
             
-            for (int i = 0; i < pathText.length; i++) {
+            for (int i = startIndex; i < pathText.length; i++) {
                 w += textWidth(pathText[i]);
             }
             
             w += 16 * (pathText.length - 1);
             
             if (w >= cWidth) {
-                pathText = subset(pathText, 1);
+                //pathText = subset(pathText, 1);
+                startIndex++;
             }
         } while (w + 8 >= cWidth);
         
@@ -42,8 +44,8 @@ class UIKFileBrowser extends UIComponent {
         
         pathText = splice(pathText, "/", 0);
         
-        for (int i = 0; i < pathText.length - 1; i++) {
-            if (i == 0) {
+        for (int i = startIndex; i < pathText.length - 1; i++) {
+            if (i == startIndex) {
                 line (x, y + 8, x, y + 56);
             }
             
@@ -96,8 +98,8 @@ class UIKFileBrowser extends UIComponent {
         String[] dirs = new File(path).list();
         int maxLines = (int)(cHeight - 72) / 48;
         
-        if (ceil((float)dirs.length / maxLines) < page) {
-            page = 0;
+        while (ceil((float)dirs.length / maxLines) <= page) {
+            page--;
         }
         
         for (int i = page * maxLines, l = 0; i < dirs.length && l < maxLines; i++, l++) {
@@ -108,27 +110,49 @@ class UIKFileBrowser extends UIComponent {
                 fill(0xFF);
                 
                 if (mousePressedInRect(x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48))) {
-                    if(new File(path + dirs[i]).exists() && new File(path + dirs[i]).isDirectory()) {
-                        path += dirs[i];
+                    if(new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isDirectory()) {
+                        path += "/" + dirs[i];
                         break;
-                    } else if (new File(path + dirs[i]).exists() && new File(path + dirs[i]).isDirectory()) {
-                        loadFile(path + dirs[i]);
+                    } else if (new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isDirectory()) {
+                        loadFile(path + "/" + dirs[i]);
                         break;
                     }
                 }
             }
             
-            text(dirs[i], x + 4, y + 72 + ((l + 1) * 48));
+            String title = dirs[i];
+            
+            if (textWidth(title) >= cWidth) {
+                while (textWidth(title + "...") >= cWidth) {
+                    title = title.substring(0, title.length() - 1);
+                }
+                
+                title += "...";
+            }
+            
+            text(title, x + 4, y + 72 + ((l + 1) * 48));
         }
     }
     
     void pan(PVector vec) {
-        if (vec.y > 50.0) {
+        panAmount += vec.y;
+        
+        if (panAmount > 300.0 && panId != -1) {
             page++;
-        } else if (vec.y < -50.0 && page > 0) {
+            panAmount = 0;
+        } else if (panAmount < -300.0 && panId != -1 && page > 0) {
             page--;
+            panAmount = 0;
         }
     }
     
     int size() { return 0; }
+    
+    void panStart(int id) {
+        panId = id;
+    }
+    
+    void panEnd(int id) {
+        panId = -1;
+    }
 }

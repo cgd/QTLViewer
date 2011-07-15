@@ -9,7 +9,7 @@
 */
 
 public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -590,6 +590,10 @@ int getChr(String stringChr) {
 }
 
 boolean mouseInRect(float x1, float y1, float x2, float y2) {
+    if (exiting) {
+        return false;
+    }
+    
     for (int i = 0; i < users.size(); i++) {
         PVector mouse = users.get(i).cursorPos;
         if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2) {
@@ -601,6 +605,10 @@ boolean mouseInRect(float x1, float y1, float x2, float y2) {
 }
 
 boolean mousePressedInRect(float x1, float y1, float x2, float y2) {
+    if (exiting) {
+        return false;
+    }
+    
     for (int i = 0; i < users.size(); i++) {
         PVector mouse = users.get(i).cursorPos;
         if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2 && users.get(i).pressed) {
@@ -614,15 +622,7 @@ boolean mousePressedInRect(float x1, float y1, float x2, float y2) {
 PVector addAngle(PVector p, float angle) {
     PVector newp = new PVector();
     
-    float a = atan(-p.y / p.x);
-    
-    if (p.x < 0.0) {
-        a = PI + a;
-    } else if (a < 0.0) {
-        a = TWO_PI + a;
-    } else if (a == -0.0) {
-        a = 0.0;
-    }
+    float a = realTan(p);
     
     a += angle;
     
@@ -637,7 +637,7 @@ PVector addAngle(PVector p, float angle) {
     float m = dist(0, 0, p.x, p.y);
     
     newp.x = cos(a) * m;
-    newp.y = -sin(a) * m;
+    newp.y = sin(a) * m;
     
     return newp;
 }
@@ -650,4 +650,32 @@ PVector[] addAngleBatch(PVector[] p, float angle) {
     }
     
     return ret;
+}
+
+float realTan(PVector p) {
+    float a = atan(p.y / p.x);
+    
+    if (p.y == 0.0) {
+        if (p.x > 0.0) {
+            a = 0;
+        } else if (p.x < 0.0) {
+            a += PI;
+        }
+    } else if (p.x < 0.0 && p.y > 0.0) {
+        a += PI;
+    } else if (p.x > 0.0 && p.y < 0.0) {
+        a = TWO_PI + a;
+    } else if (p.x < 0.0 && p.y < 0.0) {
+        a += PI;
+    }
+    
+    while (a > TWO_PI) {
+        a -= TWO_PI;
+    }
+    
+    while (a < 0.0) {
+        a += TWO_PI;
+    }
+    
+    return a;
 }
