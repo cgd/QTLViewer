@@ -9,7 +9,7 @@
  */
 
 public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -123,23 +123,6 @@ void setup() {
   large = createFont("Arial", (ENABLE_KINECT) ? 64 : 32, true);
   textFont(large);
 
-  parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
-  fileTree = new UITree(10, 10, 315, drawHeight - 20, new UIListener() { // remove file
-    public int eventHeard(int i, int j) {
-      parentFiles.remove(i);
-      return i;
-    }
-  }
-  , new UIListener() { // remove phenotype
-    public int eventHeard(int i, int j) {
-      ((Parent_File)parentFiles.get(i)).remove(j);
-      return j;
-    }
-  }
-  );
-
-  initMouseWheelListener();
-
   // set up tab container
   String[] titles;
 
@@ -147,14 +130,49 @@ void setup() {
     titles = new String[] {
       "File Management", "LOD Score view", "Chromosome view", "Genome Browser", "User Management"
     };
-  } 
-  else {
+  } else {
     titles = new String[] {
       "LOD Score view", "Chromosome view", "Genome Browser"
     };
   }
-
+  
+  parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
   tabs = new UITabFolder((!ENABLE_KINECT) ? 335 : 10, 30, 10, 10, titles);
+  
+  if (ENABLE_KINECT) {
+      fileTree = new UIKTree(tabs.cWidth - 670, tabs.y + 10, 670, tabs.cHeight - 20, new UIListener() { // remove file
+          public int eventHeard(int i, int j) {
+              parentFiles.remove(i);
+              return i;
+          }
+      }
+      , new UIListener() { // remove phenotype
+          public int eventHeard(int i, int j) {
+              ((Parent_File)parentFiles.get(i)).remove(j);
+              return j;
+          }
+      }
+      );
+      
+      tabs.addComponent(fileTree, 0, 0);
+  } else {
+      fileTree = new UITree(10, 10, 315, drawHeight - 20, new UIListener() { // remove file
+          public int eventHeard(int i, int j) {
+              parentFiles.remove(i);
+              return i;
+          }
+      }
+      , new UIListener() { // remove phenotype
+          public int eventHeard(int i, int j) {
+              ((Parent_File)parentFiles.get(i)).remove(j);
+              return j;
+          }
+      }
+      );
+  }
+
+  initMouseWheelListener();
+
   tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, -35, -25), (ENABLE_KINECT) ? 1 : 0, 0);
   tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), (ENABLE_KINECT) ? 2 : 1, 0);
 

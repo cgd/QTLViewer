@@ -68,7 +68,7 @@ void updateViewArea() {
         tabs.x = tabsXTarget;
     }
     
-    fileTree.cWidth -= (tabs.x - tabsXTarget) * velocity;
+    fileTree.cWidth -= (ENABLE_KINECT) ? 0 : (tabs.x - tabsXTarget) * velocity;
     tabs.x -= (tabs.x - tabsXTarget) * velocity;
     ((LODDisplay)tabs.get((ENABLE_KINECT) ? 1 : 0).get(0)).x = tabs.x + 65;
     ((LODDisplay)tabs.get((ENABLE_KINECT) ? 1 : 0).get(0)).cWidth = -35;
