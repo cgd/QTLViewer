@@ -162,7 +162,7 @@ void updateLegend() {
             }
         }
     } else {
-        legendBorder -= (legendBorder > 0x00) ? frameRate/5.0 : 0;
+        legendBorder -= (legendBorder > 0x00) ? frameRate / 5.0 : 0;
         
         if (legendBorder < 0x00) {
             legendBorder = 0x00;

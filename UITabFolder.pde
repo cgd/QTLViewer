@@ -35,20 +35,21 @@ class UITabFolder extends UIComponent {
         float xOff = 0.0;
         textFont(sfont);
         
-        if (! mousePressed) {
+        if (!mousePressed) {
             ready = true;
         } else if (!(mouseY < y && mouseY > y - ((ENABLE_KINECT) ? 40 : 20) && mouseX > x && mouseX < drawWidth - xLowerMargin)) {
             ready = false;
         }
         
         for (int j = 0; j < size(); j++) {
-            int c_text = 0xCC, c_tab = 0x55;
+            color c_text = 0xCC, c_tab = 0x55;
             
             if (ready && focus && active && mouseX > xOff + x && mouseX < xOff + x + textWidth(get(j).title) + 40.0 && mouseY < y && mouseY > y - ((ENABLE_KINECT) ? 40 : 20)) {
                 if (mousePressed && mouseButton == LEFT) {
                     currentpage = j;
                 } else {
-                    c_text = 0xDD; c_tab = 0x44;
+                    c_text = 0xDD;
+                    c_tab = 0x44;
                 }
             }
             

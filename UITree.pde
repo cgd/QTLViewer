@@ -39,7 +39,7 @@ class UITree extends UITreeNode {
             
             text(t, x + ((cnode.hasChildren) ? 24 : 0), drawy);
             
-            if (mouseX > x+((cnode.hasChildren) ? 24 : 0) && mouseX < x + ((cnode.hasChildren) ? 24 : 0) + textWidth(t) + 12 && mouseY < drawy && mouseY > drawy - 16 && active) {
+            if (mouseX > x + ((cnode.hasChildren) ? 24 : 0) && mouseX < x + ((cnode.hasChildren) ? 24 : 0) + textWidth(t) + 12 && mouseY < drawy && mouseY > drawy - 16 && active) {
                 strokeWeight(2);
                 line(x + ((cnode.hasChildren) ? 24 : 0) + textWidth(t) + 2, drawy - 11, x + ((cnode.hasChildren) ? 24 : 0) + textWidth(t) + 12, drawy - 1);
                 line(x + ((cnode.hasChildren) ? 24 : 0) + textWidth(t) + 2, drawy - 1, x + ((cnode.hasChildren) ? 24 : 0) + textWidth(t) + 12 , drawy - 11);

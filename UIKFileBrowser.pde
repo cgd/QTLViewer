@@ -16,6 +16,14 @@ class UIKFileBrowser extends UIComponent {
     }
     
     void update() {
+        if (ENABLE_KINECT_SIMULATE) {
+            if (keyPressed && key == CODED && keyCode == DOWN) {
+                page++;
+            } else if (keyPressed && key == CODED && keyCode == UP) {
+                page--;
+            }
+        }
+        
         textFont(main);
         fill(0x00);
         
@@ -55,12 +63,12 @@ class UIKFileBrowser extends UIComponent {
                 continue;
             }
             
-            if (mouseInRect(x + w, y + 8, x + w + textWidth(s) + 8, y + 56)) {
+            if (mouseInRect(this, x + w, y + 8, x + w + textWidth(s) + 8, y + 56)) {
                 fill(0x55);
                 rect(x + w - 8, y + 8, textWidth(s) + 16, 48);
                 fill(0xFF);
                 
-                if (mousePressedInRect(x + w, y + 8, x + w + textWidth(s) + 8, y + 56)) {
+                if (mousePressedInRect(this, x + w, y + 8, x + w + textWidth(s) + 8, y + 56)) {
                     path = "/";
                     
                     for (int j = 1; j <= i; j++) {
@@ -104,16 +112,16 @@ class UIKFileBrowser extends UIComponent {
         
         for (int i = page * maxLines, l = 0; i < dirs.length && l < maxLines; i++, l++) {
             fill(0x00);
-            if (mouseInRect(x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48))) {
+            if (mouseInRect(this, x, y + 78 + (l * 48), x + cWidth, y + 72 + ((l + 1) * 48))) {
                 fill(0x55);
-                rect(x, y + 72 + (l * 48) + 6, cWidth, 48);
+                rect(x, y + 78 + (l * 48) , cWidth, 48);
                 fill(0xFF);
                 
-                if (mousePressedInRect(x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48))) {
+                if (mousePressedInRect(this, x, y + 78 + (l * 48), x + cWidth, y + 72 + ((l + 1) * 48))) {
                     if(new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isDirectory()) {
                         path += "/" + dirs[i];
                         break;
-                    } else if (new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isDirectory()) {
+                    } else if (new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isFile()) {
                         loadFile(path + "/" + dirs[i]);
                         break;
                     }

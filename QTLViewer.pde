@@ -27,6 +27,7 @@ boolean dragReady = true, dragging = false;
 int chrColumns = 7;
 int unitThreshold;
 int mouseId = -1;
+int mouseLock = -1;
 
 long lastFrame = 0;
 long lastTime;
@@ -651,7 +652,11 @@ int getChr(String stringChr) {
   return chr;
 }
 
-boolean mouseInRect(float x1, float y1, float x2, float y2) {
+boolean mouseInRect(Object o, float x1, float y1, float x2, float y2) {
+  if (mouseLock != -1 && mouseLock != o.hashCode()) {
+      return false;
+  }
+  
   if (exiting) {
     return false;
   }
@@ -666,7 +671,11 @@ boolean mouseInRect(float x1, float y1, float x2, float y2) {
   return false;
 }
 
-boolean mousePressedInRect(float x1, float y1, float x2, float y2) {
+boolean mousePressedInRect(Object o, float x1, float y1, float x2, float y2) {
+  if (mouseLock != -1 && mouseLock != o.hashCode()) {
+      return false;
+  }
+  
   if (exiting) {
     return false;
   }
@@ -679,6 +688,24 @@ boolean mousePressedInRect(float x1, float y1, float x2, float y2) {
   }
 
   return false;
+}
+
+boolean lockMouse(Object o) {
+    if (mouseLock == -1 || mouseLock == o.hashCode()) {
+        mouseLock = o.hashCode();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+boolean freeMouse(Object o) {
+    if (mouseLock == -1 || mouseLock == o.hashCode()) {
+        mouseLock = -1;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 PVector addAngle(PVector p, float angle) {
