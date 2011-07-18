@@ -123,7 +123,7 @@ class KinectUser {
         if (dragstart != null && !(CoM.z - lefthand.z > ((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + DEPTH_LOWER)) { // dragstart is about to be set to null, tell components to stop panning
             switch (tabs.currentpage) {
                 case 0:
-                    if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowse  r.y + filebrowser.cHeight) {
+                    if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
                         filebrowser.panEnd(ID);
                     }
                     break;
