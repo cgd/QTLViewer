@@ -120,6 +120,7 @@ class UIKFileBrowser extends UIComponent {
                 }
             }
             
+            // bounds exception: -22
             String title = dirs[i];
             
             if (textWidth(title) >= cWidth) {

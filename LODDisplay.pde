@@ -31,6 +31,10 @@ class LODDisplay extends UIComponent {
             cHeight = (drawHeight - y) + cHeight;
         }
         
+        if (map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
+            offset = (zoomFactor * chrTotal) - chrTotal;
+        }
+        
         findMax(this);
         
         if (current_chr > lastChr() - 1) {
@@ -258,8 +262,8 @@ class LODDisplay extends UIComponent {
         
         if (offset > 0.0) {
             offset = 0.0;
-        } else if (map(zoomFactor * (chrTotal - abs(offset)), 0.0, chrTotal * zoomFactor, 0.0, cWidth) <= 0) {
-            //offset = -((chrTotal - offset) * cWidth) / (chrTotal * zoomFactor);
+        } else if (map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
+            offset = (zoomFactor * chrTotal) - chrTotal;
         }
     }
     
