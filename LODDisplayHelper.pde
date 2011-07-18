@@ -234,7 +234,7 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
                 continue;
             }
             
-            if (currentPhenotype.chromosome[k-1] != currentPhenotype.chromosome[k]) {
+            if (currentPhenotype.chromosome[k - 1] != currentPhenotype.chromosome[k]) {
                 lastx = map(currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, chrTotal, 0.0, display.cWidth);
                 lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
             } else {

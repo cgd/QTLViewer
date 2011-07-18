@@ -12,7 +12,7 @@ class LODDisplay extends UIComponent {
     float zoomFactor = 1.0;
     float oldzoomFactor = 1.0;
     float offset = 0.0; // measured in cM
-    int current_chr = -1;
+    int current_chr = -1, panId = -1;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
         super(newX, newY, newWidth, newHeight);
@@ -33,7 +33,7 @@ class LODDisplay extends UIComponent {
         
         findMax(this);
         
-        if (current_chr > lastChr()-1) {
+        if (current_chr > lastChr() - 1) {
             current_chr = -1;
         }
         
@@ -54,7 +54,7 @@ class LODDisplay extends UIComponent {
         
         if (current_chr == -1) {
             for (int i = 0; i < chrLengths.length; i++) {
-                float pos = offset + map(chrOffsets[i] + (chrLengths[i] / 2.0), 0.0, chrTotal * zoomFactor, 0.0, cWidth);
+                float pos = map(offset + chrOffsets[i] + (chrLengths[i] / 2.0), 0.0, chrTotal * zoomFactor, 0.0, cWidth);
                 
                 if (pos >= cWidth || pos <= 0.0) {
                     continue;
@@ -246,4 +246,28 @@ class LODDisplay extends UIComponent {
     }
     
     int size() { return 0; }
+    
+    void pan(PVector vec) {
+        if (current_chr == -1) {
+            if (vec.x < 0.0) {
+                offset -= map(abs(vec.x), 0.0, cWidth, 0.0, chrTotal * zoomFactor);
+            } else if (vec.x > 0.0) {
+                offset += map(vec.x, 0.0, cWidth, 0.0, chrTotal * zoomFactor);
+            }
+        }
+        
+        if (offset > 0.0) {
+            offset = 0.0;
+        } else if (map(zoomFactor * (chrTotal - abs(offset)), 0.0, chrTotal * zoomFactor, 0.0, cWidth) <= 0) {
+            //offset = -((chrTotal - offset) * cWidth) / (chrTotal * zoomFactor);
+        }
+    }
+    
+    void panStart(int ID) {
+        panId = ID;
+    }
+    
+    void panEnd(int ID) {
+        panId = -1;
+    }
 }
