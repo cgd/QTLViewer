@@ -12,6 +12,7 @@ class LODDisplay extends UIComponent {
     float zoomFactor = 1.0;
     float oldzoomFactor = 1.0;
     float offset = 0.0; // measured in cM
+    float yDrag = 0.0;
     int current_chr = -1, panId = -1;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
@@ -31,8 +32,10 @@ class LODDisplay extends UIComponent {
             cHeight = (drawHeight - y) + cHeight;
         }
         
-        if (map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
+        if (current_chr == -1 && map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
             offset = (zoomFactor * chrTotal) - chrTotal;
+        } else if (current_chr != -1 && map(offset + maxOffset, 0.0, zoomFactor * maxOffset, 0.0, cWidth) < cWidth) {
+            offset = (zoomFactor * maxOffset) - maxOffset;
         }
         
         findMax(this);
@@ -214,15 +217,14 @@ class LODDisplay extends UIComponent {
                 if (mouseX > map(offset + chrOffsets[i], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                     if (i == chrOffsets.length - 1) {
                         current_chr = i;
-                        offset = 0.0;
-                        zoomFactor = 1.0;
-                    } else if (mouseX < map(offset + chrOffsets[i+1], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
+                    } else if (mouseX < map(offset + chrOffsets[i + 1], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                         current_chr = i;
-                        offset = 0.0;
-                        zoomFactor = 1.0;
                     }
                 }
-             }
+            }
+            
+            offset = 0.0;
+            zoomFactor = 1.0;
         }
     }
     
@@ -275,6 +277,15 @@ class LODDisplay extends UIComponent {
             offset = 0.0;
         } else if (map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
             offset = (zoomFactor * chrTotal) - chrTotal;
+        }
+        
+        yDrag += vec.y;
+        
+        if (yDrag > 200.0 && current_chr != -1) {
+            yDrag = 0;
+            current_chr = -1;
+            zoomFactor = 1.0;
+            offset = 0.0;
         }
     }
     

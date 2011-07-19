@@ -120,6 +120,10 @@ class UIKFileBrowser extends UIComponent {
             page--;
         }
         
+        if (page == -1) {
+            return;
+        }
+        
         for (int i = page * maxLines, l = 0; i < dirs.length && l < maxLines; i++, l++) {
             fill(0x00);
             

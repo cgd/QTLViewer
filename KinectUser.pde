@@ -3,7 +3,7 @@
 */
 
 class KinectUser {
-    public static final float DEPTH_LOWER = 300.0;
+    public static final float DEPTH_LOWER = 200.0;
     public static final float DEPTH_UPPER = 800.0;
     
     int ID;
@@ -75,7 +75,7 @@ class KinectUser {
             rightvelocity = (float)dist(newright.x, newright.y, righthand.x, righthand.y) / seconds;
             
             if (prighthand != null && newCoM.z - righthand.z > DEPTH_LOWER) {
-                float coef = map(DEPTH_UPPER - (newCoM.z - righthand.z), 0, DEPTH_UPPER - DEPTH_LOWER, 0.1, 2);
+                float coef = map(newCoM.z - righthand.z  , 0, DEPTH_UPPER - DEPTH_LOWER, 0.1, 2);
                 cursorPos.x += coef * (righthand.x - prighthand.x);
                 cursorPos.y += coef * (righthand.y - prighthand.y);
             }

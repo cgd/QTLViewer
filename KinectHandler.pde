@@ -44,7 +44,7 @@ void updateKinect() {
         fill(0xFF, 0x00, 0x00);
         ellipseMode(CENTER);
         ellipse(leftHand.x, leftHand.y, 20.0, 20.0);
-        mousePressed = users.get(0).update(leftHand, new PVector(mouseX, mouseY, 0), new PVector(width / 2.0, height / 2.0,  563.16));
+        mousePressed = users.get(0).update(leftHand, new PVector(mouseX, mouseY, 0), new PVector(width / 2.0, height / 2.0,  284.2105));
         
         return;
     }

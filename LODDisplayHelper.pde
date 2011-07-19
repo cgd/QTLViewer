@@ -259,8 +259,8 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
                     lastx = map(display.offset + currentPhenotype.position[k], 0.0, display.zoomFactor * ceil(display.maxOffset), 0.0, display.cWidth);
                     lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
                 } else if (lastx > display.cWidth || map(display.offset + currentPhenotype.position[k], 0.0, display.zoomFactor * ceil(display.maxOffset), 0.0, display.cWidth) > display.cWidth) {
-                    break;
-                } else if (currentPhenotype.chromosome[k]-1 == display.current_chr) {
+                    //break;
+                } else if (currentPhenotype.chromosome[k] - 1 == display.current_chr) {
                     line(display.x + lastx, (display.y + display.cHeight) - lasty - 50, display.x + (lastx = map(display.offset + currentPhenotype.position[k], 0.0, 
                         display.zoomFactor * ceil(display.maxOffset), 0.0, display.cWidth)), display.y + display.cHeight - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50);
                 }
