@@ -38,7 +38,7 @@ class UIButton extends UIComponent {
         fill(bg);
         stroke(border);
         
-        if (mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight && active) {
+        if (((mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight) || mouseInRect(this, x, x + cWidth, y, y + cHeight)) && active) {
             if (!mousePressed || mouseButton != LEFT && active) {
                 ready = true;
             }

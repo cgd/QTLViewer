@@ -4,6 +4,9 @@ class UIKTree extends UITree {
     int currentFile = -1;
     int currentPh = -1;
     int page = 0;
+    long lastFrame = -1;
+    float panYAmount = 0.0, panXAmount = 0.0;
+    int panId = -1;
     UIButton ryes, rno;
     UIButton rMax, rMin, gMax, gMin, bMax, bMin;
     UIButton enable;
@@ -21,6 +24,7 @@ class UIKTree extends UITree {
                     page = 0;
                 }
                 
+                lastFrame = frameCount;
                 displayFile = false;
                 mousePressed = false;
                 currentPh = -1;
@@ -31,10 +35,12 @@ class UIKTree extends UITree {
         
         rno = new UIButton((drawWidth / 2.0) + 8, drawHeight / 2.0, "No", 128, 64, 48, new UIAction() {
             public void doAction() {
+                lastFrame = frameCount;
+                clientFreeMouse();
+                clientKillMouseEvents();
                 mousePressed = false;
                 displayFile = false;
                 currentPh = -1;
-                clientFreeMouse();
             }
         });
         
@@ -92,7 +98,7 @@ class UIKTree extends UITree {
             }
         });
         
-        enable = new UIButton(264 + (3 * ((drawWidth - 480) / 4.0)), 480, "Enable", (drawWidth - 480) / 4.0, 64, 48, new UIAction() {
+        enable = new UIButton(264 + (3 * ((drawWidth - 480) / 4.0)), 472, "Enable", (drawWidth - 480) / 4.0, 64, 48, new UIAction() {
             public void doAction() {
                 if (currentPh != -1) {
                     if (enable.data.toLowerCase().startsWith("e")) {
@@ -115,15 +121,15 @@ class UIKTree extends UITree {
         fill(0xAA);
         textFont(title);
         rect(x, y + 72, cWidth, cHeight);
-        
+
         if (currentFile >= super.size()) {
-            currentFile = -1;
+            currentFile = super.size() - 1;
         }
         
         if (currentPh != -1 && currentPh >= super.get(currentFile).size()) {
             currentFile = -1;
         } else if (currentFile == -1 && super.size() > 0) {
-                currentFile = 0;
+            currentFile = 0;
         }
         
         if (currentFile != -1) {
@@ -143,7 +149,7 @@ class UIKTree extends UITree {
                 rect(x, y + 8, textWidth(t) + 16, 48);
                 fill(0xFF);
                 
-                if (mousePressedInRect(this, x, y + 8, x + textWidth(t) + 16, y + 56)  && !displayFile && currentPh == -1) {
+                if (mousePressedInRect(this, x, y + 8, x + textWidth(t) + 16, y + 56) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
                     rno.data = "No";
                     rno.x = (drawWidth / 2.0) + 8;
                     rno.y = drawHeight / 2.0;
@@ -189,6 +195,7 @@ class UIKTree extends UITree {
                 }
                 
                 fill(super.get(currentFile).get(i).drawcolor);
+                stroke(0x00);
                 
                 if (super.get(currentFile).get(i).checked) {
                     strokeWeight(2);
@@ -205,7 +212,7 @@ class UIKTree extends UITree {
                     stroke(0x00);
                     fill(0xFF);
                     
-                    if (mousePressedInRect(this, x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48)) && !displayFile && currentPh == -1) {
+                    if (mousePressedInRect(this, x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48)) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
                         rno.data = "Accept";
                         rno.x = 264 + (3 * ((drawWidth - 480) / 4.0));
                         rno.y = 312;
@@ -295,6 +302,9 @@ class UIKTree extends UITree {
                 rect(232 + ((drawWidth - 480) / 4.0), 312, (drawWidth - 480) / 4.0, drawHeight - 572);
                 
                 rect(248 + ((drawWidth - 480) / 2.0), 312, (drawWidth - 480) / 4.0, drawHeight - 572);
+                
+                fill(super.get(currentFile).get(currentPh).drawcolor);
+                rect(264 + (3 * ((drawWidth - 480) / 4.0)), 552, (drawWidth - 480) / 4.0, 64);
             }
         }
     }
@@ -303,20 +313,28 @@ class UIKTree extends UITree {
         freeMouse(this);
     }
     
+    void clientKillMouseEvents() {
+        killMouseEvents(this);
+    }
+    
     void mouseAction() {
-        ryes.mouseAction();
-        rno.mouseAction();
+        if (displayFile || currentPh != -1) {
+            ryes.mouseAction();
+            rno.mouseAction();
+        }
         
-        rMax.mouseAction();
-        rMin.mouseAction();
-        
-        gMax.mouseAction();
-        gMin.mouseAction();
-        
-        bMax.mouseAction();
-        bMin.mouseAction();
-        
-        enable.mouseAction();
+        if (currentPh != -1) {
+            rMax.mouseAction();
+            rMin.mouseAction();
+            
+            gMax.mouseAction();
+            gMin.mouseAction();
+            
+            bMax.mouseAction();
+            bMin.mouseAction();
+            
+            enable.mouseAction();
+        }
         
         if (currentPh != -1 && mouseX > 216 && mouseX < 248 + (3 * ((drawWidth - 480) / 4.0)) && mouseY > 312 && mouseY < 312 + drawHeight - 572 && mousePressed && mouseButton == LEFT) {
             if (mouseX > 216 && mouseX < 216 + ((drawWidth - 480) / 4.0)) { // red box
@@ -330,5 +348,32 @@ class UIKTree extends UITree {
                 super.get(currentFile).get(currentPh).drawcolor = color(red(c), green(c), map(312 + drawHeight - 572 - mouseY, 0, drawHeight - 572, 0, 0xFF));
             }
         }
+    }
+    
+    void pan(PVector vec) {
+        panYAmount += vec.y;
+        panXAmount += vec.x;
+        
+        if (panYAmount > 300.0 && panId != -1) {
+            page++;
+            panYAmount = 0;
+        } else if (panYAmount < -300.0 && panId != -1 && page > 0) {
+            page--;
+            panYAmount = 0;
+        }
+        
+        if (panXAmount > 200.0 && panId != -1 && currentFile <= size() -) {
+            currentFile++;
+        } else if (panXAmount < -200.0 && panId != -1 && currentFile > 0) {
+            currentFile--
+        }
+    }
+    
+    void panStart(int id) {
+        panId = id;
+    }
+    
+    void panEnd(int id) {
+        panId = -1;
     }
 }

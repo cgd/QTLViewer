@@ -681,14 +681,15 @@ boolean mousePressedInRect(Object o, float x1, float y1, float x2, float y2) {
   }
   
   if (exiting) {
-    return false;
+      return false;
   }
 
   for (int i = 0; i < users.size(); i++) {
-    PVector mouse = users.get(i).cursorPos;
-    if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2 && users.get(i).pressed) {
-      return true;
-    }
+      PVector mouse = users.get(i).cursorPos;
+      
+      if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2 && users.get(i).pressed) {
+          return true;
+      }
   }
 
   if (ENABLE_KINECT_SIMULATE && mousePressed && mouseButton == LEFT && mouseX > x1 && mouseX < x2 && mouseY > y1 && mouseY < y2) {
@@ -696,6 +697,18 @@ boolean mousePressedInRect(Object o, float x1, float y1, float x2, float y2) {
   }
   
   return false;
+}
+
+boolean killMouseEvents(Object o) {
+    if (mouseLock != -1 && mouseLock != o.hashCode()) {
+        return false;
+    }
+    
+    for (int i = 0; i < users.size(); i++) {
+        users.get(i).pressed = false;
+    }
+    
+    return true;
 }
 
 boolean lockMouse(Object o) {

@@ -126,6 +126,8 @@ class KinectUser {
                     if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
                         filebrowser.panEnd(ID);
                     }
+                    
+                    ((UIKTree)fileTree).panEnd(ID);
                     break;
                 case 1:
                     loddisplay.panEnd(ID);
@@ -169,6 +171,8 @@ class KinectUser {
                         if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
                             filebrowser.panStart(ID);
                         }
+                        
+                        ((UIKTree)fileTree).panStart(ID);
                         break;
                     case 1:
                         loddisplay.panStart(ID);
@@ -261,6 +265,9 @@ class KinectUser {
                 case 0: // file management
                     if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
                         filebrowser.pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
+                        ((UIKTree)fileTree).pan(new PVector(lefthand.x - dragstart.x, 0));
+                    } else {
+                        ((UIKTree)fileTree).pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
                     }
                     break;
                 case 1:

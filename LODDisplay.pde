@@ -70,16 +70,17 @@ class LODDisplay extends UIComponent {
         } else {
             for (int i = 1; i <= 4; i++) {
                 int value = round((i * ceil(maxOffset)) / 4.0);
-                float x_off = map(value, 0.0, ceil(maxOffset), 0.0, cWidth);
+                float x_off = map(offset + value, 0.0, zoomFactor * ceil(maxOffset), 0.0, cWidth);
                 String valueText = str(value), unit = "cM";
                 
                 if (unitSelect.selected == 1) {
                     unit = "bP";
-                    valueText = str(Math.round(unitConverter.centimorgansToBasePairs(current_chr + 1, (double)value)/10000.0)*10000.0);
+                    valueText = str(Math.round(unitConverter.centimorgansToBasePairs(current_chr + 1, (double)value) / 10000.0) * 10000.0);
                 }
                 
                 if (x + x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) > x + cWidth) {
-                    text(valueText + ((i == 1) ? unit : ""), x + 16 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + cHeight) - 14);
+                    break;
+                    //text(valueText + ((i == 1) ? unit : ""), x + 16 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + cHeight) - 14);
                 } else {
                     text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0), (y + cHeight) - 14);
                 }
@@ -163,7 +164,7 @@ class LODDisplay extends UIComponent {
                     if ((currentPhenotype.thresholds.length > 1 && thresholdsEqual(currentPhenotype.thresholds))) {
                         endX = x + cWidth;
                     } else {
-                        endX = map(chrOffsets[xNum], 0.0, chrTotal, x, (x + cWidth));
+                        endX = map(offset + chrOffsets[xNum], 0.0, zoomFactor * chrTotal, x, x + cWidth);
                     }
                     
                     if ((currentPhenotype.thresholds.length > 1 && !thresholdsEqual(currentPhenotype.thresholds)) || currentPhenotype.thresholds.length > 0) {
@@ -210,11 +211,15 @@ class LODDisplay extends UIComponent {
     void mouseAction() {
         if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
             for (int i = 0; i < chrOffsets.length; i++) {
-                if (mouseX > map(chrOffsets[i], 0.0, chrTotal, 0.0, drawWidth - 50 - x) + x) {
+                if (mouseX > map(offset + chrOffsets[i], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                     if (i == chrOffsets.length - 1) {
                         current_chr = i;
-                    } else if (mouseX < map(chrOffsets[i+1], 0.0, chrTotal, 0.0, drawWidth - 50 - x) + x) {
+                        offset = 0.0;
+                        zoomFactor = 1.0;
+                    } else if (mouseX < map(offset + chrOffsets[i+1], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                         current_chr = i;
+                        offset = 0.0;
+                        zoomFactor = 1.0;
                     }
                 }
              }
@@ -257,6 +262,12 @@ class LODDisplay extends UIComponent {
                 offset -= map(abs(vec.x), 0.0, cWidth, 0.0, chrTotal * zoomFactor);
             } else if (vec.x > 0.0) {
                 offset += map(vec.x, 0.0, cWidth, 0.0, chrTotal * zoomFactor);
+            }
+        } else {
+            if (vec.x < 0.0) {
+                offset -= map(abs(vec.x), 0.0, cWidth, 0.0, chrLengths[current_chr] * zoomFactor);
+            } else if (vec.x > 0.0) {
+                offset += map(vec.x, 0.0, cWidth, 0.0, chrLengths[current_chr] * zoomFactor);
             }
         }
         
