@@ -9,7 +9,7 @@
  */
 
 public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -668,6 +668,10 @@ boolean mouseInRect(Object o, float x1, float y1, float x2, float y2) {
     }
   }
 
+  if (ENABLE_KINECT_SIMULATE && mouseX > x1 && mouseX < x2 && mouseY > y1 && mouseY < y2) {
+      return true;
+  }
+  
   return false;
 }
 
@@ -687,6 +691,10 @@ boolean mousePressedInRect(Object o, float x1, float y1, float x2, float y2) {
     }
   }
 
+  if (ENABLE_KINECT_SIMULATE && mousePressed && mouseButton == LEFT && mouseX > x1 && mouseX < x2 && mouseY > y1 && mouseY < y2) {
+      return true;
+  }
+  
   return false;
 }
 

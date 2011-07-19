@@ -96,7 +96,17 @@ class UIKFileBrowser extends UIComponent {
             line(x, y + 56, x + w - 8, y + 56);
         }
         
-        text(pathText[pathText.length - 1], x + w, y + 48);
+        String t = pathText[pathText.length - 1];
+        
+        if (textWidth(t) + x + w >= cWidth) {
+            while (textWidth(t + "...") + x + w >= cWidth) {
+                t = t.substring(0, t.length() - 1);
+            }
+            
+            t += "...";
+        }
+        
+        text(t, x + w, y + 48);
         
         fill(0xAA);
         rect(x, y + 72, cWidth, cHeight - 72);
@@ -112,6 +122,7 @@ class UIKFileBrowser extends UIComponent {
         
         for (int i = page * maxLines, l = 0; i < dirs.length && l < maxLines; i++, l++) {
             fill(0x00);
+            
             if (mouseInRect(this, x, y + 78 + (l * 48), x + cWidth, y + 72 + ((l + 1) * 48))) {
                 fill(0x55);
                 rect(x, y + 78 + (l * 48) , cWidth, 48);

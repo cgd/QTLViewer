@@ -121,6 +121,10 @@ void updateViewArea() {
 * @param colors an int array containing the colors of the phenotypes
 */
 void updateLegend() {
+    if (ENABLE_KINECT) { // FIX THIS LATER
+        return;
+    }
+    
     textFont(legendFont);
     
     String[] names = new String[0];
