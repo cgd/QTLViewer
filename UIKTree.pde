@@ -362,10 +362,10 @@ class UIKTree extends UITree {
             panYAmount = 0;
         }
         
-        if (panXAmount > 200.0 && panId != -1 && currentFile <= size() -) {
+        if (panXAmount > 200.0 && panId != -1 && currentFile <= size()) {
             currentFile++;
         } else if (panXAmount < -200.0 && panId != -1 && currentFile > 0) {
-            currentFile--
+            currentFile--;
         }
     }
     
