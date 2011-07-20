@@ -179,12 +179,17 @@ void setup() {
         tabs.addComponent(new UIButton((drawWidth / 2.0) - 128, (drawHeight / 2.0) - 64, "Stop Tracking", 256, 128, 32, new UIAction() {
             public void doAction() {
                 if (!ENABLE_KINECT_SIMULATE) {
+                    for (int i = 0; i < users.size(); i++) {
+                        if (users.get(i).ID == mouseId) {
+                            users.remove(i);
+                        }
+                    }
+                    
                     context.stopTrackingSkeleton(mouseId);
                     context.startPoseDetection("Psi", mouseId);
                 }
             }
-        }
-        ), 4, 0);
+        }), 4, 0);
     
         tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
     }
