@@ -261,18 +261,20 @@ class KinectUser {
                 angle += TWO_PI;
             }
             
-            switch (tabs.currentpage) {
-                case 0: // file management
-                    if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
-                        filebrowser.pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
-                        ((UIKTree)fileTree).pan(new PVector(lefthand.x - dragstart.x, 0));
-                    } else {
-                        ((UIKTree)fileTree).pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
-                    }
-                    break;
-                case 1:
-                    loddisplay.pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
-                    break;
+            if (!exiting && !kinect_showmenu) {
+                switch (tabs.currentpage) {
+                    case 0: // file management
+                        if (lefthand.x > filebrowser.x && lefthand.x < filebrowser.x + filebrowser.cWidth && lefthand.y > filebrowser.y && lefthand.y < filebrowser.y + filebrowser.cHeight) {
+                            filebrowser.pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
+                            ((UIKTree)fileTree).pan(new PVector(lefthand.x - dragstart.x, 0));
+                        } else {
+                            ((UIKTree)fileTree).pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
+                        }
+                        break;
+                    case 1:
+                        loddisplay.pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
+                        break;
+                }
             }
             
             dragstart = lefthand;
