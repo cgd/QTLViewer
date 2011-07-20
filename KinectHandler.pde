@@ -3,6 +3,10 @@
 */
 
 PVector leftHand = new PVector(0, 0, 565);
+PFont alert = createFont("Arial", 32, true);
+float imgHeight;
+long alertTime = -1;
+String alertText = "";
 
 void initKinect() {
     users = new ArrayList<KinectUser>();
@@ -53,7 +57,7 @@ void updateKinect() {
     
     context.update();
 
-    float imgHeight = (width - drawWidth) / (4.0 / 3.0);
+    imgHeight = (width - drawWidth) / (4.0 / 3.0);
     image(context.sceneImage(), drawWidth, height - imgHeight, width - drawWidth, imgHeight);
     
     boolean isAnyPressed = false;
@@ -85,19 +89,34 @@ void updateKinect() {
         }
     }
     
+    textFont(alert);
+    fill(0x00);
+    
+    text(alertText, drawWidth + 4, height - imgHeight - 4);
+    
     mousePressed = isAnyPressed;
+    
+    if (alertTime != -1 && System.currentTimeMillis() - alertTime > 3000) {
+        alertText = "";
+        alertTime = -1;
+    }
 }
 
 // callbacks
 void onNewUser(int userId) {
-  println("onNewUser - userId: " + userId);
-  println("  start pose detection");
+  //println("onNewUser - userId: " + userId);
+  //println("  start pose detection");
+  
+  alertText = "New user " + userId;
   
   context.startPoseDetection("Psi",userId);
 }
 
 void onLostUser(int userId) {
-  println("onLostUser - userId: " + userId);
+  //println("onLostUser - userId: " + userId);
+  alertTime = System.currentTimeMillis();
+  
+  alertText = "Lost user " + userId;
   
   for (int i = 0; i < users.size(); i++) {
       if (users.get(i).ID == userId) {
@@ -108,38 +127,49 @@ void onLostUser(int userId) {
 }
 
 void onStartCalibration(int userId) {
-  println("onStartCalibration - userId: " + userId);
+  //println("onStartCalibration - userId: " + userId);
 }
 
 void onEndCalibration(int userId, boolean successfull) {
-  println("onEndCalibration - userId: " + userId + ", successfull: " + successfull);
+  //println("onEndCalibration - userId: " + userId + ", successfull: " + successfull);
   
-  if (successfull) { 
-    println("  User calibrated !!!");
-    context.startTrackingSkeleton(userId);
-    
-    if (!hasUser(userId)) {
-        KinectUser newU = new KinectUser();
-        newU.ID = userId;
-        users.add(newU);
-    }
+  if (successfull) {
+      alertTime = System.currentTimeMillis();
+      
+      alertText = "Calibrated user " + userId;
+      
+      //println("  User calibrated !!!");
+      context.startTrackingSkeleton(userId);
+      
+      if (!hasUser(userId)) {
+          KinectUser newU = new KinectUser();
+          newU.ID = userId;
+          users.add(newU);
+      }
   } else {
-    println("  Failed to calibrate user !!!");
-    println("  Start pose detection");
-    context.startPoseDetection("Psi",userId);
+      alertTime = System.currentTimeMillis();
+      
+      alertText = "Failed to calibrate user " + userId;
+      
+      //println("  Failed to calibrate user !!!");
+      //println("  Start pose detection");
+      context.startPoseDetection("Psi",userId);
   }
 }
 
 void onStartPose(String pose,int userId) {
-  println("onStartPose - userId: " + userId + ", pose: " + pose);
-  println(" stop pose detection");
+  //println("onStartPose - userId: " + userId + ", pose: " + pose);
+  //println(" stop pose detection");
+  alertTime = System.currentTimeMillis();
+  
+  alertText = "Calibrating user " + userId + "...";
   
   context.stopPoseDetection(userId); 
   context.requestCalibrationSkeleton(userId, true);
 }
 
 void onEndPose(String pose,int userId) {
-  println("onEndPose - userId: " + userId + ", pose: " + pose);
+  //println("onEndPose - userId: " + userId + ", pose: " + pose);
 }
 
 boolean hasUser(int userId) {

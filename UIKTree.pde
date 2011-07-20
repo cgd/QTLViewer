@@ -13,6 +13,7 @@ class UIKTree extends UITree {
     
     UIKTree(float newX, float newY, float newWidth, float newHeight, UIListener nodeRemove, UIListener elementRemove) {
         super(newX, newY, newWidth, newHeight, nodeRemove, elementRemove);
+        cHeight = newHeight;
         
         ryes = new UIButton((drawWidth / 2.0) - 136, drawHeight / 2.0, "Yes", 128, 64, 48, new UIAction() {
             public void doAction() {

@@ -278,7 +278,7 @@ class LODDisplay extends UIComponent {
             offset = (zoomFactor * chrTotal) - chrTotal;
         }
         
-        if (vec.y > 150.0 && current_chr != -1) {
+        if (vec.y > 100.0 && current_chr != -1) {
             current_chr = -1;
             zoomFactor = 1.0;
             offset = 0.0;

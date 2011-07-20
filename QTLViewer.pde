@@ -143,7 +143,7 @@ void setup() {
     tabs = new UITabFolder((!ENABLE_KINECT) ? 335 : 10, 30, 10, 10, titles);
     
     if (ENABLE_KINECT) {
-        fileTree = new UIKTree(tabs.cWidth - 670, tabs.y + 10, 670, tabs.cHeight - 20, new UIListener() { // remove file
+        fileTree = new UIKTree(tabs.cWidth - 670, tabs.y + 10, 670, tabs.cHeight - 92, new UIListener() { // remove file
             public int eventHeard(int i, int j) {
                 parentFiles.remove(i);
                 return i;
