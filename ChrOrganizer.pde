@@ -121,15 +121,15 @@ void drawChromosomes(ChrDisplay display) {
         strokeWeight(1);
         noStroke();
         
-        text("chromosome " + chrNames[i], display.x + (display.chromosomeWidth*(i%chrColumns)) + 2, display.y + (display.chromosomeHeight*floor(i/chrColumns)) + 14); // draw the label
-        ellipse(display.x + (display.chromosomeWidth*(i%chrColumns)) + 8, display.y + (display.chromosomeHeight*floor(i/chrColumns)) + 20, 8, 8); // draw marker, usually at the base
+        text("chromosome " + chrNames[i], display.x + (display.chromosomeWidth * (i % chrColumns)) + 2, display.y + (display.chromosomeHeight * floor(i / chrColumns)) + 14); // draw the label
+        ellipse(display.x + (display.chromosomeWidth * (i % chrColumns)) + 8, display.y + (display.chromosomeHeight * floor(i / chrColumns)) + 20, 8, 8); // draw marker, usually at the base
         
         strokeWeight(2);
         stroke(0x00);
         
         // (i % chrColumns) is the column that the chromosome is drawn in, chrColumns is defined in QTLViewer.pde and defaults to 7
         // (multiplier) is the ratio of the length of the longest chromosome to its length on the screen
-        line(display.x + (display.chromosomeWidth*(i%chrColumns)) + 8, display.y + (display.chromosomeHeight*floor(i/chrColumns)) + 20 + (chrMarkerpos[i]*display.multiplier),
-            display.x + (display.chromosomeWidth*(i%chrColumns)) + 8, display.y + (display.chromosomeHeight*floor(i/chrColumns)) + 20 + (display.multiplier*chrLengths[i]));
+        line(display.x + (display.chromosomeWidth * (i % chrColumns)) + 8, display.y + (display.chromosomeHeight * floor(i / chrColumns)) + 20 + (chrMarkerpos[i] * display.multiplier),
+            display.x + (display.chromosomeWidth * (i % chrColumns)) + 8, display.y + (display.chromosomeHeight * floor(i / chrColumns)) + 20 + (display.multiplier * chrLengths[i]));
     }
 }

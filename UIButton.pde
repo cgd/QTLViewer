@@ -5,7 +5,7 @@ class UIButton extends UIComponent {
     color bg = color(0xCC), border = color(0xFF), mouse = color(0x99), textc = color(0x33);
     boolean ready = true, custom = false;
     UIAction action = null;
-    
+    Object key = null;
     UIButton(float newX, float newY, String newData, UIAction newAction) {
         super();
         x = newX; 
@@ -38,7 +38,7 @@ class UIButton extends UIComponent {
         fill(bg);
         stroke(border);
         
-        if (((mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight) || mouseInRect(this, x, x + cWidth, y, y + cHeight)) && active) {
+        if (((mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight) || mouseInRect((key == null) ? this : key, x, y, x + cWidth, y + cHeight)) && active) {
             if (!mousePressed || mouseButton != LEFT && active) {
                 ready = true;
             }
@@ -52,6 +52,10 @@ class UIButton extends UIComponent {
         rect(x, y, cWidth, cHeight);
         fill(textc);
         text(data, x + ((cWidth - textWidth(data)) / 2.0), y + ((cHeight - fsize) / 2.0) + fsize - 4);
+    }
+    
+    void setKey(Object o) {
+        key = o;
     }
     
     void mouseAction() {

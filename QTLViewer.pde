@@ -9,7 +9,7 @@
  */
 
 public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ String[] chrNames;
 ArrayList<Parent_File> parentFiles;
 ArrayList<KinectUser> users;
 
-PFont legendFont = createFont("Arial", 16, true);
+PFont legendFont;
 PFont large, buttonfont = createFont("Arial", 16, true);
 
 UITree fileTree;
@@ -87,10 +87,10 @@ void setup() {
 
   if (ENABLE_KINECT) {
     initKinect();
-  }
-
-  // set up exit prompt, fonts
-  if (ENABLE_KINECT) {
+    
+    legendFont = createFont("Arial", 32, true);
+    
+    // set up exit prompt, fonts
     yes = new UIButton((drawWidth / 2.0) - 80, (drawHeight / 2.0) - 24, "Yes", 72, 48, 32, new UIAction() {
       public void doAction() {
         exit();
@@ -104,8 +104,9 @@ void setup() {
       }
     }
     );
-  } 
-  else {
+  } else {
+    legendFont = createFont("Arial", 16, true);
+    
     yes = new UIButton((drawWidth / 2.0) - 40, (drawHeight / 2.0) - 24, "Yes", new UIAction() {
       public void doAction() {
         exit();
@@ -657,7 +658,7 @@ boolean mouseInRect(Object o, float x1, float y1, float x2, float y2) {
       return false;
   }
   
-  if (exiting) {
+  if (exiting || users == null) {
     return false;
   }
 
@@ -680,7 +681,7 @@ boolean mousePressedInRect(Object o, float x1, float y1, float x2, float y2) {
       return false;
   }
   
-  if (exiting) {
+  if (exiting || users == null) {
       return false;
   }
 

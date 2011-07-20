@@ -120,11 +120,7 @@ void updateViewArea() {
 * @param names a String array containing the names of the phenotypes
 * @param colors an int array containing the colors of the phenotypes
 */
-void updateLegend() {
-    if (ENABLE_KINECT) { // FIX THIS LATER
-        return;
-    }
-    
+void updateLegend() { 
     textFont(legendFont);
     
     String[] names = new String[0];
@@ -132,6 +128,7 @@ void updateLegend() {
     int[] colors = new int[0];
     float maxLen = -1.0;
     
+        
     for (int i = 0; i < fileTree.size(); i++) {
         for (int j = 0; j < fileTree.get(i).size(); j++) {
             if (fileTree.get(i).get(j).checked) {
@@ -148,6 +145,32 @@ void updateLegend() {
     }
     
     if (names.length == 0 || colors.length == 0) {
+        return;
+    }
+    
+    if (ENABLE_KINECT) {
+        strokeWeight(1);
+        stroke(0x00);
+        if (tabs.currentpage == 1 || tabs.currentpage == 2 || tabs.currentpage == 3) {
+            for (int i = 0; i < names.length; i++) {
+                fill(colors[i]);
+                rect(drawWidth + 4, 4 + (i * 32), 32, 32);
+                
+                String _name = names[i];
+                
+                if (textWidth(_name) >= width - drawWidth - 10) {
+                    while (textWidth(_name + "...") >= width - drawWidth - 10) {
+                        _name = _name.substring(0, _name.length() - 1);
+                    }
+                    
+                    _name += "...";
+                }
+                
+                fill(0x00);
+                text(_name, drawWidth + 38, (i + 1) * 32);
+            }
+        }
+
         return;
     }
     

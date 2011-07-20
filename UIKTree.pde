@@ -110,9 +110,20 @@ class UIKTree extends UITree {
                     }
                 }
                 
+                hasUpdated = true;
                 mousePressed = false;
             }
         });
+        
+        ryes.setKey(this);
+        rno.setKey(this);
+        rMax.setKey(this);
+        rMin.setKey(this);
+        gMax.setKey(this);
+        gMin.setKey(this);
+        bMax.setKey(this);
+        bMin.setKey(this);
+        enable.setKey(this);
     }
     
     void update() {
@@ -196,14 +207,17 @@ class UIKTree extends UITree {
                 
                 fill(super.get(currentFile).get(i).drawcolor);
                 stroke(0x00);
-                
-                if (super.get(currentFile).get(i).checked) {
-                    strokeWeight(2);
-                } else {
-                    noStroke();
-                }
+                strokeWeight(1);
                 
                 rect(x, y + 78 + (l * 48), 48, 48);
+                               
+                if (super.get(currentFile).get(i).checked) {
+                    noStroke();
+                    fill(negate(super.get(currentFile).get(i).drawcolor));
+                    
+                    rect(x + 12, y + 90 + (l * 48), 24, 24);
+                }
+                
                 fill(0x00);
                 if (mouseInRect(this, x, y + 78 + (l * 48), x + cWidth, y + 72 + ((l + 1) * 48)) && !displayFile && currentPh == -1) {
                     fill(0x55);
@@ -375,5 +389,18 @@ class UIKTree extends UITree {
     
     void panEnd(int id) {
         panId = -1;
+    }
+    
+    color negate(color c) {
+        return color(0xFF - red(c), 0xFF - green(c), 0xFF - blue(c));
+    }
+    
+    boolean hasUpdated() {
+        if (hasUpdated) {
+            hasUpdated = false;
+            return true;
+        } else {
+            return false;
+        }
     }
 }

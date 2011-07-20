@@ -47,7 +47,7 @@ class LODDisplay extends UIComponent {
         strokeWeight(2);
         stroke(0x00);
         line(x, y, x, (y + cHeight) - 50);
-        line(x, (y + cHeight) - 50, x + cWidth, (y + cHeight) - 50);
+        line(x, y + cHeight - 50, x + cWidth, y + cHeight - 50);
         fill(0x00);
         strokeWeight(1);
         int xNum = chrLengths.length;
@@ -66,8 +66,8 @@ class LODDisplay extends UIComponent {
                     continue;
                 }
                 
-                text(chrNames[i], x + pos - (textWidth(chrNames[i]) / 2.0), (y + cHeight) - 14);
-                line(x + pos, (y + cHeight) - 50, x + pos, (y + cHeight) - 34);
+                text(chrNames[i], x + pos - (textWidth(chrNames[i]) / 2.0), y + cHeight - 14);
+                line(x + pos, y + cHeight - 50, x + pos, y + cHeight - 34);
             }
         } else {
             for (int i = 1; i <= 4; i++) {

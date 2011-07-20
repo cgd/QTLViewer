@@ -13,6 +13,7 @@ class UIKFileBrowser extends UIComponent {
         cWidth = newW;
         cHeight = newH;
         path = System.getProperty("user.home").replace("\\", "/");
+        path = "/Users/braden/Documents/Processing/QTLViewer/data"; // TESTING ONLY, REMOVE LATER
     }
     
     void update() {

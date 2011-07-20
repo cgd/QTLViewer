@@ -30,7 +30,8 @@ class ChrDisplay extends UIComponent {
         chromosomeWidth = cWidth / chrColumns;
         chromosomeHeight = cHeight / ceil(chrLengths.length / (float)chrColumns);
         multiplier = (chromosomeHeight - 24) / max(chrLengths);
-        update = (update || fileTree.hasUpdated());
+        
+        update = (ENABLE_KINECT) ? fileTree.hasUpdated() : (update || fileTree.hasUpdated());
         
         stroke(0x00);
         fill(0x00);
@@ -89,14 +90,14 @@ class ChrDisplay extends UIComponent {
                 stroke(chrs[i].colors[j]);
                 
                 line(
-                    (float)chrs[i].uppers[j].getX()+(8*chrs[i].layers[j]),
+                    (float)chrs[i].uppers[j].getX()+(8 * chrs[i].layers[j]),
                     (float)chrs[i].uppers[j].getY(),
-                    (float)chrs[i].uppers[j].getX()+(8*chrs[i].layers[j]),
+                    (float)chrs[i].uppers[j].getX()+(8 * chrs[i].layers[j]),
                     (float)chrs[i].uppers[j].getY()+chrs[i].heights[j]
                 );
                 
                 ellipse(
-                    (float)chrs[i].uppers[j].getX()+(8*chrs[i].layers[j]),
+                    (float)chrs[i].uppers[j].getX() + (8 * chrs[i].layers[j]),
                     chrs[i].peakYs[j],
                 6, 6);
                 
