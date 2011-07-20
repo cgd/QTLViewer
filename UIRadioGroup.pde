@@ -3,7 +3,7 @@ class UIRadioGroup extends UIComponent {
     int selected;
     boolean focus, active;
     PFont font = createFont("Arial", 16, true);
-    float size = 16.0;
+    float size = 16.0, spacing;
     
     UIRadioGroup(float newX, float newY, String[] t) {
         super();
@@ -13,11 +13,12 @@ class UIRadioGroup extends UIComponent {
         y = newY;
     }
     
-    UIRadioGroup(float newX, float newY, float newSize, String[] t) {
+    UIRadioGroup(float newX, float newY, float newSize, float newSpacing, String[] t) {
         size = newSize;
         x = newX;
         y = newY;
         titles = t;
+        spacing = newSpacing;
         
         font = createFont("Arial", newSize, true);
     }
@@ -36,7 +37,7 @@ class UIRadioGroup extends UIComponent {
         
         for (int i = 0; i < titles.length; i++) {
             fill(0xFF);
-            text(titles[i], x, y + ((10 + size) * i) + size);
+            text(titles[i], x, y + ((10 + size + spacing) * i) + size);
             
             fill(0x55);
             strokeWeight(2);
@@ -46,9 +47,9 @@ class UIRadioGroup extends UIComponent {
                 fill(0xFF);
             }
             
-            ellipse(x + offX + 8, y + ((10 + size) * i) + 2, x + offX + 8 + size, y + ((10 + size) * i) + 2 + size);
+            ellipse(x + offX + 8, y + ((10 + size + spacing) * i) + 2, x + offX + 8 + size, y + ((10 + size + spacing) * i) + 2 + size);
             
-            if (active && focus && mouseX > x + offX + 8 && mouseX < x + offX + 8 + size && mouseY > y + ((10 + size) * i) + 2 && mouseY < y + ((10 + size) * i) + 2 + size && mousePressed && mouseButton == LEFT) {
+            if (active && focus && mouseX > x + offX + 8 && mouseX < x + offX + 8 + size && mouseY > y + ((10 + size + spacing) * i) + 2 && mouseY < y + ((10 + size + spacing) * i) + 2 + size && mousePressed && mouseButton == LEFT) {
                 selected = i;
             }
         }

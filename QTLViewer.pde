@@ -9,7 +9,7 @@
  */
 
 public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -59,6 +59,9 @@ UIButton accept;
 LODDisplay loddisplay;
 ChrDisplay chrdisplay;
 UIKFileBrowser filebrowser;
+UIKSpinner defUpper;
+UIKSpinner defLower;
+UITextInput upperDefault, lowerDefault;
 
 MouseMap unitConverter;
 
@@ -286,6 +289,8 @@ void mousePressed() {
     } else if (kinect_showmenu) {
         quit.mouseAction();
         accept.mouseAction();
+        defUpper.mouseAction();
+        defLower.mouseAction();
     } else if (mouseY < drawHeight + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
         tabs.mouseAction();
     } else {
@@ -677,6 +682,13 @@ boolean killMouseEvents(Object o) {
     return true;
 }
 
+void killMouseEvents() {
+     for (int i = 0; i < users.size(); i++) {
+        users.get(i).pressed = false;
+        users.get(i).righthandDown = -1;
+        users.get(i).ready = false;
+    }
+}
 boolean lockMouse(Object o) {
     if (mouseLock == -1 || mouseLock == o.hashCode()) {
         mouseLock = o.hashCode();

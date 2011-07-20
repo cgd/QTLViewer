@@ -4,6 +4,7 @@ class UIKFileBrowser extends UIComponent {
     String pathText[];
     PFont main = createFont("Arial", 48, true);
     int page = 0, panId = -1;
+    long lastFrame = -1;
     
     UIButton open;
     
@@ -69,7 +70,7 @@ class UIKFileBrowser extends UIComponent {
                 rect(x + w - 8, y + 8, textWidth(s) + 16, 48);
                 fill(0xFF);
                 
-                if (mousePressedInRect(this, x + w, y + 8, x + w + textWidth(s) + 8, y + 56)) {
+                if (mousePressedInRect(this, x + w, y + 8, x + w + textWidth(s) + 8, y + 56) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
                     path = "/";
                     
                     for (int j = 1; j <= i; j++) {
@@ -133,7 +134,7 @@ class UIKFileBrowser extends UIComponent {
                 rect(x, y + 78 + (l * 48) , cWidth, 48);
                 fill(0xFF);
                 
-                if (mousePressedInRect(this, x, y + 78 + (l * 48), x + cWidth, y + 72 + ((l + 1) * 48))) {
+                if (mousePressedInRect(this, x, y + 78 + (l * 48), x + cWidth, y + 72 + ((l + 1) * 48)) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
                     if(new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isDirectory()) {
                         path += "/" + dirs[i];
                         break;

@@ -11,22 +11,34 @@ void updateMenu() {
         loadcfg.focus = loadcfg.active = !exiting;
         quit.active = quit.focus = !exiting;
         accept.active = accept.focus = !exiting;
+        defUpper.active = defUpper.focus = !exiting;
+        defLower.active = defLower.focus = !exiting;
     } else { // menu is hidden
         texts.active = texts.focus = false;
         unitSelect.active = unitSelect.focus = false;
         loadcfg.focus = loadcfg.active = false;
         quit.active = quit.focus = false;
         accept.active = accept.focus = false;
+        defUpper.active = defUpper.focus = false;
+        defLower.active = defLower.focus = false;
     }
     
     if (ENABLE_KINECT && kinect_showmenu) {
         fill(0x00, 0xAA);
         noStroke();
         rect(0, 0, drawWidth, drawHeight);
+        
+        defUpper.x = (drawWidth / 2.0) - defUpper.getWidth() - 32;
+        defLower.x = (drawWidth / 2.0) - defLower.getWidth() - 32;
+        lowerDefault.data = str(defLower.value);
+        upperDefault.data = str(defUpper.value);
+        
         lockMouse(this);
         unitSelect.update();
         quit.update();
         accept.update();
+        defUpper.update();
+        defLower.update();
         
         return;
     } else if (ENABLE_KINECT) {

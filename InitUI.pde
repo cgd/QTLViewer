@@ -170,7 +170,6 @@ void initConstants() {
 
 void initMenu() {
     // set up menu
-    UITextInput upperDefault, lowerDefault;
     upperDefault = new UITextInput(14, 0, 200, 50, "Default upper threshold");
     upperDefault.setText("3.0");
     lowerDefault = new UITextInput(14, 0, 200, 50, "Default lower threshold");
@@ -179,7 +178,7 @@ void initMenu() {
     String[] groupNames = {"Centimorgans", "Base pairs"};
     
     if (ENABLE_KINECT) {
-        unitSelect = new UIRadioGroup((drawWidth / 2.0) + 4, 400, 48.0, groupNames);
+        unitSelect = new UIRadioGroup((drawWidth / 2.0) + 32, 400, 48.0, 100.0, groupNames);
     } else {
         unitSelect = new UIRadioGroup(275, drawHeight, groupNames);
     }
@@ -194,7 +193,7 @@ void initMenu() {
         }
     });
     
-    quit = new UIButton((drawWidth / 2.0) + 4, 300, "Exit", 192, 64, 48, new UIAction() {
+    quit = new UIButton((drawWidth / 2.0) + 8, 300, "Exit", 192, 64, 48, new UIAction() {
         public void doAction() {
             freeMouse();
             kinect_showmenu = false;
@@ -202,15 +201,21 @@ void initMenu() {
         }
     });
     
-    accept = new UIButton((drawWidth / 2.0) - 196, 300, "Accept", 192, 64, 48, new UIAction() {
+    accept = new UIButton((drawWidth / 2.0) - 200, 300, "Accept", 192, 64, 48, new UIAction() {
         public void doAction() {
             kinect_showmenu = false;
             freeMouse();
+            filebrowser.lastFrame = frameCount;
         }
     });
     
+    defUpper = new UIKSpinner(0, 400, 48, 3.0, "Default upper threshold");
+    defLower = new UIKSpinner(0, 558, 48, 1.5, "Default lower threshold");
+    
     quit.setKey(this);
     accept.setKey(this);
+    defUpper.setKey(this);
+    defLower.setKey(this);
     
     texts = new UIContainer();
     texts.add(lowerDefault);
