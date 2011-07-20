@@ -12,7 +12,6 @@ class LODDisplay extends UIComponent {
     float zoomFactor = 1.0;
     float oldzoomFactor = 1.0;
     float offset = 0.0; // measured in cM
-    float yDrag = 0.0;
     int current_chr = -1, panId = -1;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
@@ -275,14 +274,11 @@ class LODDisplay extends UIComponent {
         
         if (offset > 0.0) {
             offset = 0.0;
-        } else if (map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
+        } else if (current_chr == -1 && map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
             offset = (zoomFactor * chrTotal) - chrTotal;
         }
         
-        yDrag += vec.y;
-        
-        if (yDrag > 200.0 && current_chr != -1) {
-            yDrag = 0;
+        if (vec.y > 150.0 && current_chr != -1) {
             current_chr = -1;
             zoomFactor = 1.0;
             offset = 0.0;

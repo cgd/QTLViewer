@@ -108,7 +108,7 @@ class KinectUser {
         }
         
         // right hand down
-        if (rightvelocity < 250.0 && newCoM.z - righthand.z > DEPTH_LOWER && !dragZoom) {
+        if (rightvelocity < 150.0 && newCoM.z - righthand.z > DEPTH_LOWER && !dragZoom) {
             if (righthandDown == -1) {
                 righthandDown = System.currentTimeMillis();
             }
