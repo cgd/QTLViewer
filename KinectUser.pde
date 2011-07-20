@@ -113,7 +113,7 @@ class KinectUser {
                 righthandDown = System.currentTimeMillis();
             }
             
-            leftReady = false;
+            //leftReady = false;
         } else {
             righthandDown = -1;
             ready = true;
@@ -209,7 +209,7 @@ class KinectUser {
         
         // left hand has been held at an angle
         if (lefthandDown != -1 && System.currentTimeMillis() - lefthandDown >= 2500 && System.currentTimeMillis() - lefthandDown < 3000 && leftReady) {
-            
+            kinect_showmenu = true;
             leftReady = false;
         }
         

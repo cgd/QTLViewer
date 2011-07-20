@@ -20,7 +20,7 @@ class UIKFileBrowser extends UIComponent {
         if (ENABLE_KINECT_SIMULATE) {
             if (keyPressed && key == CODED && keyCode == DOWN) {
                 page++;
-            } else if (keyPressed && key == CODED && keyCode == UP) {
+            } else if (keyPressed && key == CODED && keyCode == UP && page > 0) {
                 page--;
             }
         }
@@ -121,7 +121,7 @@ class UIKFileBrowser extends UIComponent {
             page--;
         }
         
-        if (page == -1) {
+        if (page < 0) {
             return;
         }
         

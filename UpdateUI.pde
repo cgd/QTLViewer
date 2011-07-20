@@ -4,25 +4,38 @@
 
 void updateMenu() {
     // draw the menu, set focus/activity based on whether or not the menu is shown
+
+    if (menuTargetY == -100.0 || kinect_showmenu) { // menu is shown
+        texts.active = texts.focus = !exiting;
+        unitSelect.active = unitSelect.focus = !exiting;
+        loadcfg.focus = loadcfg.active = !exiting;
+        quit.active = quit.focus = !exiting;
+        accept.active = accept.focus = !exiting;
+    } else { // menu is hidden
+        texts.active = texts.focus = false;
+        unitSelect.active = unitSelect.focus = false;
+        loadcfg.focus = loadcfg.active = false;
+        quit.active = quit.focus = false;
+        accept.active = accept.focus = false;
+    }
+    
+    if (ENABLE_KINECT && kinect_showmenu) {
+        fill(0x00, 0xAA);
+        noStroke();
+        rect(0, 0, drawWidth, drawHeight);
+        lockMouse(this);
+        unitSelect.update();
+        quit.update();
+        accept.update();
+        
+        return;
+    } else if (ENABLE_KINECT) {
+        return;
+    }
+    
     stroke(0xCC);
     fill(0x00, 0x00, 0x00, 0xAA);
     pushMatrix();
-    
-    if (menuTargetY == -100.0) { // menu is shown
-        texts.active = !exiting;
-        texts.focus = !exiting;
-        unitSelect.active = !exiting;
-        unitSelect.focus = !exiting;
-        loadcfg.focus = !exiting;
-        loadcfg.active = !exiting;
-    } else { // menu is hidden
-        texts.active = false;
-        texts.focus = false;
-        unitSelect.active = false;
-        unitSelect.focus = false;
-        loadcfg.focus = false;
-        loadcfg.active = false;
-    }
     
     translate(0.0, menuY, 0);
     menuY += (menuTargetY - menuY) * velocity; // this moves the menu up or down in a non-linear way
@@ -55,8 +68,8 @@ void updateMenu() {
     popMatrix();
     ((UIComponent)texts.get(0)).y = (drawHeight + menuY) + 10;
     ((UIComponent)texts.get(1)).y = (drawHeight + menuY) + 36;
-    unitSelect.y = drawHeight + menuY+10;
-    loadcfg.y = drawHeight+menuY+10;
+    unitSelect.y = drawHeight + menuY + 10;
+    loadcfg.y = drawHeight + menuY + 10;
     texts.update();
     unitSelect.update();
     loadcfg.update();

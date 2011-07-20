@@ -394,13 +394,4 @@ class UIKTree extends UITree {
     color negate(color c) {
         return color(0xFF - red(c), 0xFF - green(c), 0xFF - blue(c));
     }
-    
-    boolean hasUpdated() {
-        if (hasUpdated) {
-            hasUpdated = false;
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

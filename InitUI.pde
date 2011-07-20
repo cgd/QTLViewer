@@ -15,6 +15,7 @@ void initMenuBar() {
             openFile();
         }
     });
+    
     MenuItem openFolderItem = new MenuItem("Open Folder...", new MenuShortcut(KeyEvent.VK_O, true));
     openFolderItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -25,6 +26,7 @@ void initMenuBar() {
             loadFolder();
         }
     });
+    
     MenuItem loadConfigItem = new MenuItem("Load config...", new MenuShortcut(KeyEvent.VK_E));
     loadConfigItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -53,6 +55,7 @@ void initMenuBar() {
             tabs.focus = false;
         }
     });
+    
     MenuItem menudown = new MenuItem("Hide Menu", new MenuShortcut(KeyEvent.VK_DOWN));
     menudown.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -63,6 +66,7 @@ void initMenuBar() {
             tabs.focus = true;
         }
     });
+    
     MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(KeyEvent.VK_RIGHT));
     nextchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -73,6 +77,7 @@ void initMenuBar() {
             loddisplay.nextChr();
         }
     });
+    
     MenuItem prevchr = new MenuItem("Previous Chromosome", new MenuShortcut(KeyEvent.VK_LEFT));
     prevchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -83,6 +88,7 @@ void initMenuBar() {
             loddisplay.prevChr();
         }
     });
+    
     MenuItem showall = new MenuItem("Show All", new MenuShortcut(KeyEvent.VK_BACK_SPACE));
     showall.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -171,7 +177,12 @@ void initMenu() {
     lowerDefault.setText("1.5");
     
     String[] groupNames = {"Centimorgans", "Base pairs"};
-    unitSelect = new UIRadioGroup(275, drawHeight, groupNames);
+    
+    if (ENABLE_KINECT) {
+        unitSelect = new UIRadioGroup((drawWidth / 2.0) + 4, 400, 48.0, groupNames);
+    } else {
+        unitSelect = new UIRadioGroup(275, drawHeight, groupNames);
+    }
     
     loadcfg = new UIButton(425, drawHeight, "Load config", new UIAction() {
         public void doAction() {
@@ -182,6 +193,24 @@ void initMenu() {
             loadConfig();
         }
     });
+    
+    quit = new UIButton((drawWidth / 2.0) + 4, 300, "Exit", 192, 64, 48, new UIAction() {
+        public void doAction() {
+            freeMouse();
+            kinect_showmenu = false;
+            exiting = true;
+        }
+    });
+    
+    accept = new UIButton((drawWidth / 2.0) - 196, 300, "Accept", 192, 64, 48, new UIAction() {
+        public void doAction() {
+            kinect_showmenu = false;
+            freeMouse();
+        }
+    });
+    
+    quit.setKey(this);
+    accept.setKey(this);
     
     texts = new UIContainer();
     texts.add(lowerDefault);
