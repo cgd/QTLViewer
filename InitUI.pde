@@ -100,12 +100,48 @@ void initMenuBar() {
         }
     });
     
+    MenuItem zoomin = new MenuItem("Zoom In", new MenuShortcut(KeyEvent.VK_EQUALS));
+    zoomin.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (exiting) {
+                return;
+            }
+            
+            loddisplay.zoomFactor -= 0.05;
+        }
+    });
+    
+    MenuItem zoomout = new MenuItem("Zoom Out", new MenuShortcut(KeyEvent.VK_MINUS));
+    zoomout.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (exiting) {
+                return;
+            }
+            
+            loddisplay.zoomFactor += 0.05;
+        }
+    });
+    
+    MenuItem zoomreset = new MenuItem("Zoom Reset", new MenuShortcut(KeyEvent.VK_Z));
+    zoomreset.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (exiting) {
+                return;
+            }
+            
+            loddisplay.zoomFactor = 1.0;
+        }
+    });
+    
     viewMenu.add(menuup);
     viewMenu.add(menudown);
     viewMenu.add(new MenuItem("-"));
     viewMenu.add(nextchr);
     viewMenu.add(prevchr);
     viewMenu.add(showall);
+    viewMenu.add(zoomin);
+    viewMenu.add(zoomout);
+    viewMenu.add(zoomreset);
     
     menu.add(fileMenu);
     menu.add(viewMenu);
@@ -230,22 +266,28 @@ void initMouseWheelListener() {
     frame.addMouseWheelListener(new MouseWheelListener() {
         public void mouseWheelMoved(MouseWheelEvent e) {
             // side scroll: e.getModifiers is 1  
-            if (loddisplay.current_chr != -1 && !exiting && tabs.currentpage == 0 && mouseX > tabsXTarget && tabs.focus && tabs.active) {
+            if (!exiting && tabs.currentpage == 0 && mouseX > tabsXTarget && tabs.focus && tabs.active) {
                 // negative = left, positive = right
-                if (e.getModifiers() == 1 && e.getWheelRotation() < 0 && (frameCount - lastFrame) > 8) { // 8 means no more than 60/8 switches per second (FPS is 60)
-                    loddisplay.prevChr();
-                    lastFrame = frameCount;
-                } else if (e.getModifiers() == 1 && e.getWheelRotation() > 0 && (frameCount - lastFrame) > 8) {
-                    loddisplay.nextChr();
-                    lastFrame = frameCount;
-                } else if (e.getModifiers() == 0 && e.getWheelRotation() < -5) { // -5 is threshold for scrolling up
+                if (e.getModifiers() == 1) {// && (frameCount - lastFrame) > 8) { // 8 means no more than 60/8 switches per second (FPS is 60)
+                    float realWidth = loddisplay.cWidth;
+                    
+                    if (realWidth < 0.0) {
+                        realWidth = (drawWidth - loddisplay.x) + loddisplay.cWidth;
+                    }
+                    
+                    if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+                        loddisplay.offset += map(e.getUnitsToScroll(), 0.0, realWidth, 0.0, (loddisplay.current_chr == -1) ? loddisplay.zoomFactor * chrTotal : loddisplay.zoomFactor * loddisplay.maxOffset);
+                    }
+                } else if (keyPressed && key == CODED && keyCode == 157) { // command key down
+                    if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+                        loddisplay.zoomFactor -= e.getUnitsToScroll() / 100.0;
+                    }
+                } else if (e.getWheelRotation() < -5) { // -5 is threshold for scrolling up
                     loddisplay.allChr();
-                    lastFrame = frameCount;
-                    return;
                 }
             }
             
-            if ((mouseX < tabsXTarget || loddisplay.current_chr == -1 || tabs.currentpage != 0) && e.getModifiers() == 1 && !exiting && !ENABLE_KINECT) {
+            /*if ((mouseX < tabsXTarget || loddisplay.current_chr == -1 || tabs.currentpage != 0) && e.getModifiers() == 1 && !exiting && !ENABLE_KINECT) {
                 if (e.getWheelRotation() < 0) {
                   tabsXTarget = 110; // X coordinate
                 } else if (e.getWheelRotation() > 0) {
@@ -260,7 +302,7 @@ void initMouseWheelListener() {
             // wait 1/2 second for mouse movement to cease
             if (menuTargetY > -100.0 && !exiting && e.getModifiers() == 0 && e.getWheelRotation() < -5 && (frameCount - lastFrame) > 30) {
                 menuTargetY = -100.0;
-            }
+            }*/
         }
     });
 }

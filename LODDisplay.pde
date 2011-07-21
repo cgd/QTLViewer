@@ -23,6 +23,10 @@ class LODDisplay extends UIComponent {
             zoomFactor = 1.0;
         }
         
+        if (offset > 0.0) {
+            offset = 0.0;
+        }
+        
         if (cWidth <= 0.0) {
             cWidth = (drawWidth - x) + cWidth;
         }
@@ -80,8 +84,8 @@ class LODDisplay extends UIComponent {
                     valueText = str(Math.round(unitConverter.centimorgansToBasePairs(current_chr + 1, (double)value) / 10000.0) * 10000.0);
                 }
                 
-                if (x + x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) > x + cWidth) {
-                    break;
+                if (x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) > cWidth || x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) < 30.0) {
+                    continue;
                     //text(valueText + ((i == 1) ? unit : ""), x + 16 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + cHeight) - 14);
                 } else {
                     text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0), (y + cHeight) - 14);
@@ -211,7 +215,7 @@ class LODDisplay extends UIComponent {
     }
     
     void mouseAction() {
-        if (mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
+        if (!(keyPressed && key == CODED && keyCode == 157) && mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
             for (int i = 0; i < chrOffsets.length; i++) {
                 if (mouseX > map(offset + chrOffsets[i], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                     if (i == chrOffsets.length - 1) {

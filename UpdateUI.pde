@@ -138,13 +138,6 @@ void updateViewArea() {
     }
 }
 
-/**
-* Updates the legend for a ChrDisplay.
-*
-* @param display the ChrDisplay on which to draw the legend
-* @param names a String array containing the names of the phenotypes
-* @param colors an int array containing the colors of the phenotypes
-*/
 void updateLegend() { 
     textFont(legendFont);
     

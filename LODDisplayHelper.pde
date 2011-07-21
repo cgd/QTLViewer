@@ -138,23 +138,23 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
     if (currentPhenotype.thresholds.length > 1 && currentPhenotype.thresholds[1][1] <= tempMaxLod) {
         String label = "a=" + (round(currentPhenotype.thresholds[1][1] * 100) / 100.0);
         
-        if (endX + textWidth(label) < display.x + display.cWidth) {
-            text(label, display.x + display.cWidth - textWidth(label), display.y + display.cHeight - y_offXU - 54);
+        if (endX + textWidth(label) < display.x + display.cWidth + 20) {
+            text(label, endX/* - textWidth(label)*/, display.y + display.cHeight - y_offXU - 54);
         }
     }
     
     if (currentPhenotype.thresholds.length > 1 && currentPhenotype.thresholds[1][0] <= tempMaxLod) {
         String label = "a=" + (round(currentPhenotype.thresholds[1][0] * 100) / 100.0);
         
-        if (endX + textWidth(label) < display.x + display.cWidth) {
-            text(label, display.x + display.cWidth - textWidth(label), display.y + display.cHeight - y_offXL - 54);
+        if (endX + textWidth(label) < display.x + display.cWidth + 20) {
+            text(label, endX/* - textWidth(label)*/, display.y + display.cHeight - y_offXL - 54);
         }
     }
     
     if (currentPhenotype.thresholds[0][1] <= tempMaxLod) {
         String label = "a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0);
         
-        if (endX + textWidth(label) < display.x + display.cWidth) {
+        if (endX + textWidth(label) < display.x + display.cWidth + 20) {
             text(label, endX - textWidth(label), display.y + display.cHeight - y_offU - 54);
         } else {
             text(label, display.x + display.cWidth - textWidth(label), display.y + display.cHeight - y_offU - 54);
@@ -164,7 +164,7 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
     if (currentPhenotype.thresholds[0][0] <= tempMaxLod) {
         String label = "a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0);
         
-        if (endX + textWidth(label) < display.x + display.cWidth) {
+        if (endX + textWidth(label) < display.x + display.cWidth + 20) {
             text(label, endX - textWidth(label), display.y + display.cHeight - y_offL - 54);
         } else {
             text(label, display.x + display.cWidth - textWidth(label), display.y + display.cHeight - y_offL - 54);
@@ -189,11 +189,11 @@ void drawThresholdLabels(LODDisplay display, Phenotype currentPhenotype, int tem
     float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
     
     if (currentPhenotype.thresholds.length > 1 && currentPhenotype.thresholds[1][1] <= tempMaxLod) {
-        text("a=" + (round(currentPhenotype.thresholds[0][1]*100)/100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0)), (display.y + display.cHeight) - y_offXU - 54);
+        text("a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0)), (display.y + display.cHeight) - y_offXU - 54);
     }
     
     if (currentPhenotype.thresholds.length > 1 && currentPhenotype.thresholds[1][0] <= tempMaxLod) {
-        text("a=" + (round(currentPhenotype.thresholds[0][0]*100)/100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0)), (display.y + display.cHeight) - y_offXL - 54);
+        text("a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0)), (display.y + display.cHeight) - y_offXL - 54);
     }
 }
 
