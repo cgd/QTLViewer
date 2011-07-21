@@ -108,16 +108,13 @@ class KinectUser {
         }
         
         // right hand down
-        if (rightvelocity < 150.0 && newCoM.z - righthand.z > DEPTH_LOWER && !dragZoom) {
+        if (rightvelocity < 150.0 && newCoM.z - righthand.z > DEPTH_LOWER && !dragZoom && (lefthandDown == -1 || (System.currentTimeMillis() - lefthandDown) > 3000)) {
             if (righthandDown == -1) {
                 righthandDown = System.currentTimeMillis();
             }
-            
-            //leftReady = false;
         } else {
             righthandDown = -1;
             ready = true;
-            leftReady = true;
         }
         
         if (dragstart != null && !(CoM.z - lefthand.z > ((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + DEPTH_LOWER)) { // dragstart is about to be set to null, tell components to stop panning
@@ -159,9 +156,14 @@ class KinectUser {
                 lefthandDown = System.currentTimeMillis();
             }
             
+            if (System.currentTimeMillis() - lefthandDown > 3000) {
+                ready = true;
+            } else {
+                ready = false;
+            }
+            
             dragZoom = false;
             zoomReady = false;
-            dragstart = null;
         } else if (CoM.z - lefthand.z > ((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + DEPTH_LOWER) {
             if (dragstart == null) {
                 dragstart = lefthand;
@@ -198,7 +200,6 @@ class KinectUser {
             mouseButton = LEFT;
             mouseX = round(cursorPos.x);
             mouseY = round(cursorPos.y);
-            
             mouseId = ID;
             
             mousePressed();
@@ -209,8 +210,17 @@ class KinectUser {
         
         // left hand has been held at an angle
         if (lefthandDown != -1 && System.currentTimeMillis() - lefthandDown >= 2500 && System.currentTimeMillis() - lefthandDown < 3000 && leftReady) {
-            kinect_showmenu = true;
+            mousePressed = retVal = pressed = true;
+            mouseButton = RIGHT;
+            mouseX = round(cursorPos.x);
+            mouseY = round(cursorPos.y);
+            
+            mouseId = ID;
+            
+            mousePressed();
+            
             leftReady = false;
+            ready = true;
         }
         
         // start timer if hand distance changes less than 5.0 pixels

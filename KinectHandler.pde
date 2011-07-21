@@ -191,3 +191,68 @@ KinectUser getUser(int userId) {
     
     return null;
 }
+
+PVector addAngle(PVector p, float angle) {
+  PVector newp = new PVector();
+
+  float a = realTan(p);
+
+  a += angle;
+
+  while (a > TWO_PI) {
+    a -= TWO_PI;
+  }
+
+  while (a < 0.0) {
+    a += TWO_PI;
+  }
+
+  float m = dist(0, 0, p.x, p.y);
+
+  newp.x = cos(a) * m;
+  newp.y = sin(a) * m;
+
+  return newp;
+}
+
+PVector[] addAngleBatch(PVector[] p, float angle) {
+  PVector[] ret = new PVector[p.length];
+
+  for (int i = 0; i < p.length; i++) {
+    ret[i] = addAngle(p[i], angle);
+  }
+
+  return ret;
+}
+
+float realTan(PVector p) {
+  float a = atan(p.y / p.x);
+
+  if (p.y == 0.0) {
+    if (p.x > 0.0) {
+      a = 0;
+    } 
+    else if (p.x < 0.0) {
+      a += PI;
+    }
+  } 
+  else if (p.x < 0.0 && p.y > 0.0) {
+    a += PI;
+  } 
+  else if (p.x > 0.0 && p.y < 0.0) {
+    a = TWO_PI + a;
+  } 
+  else if (p.x < 0.0 && p.y < 0.0) {
+    a += PI;
+  }
+
+  while (a > TWO_PI) {
+    a -= TWO_PI;
+  }
+
+  while (a < 0.0) {
+    a += TWO_PI;
+  }
+
+  return a;
+}

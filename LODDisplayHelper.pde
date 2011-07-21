@@ -139,7 +139,7 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
         String label = "a=" + (round(currentPhenotype.thresholds[1][1] * 100) / 100.0);
         
         if (endX + textWidth(label) < display.x + display.cWidth + 20) {
-            text(label, endX/* - textWidth(label)*/, display.y + display.cHeight - y_offXU - 54);
+            text(label, endX, display.y + display.cHeight - y_offXU - 54);
         }
     }
     
@@ -147,7 +147,7 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
         String label = "a=" + (round(currentPhenotype.thresholds[1][0] * 100) / 100.0);
         
         if (endX + textWidth(label) < display.x + display.cWidth + 20) {
-            text(label, endX/* - textWidth(label)*/, display.y + display.cHeight - y_offXL - 54);
+            text(label, endX, display.y + display.cHeight - y_offXL - 54);
         }
     }
     

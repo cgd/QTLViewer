@@ -1,7 +1,6 @@
 /**
 * This module is a container for methods that set up UI components and chromosome constants.
 */
-
 void initMenuBar() {
     // init menu bar, sub menus, menu items, etc.
     MenuBar menu = new MenuBar();
@@ -258,23 +257,6 @@ void initMouseWheelListener() {
                     loddisplay.allChr();
                 }
             }
-            
-            /*if ((mouseX < tabsXTarget || loddisplay.current_chr == -1 || tabs.currentpage != 0) && e.getModifiers() == 1 && !exiting && !ENABLE_KINECT) {
-                if (e.getWheelRotation() < 0) {
-                  tabsXTarget = 110; // X coordinate
-                } else if (e.getWheelRotation() > 0) {
-                  tabsXTarget = 335;
-                }
-            }
-            
-            if (menuTargetY < 0.0 && !exiting && e.getModifiers() == 0 && e.getWheelRotation() > 5) {
-                menuTargetY = 0.0;
-            }
-            
-            // wait 1/2 second for mouse movement to cease
-            if (menuTargetY > -100.0 && !exiting && e.getModifiers() == 0 && e.getWheelRotation() < -5 && (frameCount - lastFrame) > 30) {
-                menuTargetY = -100.0;
-            }*/
         }
     });
 }

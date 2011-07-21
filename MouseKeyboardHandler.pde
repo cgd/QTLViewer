@@ -1,0 +1,151 @@
+void keyPressed() { // most key events are handled by the MenuBar
+    if (key == ESC) {
+        exiting = !exiting;
+        key = 0; // nullify the key, preventing Processing from closing automatically
+    }
+  
+    if (exiting) {
+        yes.keyAction(key, keyCode, keyEvent.getModifiersEx());
+        no.keyAction(key, keyCode, keyEvent.getModifiersEx());
+    } else {
+        texts.keyAction(key, keyCode, keyEvent.getModifiersEx());
+    }
+}
+
+void keyReleased() {
+    if (! exiting && tabs.active && tabs.focus) {
+        tabs.keyAction(key, keyCode, keyEvent.getModifiersEx());
+    }
+}
+
+void mousePressed() {
+    if (mouseX > 10 && mouseX < 95 && mouseY < menuY + drawHeight && mouseY > menuY + drawHeight - 20 && !exiting && !dragging) {
+        menuTargetY = (menuY == 0.0) ? -100.0 : 0.0;
+        tabs.focus = (menuY == 0.0);
+    }
+  
+    if (!ENABLE_KINECT && !exiting && !dragging && mouseX > fileTree.x + fileTree.cWidth && mouseX < tabs.x && mouseY > fileTree.y && mouseY < drawHeight + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
+        if (tabsXTarget == 110) {
+            tabsXTarget = 335;
+        } else {
+            tabsXTarget = 110;
+        }
+    } else if (exiting) {
+        yes.mouseAction();
+        no.mouseAction();
+    } else if (mouseY < drawHeight + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
+        tabs.mouseAction();
+    } else {
+        texts.mouseAction();
+    }
+}
+
+void mouseMoved() {
+    if (!exiting && !dragging) {
+        tabs.mouseAction();
+        texts.mouseAction();
+    } else {
+        yes.mouseAction();
+        no.mouseAction();
+    }
+}
+
+void mouseReleased() {
+    if (!exiting && !dragging) {
+        tabs.mouseAction();
+        texts.mouseAction();
+    } else {
+        yes.mouseAction();
+        no.mouseAction();
+    }
+}
+
+boolean mouseInRect(Object o, float x1, float y1, float x2, float y2) {
+    if (mouseLock != -1 && mouseLock != o.hashCode()) {
+        return false;
+    }
+    
+    if (exiting || users == null) {
+        return false;
+    }
+  
+    for (int i = 0; i < users.size(); i++) {
+        PVector mouse = users.get(i).cursorPos;
+        
+        if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2) {
+            return true;
+        }
+    }
+  
+    if (ENABLE_KINECT_SIMULATE && mouseX > x1 && mouseX < x2 && mouseY > y1 && mouseY < y2) {
+        return true;
+    }
+    
+    return false;
+}
+
+boolean mousePressedInRect(Object o, float x1, float y1, float x2, float y2) {
+  if (mouseLock != -1 && mouseLock != o.hashCode()) {
+      return false;
+  }
+  
+  if (exiting || users == null) {
+      return false;
+  }
+
+  for (int i = 0; i < users.size(); i++) {
+      PVector mouse = users.get(i).cursorPos;
+      
+      if (mouse.x > x1 && mouse.x < x2 && mouse.y > y1 && mouse.y < y2 && users.get(i).pressed) {
+          return true;
+      }
+  }
+
+  if (ENABLE_KINECT_SIMULATE && mousePressed && mouseButton == LEFT && mouseX > x1 && mouseX < x2 && mouseY > y1 && mouseY < y2) {
+      return true;
+  }
+  
+  return false;
+}
+
+boolean killMouseEvents(Object o) {
+    if (mouseLock != -1 && mouseLock != o.hashCode()) {
+        return false;
+    }
+    
+    for (int i = 0; i < users.size(); i++) {
+        users.get(i).pressed = false;
+    }
+    
+    return true;
+}
+
+void killMouseEvents() {
+     for (int i = 0; i < users.size(); i++) {
+        users.get(i).pressed = false;
+        users.get(i).righthandDown = -1;
+        users.get(i).ready = false;
+    }
+}
+
+boolean lockMouse(Object o) {
+    if (mouseLock == -1 || mouseLock == o.hashCode()) {
+        mouseLock = o.hashCode();
+        return true;
+    } else {
+        return false;
+    }
+}
+
+boolean freeMouse(Object o) {
+    if (mouseLock == -1 || mouseLock == o.hashCode()) {
+        mouseLock = -1;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void freeMouse() {
+    mouseLock = -1;
+}
