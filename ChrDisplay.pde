@@ -3,7 +3,7 @@
 */
 class ChrDisplay extends UIComponent {
   
-    boolean chr_ready = true, update = false;
+    boolean chr_ready = true, update = true;
     PFont normFont = createFont("Arial", 12, true);
     float maxOffset = -1.0, chromosomeWidth, chromosomeHeight, multiplier;
     float maxLen = -1.0;
@@ -59,7 +59,6 @@ class ChrDisplay extends UIComponent {
                 UITreeNode jTreeNode = ((UITreeNode)((UITreeNode)fileTree.get(i)).get(j));
                 
                 if (jTreeNode.checked) {
-                  
                     if (!update) {
                         continue;
                     }
@@ -81,7 +80,6 @@ class ChrDisplay extends UIComponent {
                 }
             }
         } 
-        
         // draw ranges, peaks
         for (int i = 0; i < chrs.length; i++) {
             for (int j = 0; j < chrs[i].peaks.length; j++) {

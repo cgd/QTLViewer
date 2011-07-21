@@ -9,7 +9,6 @@ class UIKTree extends UITree {
     int panId = -1;
     UIButton ryes, rno;
     UIButton rMax, rMin, gMax, gMin, bMax, bMin;
-    UIButton enable;
     
     UIKTree(float newX, float newY, float newWidth, float newHeight, UIListener nodeRemove, UIListener elementRemove) {
         super(newX, newY, newWidth, newHeight, nodeRemove, elementRemove);
@@ -17,13 +16,8 @@ class UIKTree extends UITree {
         
         ryes = new UIButton((drawWidth / 2.0) - 136, drawHeight / 2.0, "Yes", 128, 64, 48, new UIAction() {
             public void doAction() {
-                if (displayFile) {
-                    remove(removeN.eventHeard(currentFile--, 0));
-                    currentFile = 0;
-                } else if (currentPh != -1) {
-                    get(currentFile).remove(removeE.eventHeard(currentFile, currentPh--));
-                    page = 0;
-                }
+                remove(removeN.eventHeard(currentFile--, 0));
+                currentFile = 0;
                 
                 lastFrame = frameCount;
                 displayFile = false;
@@ -99,23 +93,6 @@ class UIKTree extends UITree {
             }
         });
         
-        enable = new UIButton(264 + (3 * ((drawWidth - 480) / 4.0)), 472, "Enable", (drawWidth - 480) / 4.0, 64, 48, new UIAction() {
-            public void doAction() {
-                if (currentPh != -1) {
-                    if (enable.data.toLowerCase().startsWith("e")) {
-                        get(currentFile).get(currentPh).checked = true;
-                        enable.data = "Disable";
-                    } else if (enable.data.toLowerCase().startsWith("d")) {
-                        get(currentFile).get(currentPh).checked = false;
-                        enable.data = "Enable";
-                    }
-                }
-                
-                hasUpdated = true;
-                mousePressed = false;
-            }
-        });
-        
         ryes.setKey(this);
         rno.setKey(this);
         rMax.setKey(this);
@@ -124,7 +101,6 @@ class UIKTree extends UITree {
         gMin.setKey(this);
         bMax.setKey(this);
         bMin.setKey(this);
-        enable.setKey(this);
     }
     
     void update() {
@@ -162,18 +138,9 @@ class UIKTree extends UITree {
                 fill(0xFF);
                 
                 if (mousePressedInRect(this, x, y + 8, x + textWidth(t) + 16, y + 56) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
-                    rno.data = "No";
-                    rno.x = (drawWidth / 2.0) + 8;
-                    rno.y = drawHeight / 2.0;
-                    rno.cWidth = 128;
-                    
-                    ryes.data = "Yes";
-                    ryes.x = (drawWidth / 2.0) - 136;
-                    ryes.y = drawHeight / 2.0;
-                    ryes.cWidth = 128;
-                    
                     displayFile = true;
                     lockMouse(this);
+                    lastFrame = frameCount;
                 }
             } else {
                 rect(x, y + 8, textWidth(t) + 16, 48);
@@ -227,21 +194,13 @@ class UIKTree extends UITree {
                     stroke(0x00);
                     fill(0xFF);
                     
-                    if (mousePressedInRect(this, x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48)) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
-                        rno.data = "Accept";
-                        rno.x = 264 + (3 * ((drawWidth - 480) / 4.0));
-                        rno.y = 312;
-                        rno.cWidth = (drawWidth - 480) / 4.0;
-                        
-                        ryes.data = "Remove";
-                        ryes.x = 264 + (3 * ((drawWidth - 480) / 4.0));
-                        ryes.y = 392;
-                        ryes.cWidth = (drawWidth - 480) / 4.0;
-                        
-                        enable.data = (super.get(currentFile).get(i).checked) ? "Disable" : "Enable";
-                        
+                    if (mousePressed && mouseButton == RIGHT && mouseX > x && mouseX < x + cWidth && mouseY > y + 72 + (l * 48) + 6 && mouseY < y + 72 + ((l + 1) * 48)) {
+                        super.get(currentFile).get(i).checked = true;
+                        hasUpdated = true;
+                    } else if (mousePressedInRect(this, x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48)) && (lastFrame == -1 || frameCount - lastFrame > 1)) {                        
                         currentPh = i;
                         lockMouse(this);
+                        lastFrame = frameCount;
                     }
                 }
                 
@@ -278,21 +237,16 @@ class UIKTree extends UITree {
                 String title = super.get(currentFile).get(currentPh).title;
                 text(title, (drawWidth - textWidth(title)) / 2.0, 248);
                 
-                ryes.active = rno.active = this.active;
                 rMax.active = rMin.active = this.active;
                 gMax.active = gMin.active = this.active;
                 bMax.active = bMin.active = this.active;
-                enable.active = this.active;
                 
-                ryes.update();
-                rno.update();
                 rMax.update();
                 rMin.update();
                 gMax.update();
                 gMin.update();
                 bMax.update();
                 bMin.update();
-                enable.update();
                 
                 noStroke();
                 
@@ -319,7 +273,8 @@ class UIKTree extends UITree {
                 rect(248 + ((drawWidth - 480) / 2.0), 312, (drawWidth - 480) / 4.0, drawHeight - 572);
                 
                 fill(super.get(currentFile).get(currentPh).drawcolor);
-                rect(264 + (3 * ((drawWidth - 480) / 4.0)), 552, (drawWidth - 480) / 4.0, 64);
+                noStroke();
+                rect(296 + (3 * ((drawWidth - 480) / 4.0)), 312, ((drawWidth - 480) / 4.0) - 64, drawHeight - 572);
             }
         }
     }
@@ -333,12 +288,28 @@ class UIKTree extends UITree {
     }
     
     void mouseAction() {
-        if (displayFile || currentPh != -1) {
+        if (displayFile) {
+            if (mousePressed && mouseButton == LEFT && (mouseX < 400 || mouseY < 400 || mouseX > drawWidth - 400 || mouseY > drawHeight - 400) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
+                displayFile = false;
+                lastFrame = frameCount;
+                freeMouse(this);
+                blockEvents();
+                return;
+            }
+            
             ryes.mouseAction();
             rno.mouseAction();
         }
         
         if (currentPh != -1) {
+            if (mousePressed && mouseButton == LEFT && (mouseX < 200 || mouseY < 200 || mouseX > drawWidth - 200 || mouseY > drawHeight - 200) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
+                currentPh = -1;
+                lastFrame = frameCount;
+                freeMouse(this);
+                blockEvents();
+                return;
+            }
+            
             rMax.mouseAction();
             rMin.mouseAction();
             
@@ -347,8 +318,6 @@ class UIKTree extends UITree {
             
             bMax.mouseAction();
             bMin.mouseAction();
-            
-            enable.mouseAction();
         }
         
         if (currentPh != -1 && mouseX > 216 && mouseX < 248 + (3 * ((drawWidth - 480) / 4.0)) && mouseY > 312 && mouseY < 312 + drawHeight - 572 && mousePressed && mouseButton == LEFT) {
@@ -394,5 +363,8 @@ class UIKTree extends UITree {
     
     color negate(color c) {
         return color(0xFF - red(c), 0xFF - green(c), 0xFF - blue(c));
+    }
+    
+    void blockEvents() {
     }
 }

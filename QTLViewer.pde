@@ -9,7 +9,7 @@
  */
 
 public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -153,7 +153,11 @@ void setup() {
                 ((Parent_File)parentFiles.get(i)).remove(j);
                 return j;
             }
-        });
+        }) {
+            public void blockEvents() {
+                filebrowser.lastFrame = frameCount;
+            }
+        };
         
         tabs.addComponent(fileTree, 0, 0);
     } else {
@@ -175,8 +179,47 @@ void setup() {
     tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, -35, -25), (ENABLE_KINECT) ? 1 : 0, 0);
     tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), (ENABLE_KINECT) ? 2 : 1, 0);
   
-    if (ENABLE_KINECT) {
-        tabs.addComponent(new UIButton((drawWidth / 2.0) - 128, (drawHeight / 2.0) - 64, "Stop Tracking", 256, 128, 32, new UIAction() {
+    if (ENABLE_KINECT) {  
+        tabs.addComponent(quit = new UIButton((drawWidth / 2.0) + 8, 300, "Exit", 192, 64, 48, new UIAction() {
+            public void doAction() {
+                kinect_showmenu = false;
+                exiting = true;
+            }
+        }), 4, 0);
+        
+        tabs.addComponent(accept = new UIButton((drawWidth / 2.0) - 200, 300, "Accept", 192, 64, 48, new UIAction() {
+            public void doAction() {
+                kinect_showmenu = false;
+                filebrowser.lastFrame = frameCount;
+            }
+        }), 4, 0);
+        
+        tabs.addComponent(defUpper = new UIKSpinner(0, 400, 48, 3.0, "Default upper threshold") {
+            public void update() {
+                this.x = (tabs.cWidth / 2.0) - getWidth() - 32 + tabs.x;
+                upperDefault.data = str(value);
+                textColor = color(0x00);
+                super.update();
+            }
+        }, 4, 0);
+        
+        tabs.addComponent(defLower = new UIKSpinner(0, 558, 48, 1.5, "Default lower threshold") {
+            public void update() {
+                this.x = (tabs.cWidth / 2.0) - getWidth() - 32 + tabs.x;
+                lowerDefault.data = str(value);
+                textColor = color(0x00);
+                super.update();
+            }
+        }, 4, 0);
+        
+        tabs.addComponent(unitSelect = new UIRadioGroup((tabs.cWidth / 2.0) + 32 + tabs.x, 400, 48.0, 100.0, new String[] {"Centimorgans", "Base pairs"}) {
+            public void update() {
+                super.textColor = color(0x00);
+                super.update();
+            }
+        } , 4, 0);
+        
+        tabs.addComponent(new UIButton((tabs.cWidth / 2.0) - 128 + tabs.x, (tabs.cHeight / 2.0) + tabs.y + 128, "Stop Tracking", 256, 128, 32, new UIAction() {
             public void doAction() {
                 if (!ENABLE_KINECT_SIMULATE) {
                     for (int i = 0; i < users.size(); i++) {
@@ -190,7 +233,7 @@ void setup() {
                 }
             }
         }), 4, 0);
-    
+        
         tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
     }
   
@@ -227,7 +270,9 @@ void draw() {
     // see module UpdateUI for update* methods
     updateViewArea();
   
-    updateMenu();
+    if (!ENABLE_KINECT) {
+        updateMenu();
+    }
   
     updateLegend();
   
@@ -264,7 +309,6 @@ void keyPressed() { // most key events are handled by the MenuBar
     if (exiting) {
         yes.keyAction(key, keyCode, keyEvent.getModifiersEx());
         no.keyAction(key, keyCode, keyEvent.getModifiersEx());
-        return;
     } else {
         texts.keyAction(key, keyCode, keyEvent.getModifiersEx());
     }
@@ -291,11 +335,6 @@ void mousePressed() {
     } else if (exiting) {
         yes.mouseAction();
         no.mouseAction();
-    } else if (kinect_showmenu) {
-        quit.mouseAction();
-        accept.mouseAction();
-        defUpper.mouseAction();
-        defLower.mouseAction();
     } else if (mouseY < drawHeight + menuTargetY && (mouseX < legendX || mouseX > legendX + legendW || mouseY < legendY || mouseY > legendY + legendH)) {
         tabs.mouseAction();
     } else {
@@ -780,4 +819,3 @@ float realTan(PVector p) {
 
   return a;
 }
-

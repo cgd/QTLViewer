@@ -1,9 +1,10 @@
 class UIRadioGroup extends UIComponent {
     String[] titles;
     int selected;
-    boolean focus, active;
+    boolean focus = true, active = true;
     PFont font = createFont("Arial", 16, true);
     float size = 16.0, spacing;
+    color textColor = 0xFF;
     
     UIRadioGroup(float newX, float newY, String[] t) {
         super();
@@ -36,7 +37,7 @@ class UIRadioGroup extends UIComponent {
         ellipseMode(CORNERS);
         
         for (int i = 0; i < titles.length; i++) {
-            fill(0xFF);
+            fill(textColor);
             text(titles[i], x, y + ((10 + size + spacing) * i) + size);
             
             fill(0x55);
@@ -44,7 +45,7 @@ class UIRadioGroup extends UIComponent {
             stroke(0x00);
             
             if (i == selected) {
-                fill(0xFF);
+                fill(0xCC);
             }
             
             ellipse(x + offX + 8, y + ((10 + size + spacing) * i) + 2, x + offX + 8 + size, y + ((10 + size + spacing) * i) + 2 + size);

@@ -3,6 +3,7 @@ class UIKSpinner extends UIComponent {
     PFont main;
     Object key;
     String title;
+    color textColor = color(0xFF);
     UIButton up, down;
     
     UIKSpinner(float newX, float newY, float newSize, float newValue, String newT) {
@@ -26,7 +27,7 @@ class UIKSpinner extends UIComponent {
     }
     
     void update() {
-        fill(0xFF);
+        fill(textColor);
         textFont(main);
         
         text(title, x, y + size);
