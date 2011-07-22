@@ -134,13 +134,23 @@ class KinectUser {
         
         // left and right hands down
         if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady && tabs.currentpage == 1) {
+            LODDisplay display = (LODDisplay)tabs.get(1).get(0);
+            float old = 1.0;
+            
             if (!dragZoom) {
                 firsthandDiff = abs(lefthand.x - righthand.x);
-                ((LODDisplay)tabs.get(1).get(0)).oldzoomFactor = ((LODDisplay)tabs.get(1).get(0)).zoomFactor;
+                display.oldzoomFactor = old = display.zoomFactor;
             }
-                        
+            
             if (tabs.currentpage == 1) {
-                ((LODDisplay)tabs.get(1).get(0)).zoomFactor = ((LODDisplay)tabs.get(1).get(0)).oldzoomFactor * (100.0 / map(handDiff, 0, firsthandDiff, 0, 100));
+                old = display.zoomFactor;
+                display.zoomFactor = display.oldzoomFactor * (100.0 / map(handDiff, 0, firsthandDiff, 0, 100));
+                
+                if (display.current_chr == -1) {
+                    display.offset -= ((old * chrTotal) - (display.zoomFactor * chrTotal)) / 2.0;
+                } else {
+                    display.offset -= ((old * display.maxOffset) - (display.zoomFactor * display.maxOffset)) / 2.0;
+                }
             }
             
             dragZoom = true;
@@ -289,15 +299,19 @@ class KinectUser {
             
             dragstart = lefthand;
             
-            beginShape();
-            
-            for (PVector _p : addAngleBatch(arrow, angle)) {
-                vertex(lefthand.x + _p.x, lefthand.y + _p.y);
+            if (hyp < 10.0) {
+                ellipse(lefthand.x, lefthand.y, 25, 25);
+            } else {
+                beginShape();
+                
+                for (PVector _p : addAngleBatch(arrow, angle)) {
+                    vertex(lefthand.x + _p.x, lefthand.y + _p.y);
+                }
+                
+                endShape(CLOSE);
+                
+                popStyle();
             }
-            
-            endShape(CLOSE);
-            
-            popStyle();
         }
         
         if (lefthandDown != -1 && System.currentTimeMillis() - lefthandDown > 1000 && System.currentTimeMillis() - lefthandDown < 3000) {

@@ -12,6 +12,8 @@ class LODDisplay extends UIComponent {
     float zoomFactor = 1.0;
     float oldzoomFactor = 1.0;
     float offset = 0.0; // measured in cM
+    float velocity = 0.0, lastVelocity = 0.0;
+    float gravity = 0.95;
     int current_chr = -1, panId = -1;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
@@ -23,10 +25,6 @@ class LODDisplay extends UIComponent {
             zoomFactor = 1.0;
         }
         
-        if (offset > 0.0) {
-            offset = 0.0;
-        }
-        
         if (cWidth <= 0.0) {
             cWidth = (drawWidth - x) + cWidth;
         }
@@ -34,6 +32,31 @@ class LODDisplay extends UIComponent {
         if (cHeight <= 0.0) {
             cHeight = (drawHeight - y) + cHeight;
         }
+        
+        if (abs(velocity) < 1.0) {
+            velocity = 0.0;
+        }
+        
+        if (current_chr == -1) {
+            if (velocity < 0.0) {
+                offset -= map(abs(velocity), 0.0, cWidth, 0.0, chrTotal * zoomFactor);
+            } else if (velocity > 0.0) {
+                offset += map(velocity, 0.0, cWidth, 0.0, chrTotal * zoomFactor);
+            }
+        } else {
+            if (velocity < 0.0) {
+                offset -= map(abs(velocity), 0.0, cWidth, 0.0, chrLengths[current_chr] * zoomFactor);
+            } else if (velocity > 0.0) {
+                offset += map(velocity, 0.0, cWidth, 0.0, chrLengths[current_chr] * zoomFactor);
+            }
+        }
+        
+        velocity *= gravity;
+        
+        if (offset > 0.0) {
+            offset = 0.0;
+        }
+        
         
         if (current_chr == -1 && map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
             offset = (zoomFactor * chrTotal) - chrTotal;
@@ -262,6 +285,14 @@ class LODDisplay extends UIComponent {
     int size() { return 0; }
     
     void pan(PVector vec) {
+        lastVelocity = vec.x;
+        
+        if (abs(vec.x) < 5.0) {
+            velocity = lastVelocity = 0.0;
+        }
+        
+        lastVelocity = vec.x;
+        
         if (current_chr == -1) {
             if (vec.x < 0.0) {
                 offset -= map(abs(vec.x), 0.0, cWidth, 0.0, chrTotal * zoomFactor);
@@ -295,5 +326,13 @@ class LODDisplay extends UIComponent {
     
     void panEnd(int ID) {
         panId = -1;
+        
+        velocity = lastVelocity;
+        
+        if (abs(lastVelocity) < 5.0) {
+            velocity = 0.0;
+        }
+        
+        lastVelocity = 0.0;
     }
 }
