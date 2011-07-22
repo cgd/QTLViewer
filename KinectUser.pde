@@ -282,7 +282,7 @@ class KinectUser {
                         }
                         break;
                     case 1:
-                        loddisplay.pan(new PVector(lefthand.x - dragstart.x, lefthand.y - dragstart.y));
+                        loddisplay.pan(new PVector(1.5 * (lefthand.x - dragstart.x), lefthand.y - dragstart.y));
                         break;
                 }
             }

@@ -101,7 +101,7 @@ class UIKFileBrowser extends UIComponent {
         String t = pathText[pathText.length - 1];
         
         if (textWidth(t) + x + w >= cWidth) {
-            while (textWidth(t + "...") + x + w >= cWidth) {
+            while (textWidth(t + "...") + x + w >= cWidth && t.length() > 0) {
                 t = t.substring(0, t.length() - 1);
             }
             

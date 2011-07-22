@@ -131,7 +131,7 @@ void setup() {
   
     if (ENABLE_KINECT) {
         titles = new String[] {
-            "File Management", "LOD Score view", "Chromosome view", "Genome Browser", "User Management"
+            "File Management", "LOD Score view", "Chromosome view", "Genome Browser", "Settings"
         };
     } else {
         titles = new String[] {
