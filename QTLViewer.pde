@@ -8,7 +8,7 @@
  * @since 1.6
  */
 
-public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
+public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
 public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;

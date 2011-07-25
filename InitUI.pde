@@ -69,7 +69,7 @@ void initMenuBar() {
     MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(KeyEvent.VK_RIGHT));
     nextchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) {
+            if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
                 return;
             }
             
@@ -80,7 +80,7 @@ void initMenuBar() {
     MenuItem prevchr = new MenuItem("Previous Chromosome", new MenuShortcut(KeyEvent.VK_LEFT));
     prevchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) {
+            if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
                 return;
             }
             
@@ -91,7 +91,7 @@ void initMenuBar() {
     MenuItem showall = new MenuItem("Show All", new MenuShortcut(KeyEvent.VK_BACK_SPACE));
     showall.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) {
+            if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
                 return;
             }
             
@@ -102,29 +102,43 @@ void initMenuBar() {
     MenuItem zoomin = new MenuItem("Zoom In", new MenuShortcut(KeyEvent.VK_EQUALS));
     zoomin.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) {
+            if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
                 return;
             }
             
+            float old = loddisplay.zoomFactor;
             loddisplay.zoomFactor -= 0.05;
+            
+            if (loddisplay.current_chr == -1) {
+                loddisplay.offset -= ((old * chrTotal) - (loddisplay.zoomFactor * chrTotal)) / 2.0;
+            } else {
+                loddisplay.offset -= ((old * loddisplay.maxOffset) - (loddisplay.zoomFactor * loddisplay.maxOffset)) / 2.0;
+            }
         }
     });
     
     MenuItem zoomout = new MenuItem("Zoom Out", new MenuShortcut(KeyEvent.VK_MINUS));
     zoomout.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) {
+            if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
                 return;
             }
             
+            float old = loddisplay.zoomFactor;
             loddisplay.zoomFactor += 0.05;
+            
+            if (loddisplay.current_chr == -1) {
+                loddisplay.offset -= ((old * chrTotal) - (loddisplay.zoomFactor * chrTotal)) / 2.0;
+            } else {
+                loddisplay.offset -= ((old * loddisplay.maxOffset) - (loddisplay.zoomFactor * loddisplay.maxOffset)) / 2.0;
+            }
         }
     });
     
     MenuItem zoomreset = new MenuItem("Zoom Reset", new MenuShortcut(KeyEvent.VK_Z));
     zoomreset.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            if (exiting) {
+            if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
                 return;
             }
             
