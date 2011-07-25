@@ -8,7 +8,7 @@ class UIKTree extends UITree {
     float panYAmount = 0.0, panXAmount = 0.0;
     int panId = -1;
     UIButton ryes, rno;
-    UIButton rMax, rMin, gMax, gMin, bMax, bMin;
+    PGraphics hsbGraph;
     
     UIKTree(float newX, float newY, float newWidth, float newHeight, UIListener nodeRemove, UIListener elementRemove) {
         super(newX, newY, newWidth, newHeight, nodeRemove, elementRemove);
@@ -39,68 +39,22 @@ class UIKTree extends UITree {
             }
         });
         
-        rMax = new UIButton(216, 264, "", (drawWidth - 480) / 4.0, 32, 48, new UIAction() {
-            public void doAction() {
-                if (currentPh != -1) {
-                    color c = get(currentFile).get(currentPh).drawcolor;
-                    get(currentFile).get(currentPh).drawcolor = color(0xFF, green(c), blue(c));
-                }
-            }
-        });
-        
-        rMin = new UIButton(216, drawHeight - 248, "", (drawWidth - 480) / 4.0, 32, 48, new UIAction() {
-            public void doAction() {
-                if (currentPh != -1) {
-                    color c = get(currentFile).get(currentPh).drawcolor;
-                    get(currentFile).get(currentPh).drawcolor = color(0x00, green(c), blue(c));
-                }
-            }
-        });
-        
-        gMax = new UIButton(232 + ((drawWidth - 480) / 4.0), 264, "", (drawWidth - 480) / 4.0, 32, 48, new UIAction() {
-            public void doAction() {
-                if (currentPh != -1) {
-                    color c = get(currentFile).get(currentPh).drawcolor;
-                    get(currentFile).get(currentPh).drawcolor = color(red(c), 0xFF, blue(c));
-                }
-            }
-        });
-        
-        gMin = new UIButton(232 + ((drawWidth - 480) / 4.0), drawHeight - 248, "", (drawWidth - 480) / 4.0, 32, 48, new UIAction() {
-            public void doAction() {
-                if (currentPh != -1) {
-                    color c = get(currentFile).get(currentPh).drawcolor;
-                    get(currentFile).get(currentPh).drawcolor = color(red(c), 0x00, blue(c));
-                }
-            }
-        });
-        
-        bMax = new UIButton(248 + ((drawWidth - 480) / 2.0), 264, "", (drawWidth - 480) / 4.0, 32, 48, new UIAction() {
-            public void doAction() {
-                if (currentPh != -1) {
-                    color c = get(currentFile).get(currentPh).drawcolor;
-                    get(currentFile).get(currentPh).drawcolor = color(red(c), green(c), 0xFF);
-                }
-            }
-        });
-        
-        bMin = new UIButton(248 + ((drawWidth - 480) / 2.0), drawHeight - 248, "", (drawWidth - 480) / 4.0, 32, 48, new UIAction() {
-            public void doAction() {
-                if (currentPh != -1) {
-                    color c = get(currentFile).get(currentPh).drawcolor;
-                    get(currentFile).get(currentPh).drawcolor = color(red(c), green(c), 0x00);
-                }
-            }
-        });
-        
         ryes.setKey(this);
         rno.setKey(this);
-        rMax.setKey(this);
-        rMin.setKey(this);
-        gMax.setKey(this);
-        gMin.setKey(this);
-        bMax.setKey(this);
-        bMin.setKey(this);
+        
+        hsbGraph = createGraphics(drawHeight - 572, drawHeight - 572, P2D);
+        hsbGraph.beginDraw();
+        hsbGraph.noStroke();
+        hsbGraph.colorMode(HSB, 255);
+        
+        for (int i = 0; i < drawHeight - 572; i++) {
+            for (int j = 0; j < drawHeight - 572; j++) {
+                hsbGraph.stroke(map(i, 0, drawHeight - 572, 0, 255), map(j, 0, drawHeight - 572, 0, 255), 255);
+                hsbGraph.point(i, j);
+            }
+        }
+        colorMode(RGB, 255);
+        hsbGraph.endDraw();
     }
     
     void update() {
@@ -237,44 +191,13 @@ class UIKTree extends UITree {
                 String title = super.get(currentFile).get(currentPh).title;
                 text(title, (drawWidth - textWidth(title)) / 2.0, 248);
                 
-                rMax.active = rMin.active = this.active;
-                gMax.active = gMin.active = this.active;
-                bMax.active = bMin.active = this.active;
-                
-                rMax.update();
-                rMin.update();
-                gMax.update();
-                gMin.update();
-                bMax.update();
-                bMin.update();
-                
-                noStroke();
-                
-                fill(0xFF, 0x00, 0x00);
-                float rHeight = map(red(super.get(currentFile).get(currentPh).drawcolor), 0, 0xFF, 0, drawHeight - 572);
-                rect(216, 312 + drawHeight - 572 - rHeight, (drawWidth - 480) / 4.0, rHeight);
-                
-                fill(0x00, 0xFF, 0x00);
-                float gHeight = map(green(super.get(currentFile).get(currentPh).drawcolor), 0, 0xFF, 0, drawHeight - 572);
-                rect(232 + ((drawWidth - 480) / 4.0), 312 + drawHeight - 572 - gHeight, (drawWidth - 480) / 4.0, gHeight);
-                
-                fill(0x00, 0x00, 0xFF);
-                float bHeight = map(blue(super.get(currentFile).get(currentPh).drawcolor), 0, 0xFF, 0, drawHeight - 572);
-                rect(248 + ((drawWidth - 480) / 2.0), 312 + drawHeight - 572 - bHeight, (drawWidth - 480) / 4.0, bHeight);
-                
-                stroke(0x00);
-                strokeWeight(2);
                 noFill();
-                
-                rect(216, 312, (drawWidth - 480) / 4.0, drawHeight - 572);
-                
-                rect(232 + ((drawWidth - 480) / 4.0), 312, (drawWidth - 480) / 4.0, drawHeight - 572);
-                
-                rect(248 + ((drawWidth - 480) / 2.0), 312, (drawWidth - 480) / 4.0, drawHeight - 572);
+                rect(264, 312, drawHeight - 572, drawHeight - 572);
+                image(hsbGraph, 264, 312);
                 
                 fill(super.get(currentFile).get(currentPh).drawcolor);
                 noStroke();
-                rect(296 + (3 * ((drawWidth - 480) / 4.0)), 312, ((drawWidth - 480) / 4.0) - 64, drawHeight - 572);
+                rect(drawWidth - 200 - ((drawWidth - 480) / 4.0) - 64, 312, ((drawWidth - 480) / 4.0), drawHeight - 572);
             }
         }
     }
@@ -309,28 +232,15 @@ class UIKTree extends UITree {
                 blockEvents();
                 return;
             }
-            
-            rMax.mouseAction();
-            rMin.mouseAction();
-            
-            gMax.mouseAction();
-            gMin.mouseAction();
-            
-            bMax.mouseAction();
-            bMin.mouseAction();
         }
         
-        if (currentPh != -1 && mouseX > 216 && mouseX < 248 + (3 * ((drawWidth - 480) / 4.0)) && mouseY > 312 && mouseY < 312 + drawHeight - 572 && mousePressed && mouseButton == LEFT) {
-            if (mouseX > 216 && mouseX < 216 + ((drawWidth - 480) / 4.0)) { // red box
-                color c = super.get(currentFile).get(currentPh).drawcolor;
-                super.get(currentFile).get(currentPh).drawcolor = color(map(312 + drawHeight - 572 - mouseY, 0, drawHeight - 572, 0, 0xFF), green(c), blue(c));
-            } else if (mouseX > 232 + ((drawWidth - 480) / 4.0) && mouseX < 232 + ((drawWidth - 480) / 2.0)) { // green box
-                color c = super.get(currentFile).get(currentPh).drawcolor;
-                super.get(currentFile).get(currentPh).drawcolor = color(red(c), map(312 + drawHeight - 572 - mouseY, 0, drawHeight - 572, 0, 0xFF), blue(c));
-            } else if (mouseX > 248 + ((drawWidth - 480) / 2.0) && mouseX < 248 + (3 * ((drawWidth - 480) / 4.0))) { // blue box
-                color c = super.get(currentFile).get(currentPh).drawcolor;
-                super.get(currentFile).get(currentPh).drawcolor = color(red(c), green(c), map(312 + drawHeight - 572 - mouseY, 0, drawHeight - 572, 0, 0xFF));
-            }
+        if (currentPh != -1 && mouseX > 264 && mouseY > 312 && mouseX < 264 + drawHeight - 572 && mouseY < 312 + drawHeight - 572) {
+            float h = map(mouseX - 264, 0, drawHeight - 572, 0, 255);
+            float b = map(mouseY - 312, 0, drawHeight - 572, 0, 255);
+            
+            colorMode(HSB, 255);
+            super.get(currentFile).get(currentPh).drawcolor = color(h, b, 255);
+            colorMode(RGB, 255);
         }
     }
     

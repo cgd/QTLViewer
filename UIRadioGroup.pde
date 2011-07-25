@@ -40,12 +40,12 @@ class UIRadioGroup extends UIComponent {
             fill(textColor);
             text(titles[i], x, y + ((10 + size + spacing) * i) + size);
             
-            fill(0x55);
+            fill(0x33);
             strokeWeight(2);
             stroke(0x00);
             
             if (i == selected) {
-                fill(0xCC);
+                fill(0xAA);
             }
             
             ellipse(x + offX + 8, y + ((10 + size + spacing) * i) + 2, x + offX + 8 + size, y + ((10 + size + spacing) * i) + 2 + size);

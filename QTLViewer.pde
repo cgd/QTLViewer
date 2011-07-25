@@ -8,7 +8,7 @@
  * @since 1.6
  */
 
-public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
+public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
 public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
@@ -55,7 +55,6 @@ UITabFolder tabs;
 UIButton yes, no;
 UIButton loadcfg;
 UIButton quit;
-UIButton accept;
 LODDisplay loddisplay;
 ChrDisplay chrdisplay;
 UIKFileBrowser filebrowser;
@@ -65,7 +64,7 @@ UITextInput upperDefault, lowerDefault;
 
 MouseMap unitConverter;
 
-PGraphics icon;
+//PGraphics icon;
 
 SimpleOpenNI context;
 
@@ -180,17 +179,10 @@ void setup() {
     tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), (ENABLE_KINECT) ? 2 : 1, 0);
   
     if (ENABLE_KINECT) {  
-        tabs.addComponent(quit = new UIButton((drawWidth / 2.0) + 8, 300, "Exit", 192, 64, 48, new UIAction() {
+        tabs.addComponent(quit = new UIButton((drawWidth / 2.0) + 8, (tabs.cHeight / 2.0) + tabs.y + 128, "Exit",  256, 128, 48, new UIAction() {
             public void doAction() {
                 kinect_showmenu = false;
                 exiting = true;
-            }
-        }), 4, 0);
-        
-        tabs.addComponent(accept = new UIButton((drawWidth / 2.0) - 200, 300, "Accept", 192, 64, 48, new UIAction() {
-            public void doAction() {
-                kinect_showmenu = false;
-                filebrowser.lastFrame = frameCount;
             }
         }), 4, 0);
         
@@ -219,7 +211,7 @@ void setup() {
             }
         } , 4, 0);
         
-        tabs.addComponent(new UIButton((tabs.cWidth / 2.0) - 128 + tabs.x, (tabs.cHeight / 2.0) + tabs.y + 128, "Stop Tracking", 256, 128, 32, new UIAction() {
+        tabs.addComponent(new UIButton((tabs.cWidth / 2.0) - 264 + tabs.x, (tabs.cHeight / 2.0) + tabs.y + 128, "Stop Tracking", 256, 128, 36, new UIAction() {
             public void doAction() {
                 if (!ENABLE_KINECT_SIMULATE) {
                     for (int i = 0; i < users.size(); i++) {
@@ -241,7 +233,8 @@ void setup() {
     legendY = 250.0;
   
     lastTime = System.currentTimeMillis();
-  
+    
+    /*
     int dim;
     if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
         dim = 128;
@@ -262,6 +255,7 @@ void setup() {
     icon.text("VIEWER", 0, (dim / 2) + (dim / 8) + (dim / 4));
     icon.endDraw();
     frame.setIconImage(icon.image);
+    */
 }
 
 void draw() {
