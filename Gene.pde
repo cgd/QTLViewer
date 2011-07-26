@@ -39,6 +39,14 @@ class Gene {
             }
         }
     }
+    
+    boolean drawThis(float startPos, float endPos) {
+        if (!draw) {
+            return false;
+        }
+        
+        return (geneEnd > startPos && geneStart < endPos);
+    }
 }
 
 Gene[] readGenes(InputStreamReader reader) throws IOException {

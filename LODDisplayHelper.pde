@@ -74,18 +74,18 @@ void findMax(LODDisplay display) {
 int drawLODScale(LODDisplay display, int tempMaxLod) {
     if (maxLod < 1.0) {
         tempMaxLod = 1;
-        float y_off = map(tempMaxLod, 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-        text("1", display.x - 16 - textWidth("1"), (display.y + display.cHeight) - 50 - y_off + 8);
-        line(display.x, (display.y + display.cHeight) - 50 - y_off, display.x - 16, (display.y + display.cHeight) - 50 - y_off);
-        y_off = map(0, 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-        text("0", display.x - 16 - textWidth("0"), (display.y + display.cHeight) - 50 - y_off + 8);
-        line(display.x, (display.y + display.cHeight) - 50 - y_off, display.x - 16, (display.y + display.cHeight) - 50 - y_off);
+        float y_off = map(tempMaxLod, 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+        text("1", display.x - 16 - textWidth("1"), (display.y + display.plotHeight) - 50 - y_off + 8);
+        line(display.x, (display.y + display.plotHeight) - 50 - y_off, display.x - 16, (display.y + display.plotHeight) - 50 - y_off);
+        y_off = map(0, 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+        text("0", display.x - 16 - textWidth("0"), (display.y + display.plotHeight) - 50 - y_off + 8);
+        line(display.x, (display.y + display.plotHeight) - 50 - y_off, display.x - 16, (display.y + display.plotHeight) - 50 - y_off);
     } else {
         for (int i = 0; i <= 4; i++) {
             int value = round((i*tempMaxLod)/4.0);
-            float y_off = map(value, 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-            text(str(value), display.x - 16 - textWidth(str(value)), (display.y + display.cHeight) - 50 - y_off + 8);
-            line(display.x, (display.y + display.cHeight) - 50 - y_off, display.x - 16, (display.y + display.cHeight) - 50 - y_off);
+            float y_off = map(value, 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+            text(str(value), display.x - 16 - textWidth(str(value)), (display.y + display.plotHeight) - 50 - y_off + 8);
+            line(display.x, (display.y + display.plotHeight) - 50 - y_off, display.x - 16, (display.y + display.plotHeight) - 50 - y_off);
         }
     }
     
@@ -101,22 +101,22 @@ int drawLODScale(LODDisplay display, int tempMaxLod) {
 * @param tempMaxLod the maximum LOD score for those being drawn
 */
 void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float endX, int tempMaxLod) {
-    float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-    float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+    float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+    float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
     
     int threshIndex = (currentPhenotype.thresholds.length > 1) ? 1 : 0;
     
-    float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-    float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+    float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+    float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
     
     if (currentPhenotype.thresholds.length > 1) {
         for (float i = endX; i < (display.x + display.cWidth) - 10; i += 20.0) {                 
             if (currentPhenotype.thresholds[1][0] <= tempMaxLod) {
-                line(i, (display.y + display. cHeight) - 50 - y_offXL, i + 10.0, (display.y + display.cHeight) - 50 - y_offXL);
+                line(i, (display.y + display. plotHeight) - 50 - y_offXL, i + 10.0, (display.y + display.plotHeight) - 50 - y_offXL);
             }
             
             if (currentPhenotype.thresholds[1][1] <= tempMaxLod) {
-                line(i, (display.y + display.cHeight) - 50 - y_offXU, i + 10.0, (display.y + display.cHeight) - 50 - y_offXU);
+                line(i, (display.y + display.plotHeight) - 50 - y_offXU, i + 10.0, (display.y + display.plotHeight) - 50 - y_offXU);
             }
         }
     }
@@ -127,11 +127,11 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
         }
         
         if (currentPhenotype.thresholds[0][1] <= tempMaxLod) {
-            line(xp, (display.y + display.cHeight) - 50 - y_offU, xp + 10.0, (display.y + display.cHeight) - 50 - y_offU);
+            line(xp, (display.y + display.plotHeight) - 50 - y_offU, xp + 10.0, (display.y + display.plotHeight) - 50 - y_offU);
         }
         
         if (currentPhenotype.thresholds[0][0] <= tempMaxLod) {
-            line(xp, (display.y + display.cHeight) - 50 - y_offL, xp + 10.0, (display.y + display.cHeight) - 50 - y_offL);
+            line(xp, (display.y + display.plotHeight) - 50 - y_offL, xp + 10.0, (display.y + display.plotHeight) - 50 - y_offL);
         }
     }
                         
@@ -139,7 +139,7 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
         String label = "a=" + (round(currentPhenotype.thresholds[1][1] * 100) / 100.0);
         
         if (endX + textWidth(label) < display.x + display.cWidth + 20) {
-            text(label, endX, display.y + display.cHeight - y_offXU - 54);
+            text(label, endX, display.y + display.plotHeight - y_offXU - 54);
         }
     }
     
@@ -147,7 +147,7 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
         String label = "a=" + (round(currentPhenotype.thresholds[1][0] * 100) / 100.0);
         
         if (endX + textWidth(label) < display.x + display.cWidth + 20) {
-            text(label, endX, display.y + display.cHeight - y_offXL - 54);
+            text(label, endX, display.y + display.plotHeight - y_offXL - 54);
         }
     }
     
@@ -155,9 +155,9 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
         String label = "a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0);
         
         if (endX + textWidth(label) < display.x + display.cWidth + 20) {
-            text(label, endX - textWidth(label), display.y + display.cHeight - y_offU - 54);
+            text(label, endX - textWidth(label), display.y + display.plotHeight - y_offU - 54);
         } else {
-            text(label, display.x + display.cWidth - textWidth(label), display.y + display.cHeight - y_offU - 54);
+            text(label, display.x + display.cWidth - textWidth(label), display.y + display.plotHeight - y_offU - 54);
         }
     }
     
@@ -165,9 +165,9 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
         String label = "a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0);
         
         if (endX + textWidth(label) < display.x + display.cWidth + 20) {
-            text(label, endX - textWidth(label), display.y + display.cHeight - y_offL - 54);
+            text(label, endX - textWidth(label), display.y + display.plotHeight - y_offL - 54);
         } else {
-            text(label, display.x + display.cWidth - textWidth(label), display.y + display.cHeight - y_offL - 54);
+            text(label, display.x + display.cWidth - textWidth(label), display.y + display.plotHeight - y_offL - 54);
         }
     }
 }
@@ -180,20 +180,20 @@ void drawThresholdLabelsX(LODDisplay display, Phenotype currentPhenotype, float 
 * @param tempMaxLod the maximum LOD score for those being drawn
 */
 void drawThresholdLabels(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod) {
-    float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-    float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+    float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+    float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
     
     int threshIndex = (currentPhenotype.thresholds.length > 1) ? 1 : 0;
     
-    float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-    float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+    float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+    float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
     
     if (currentPhenotype.thresholds.length > 1 && currentPhenotype.thresholds[1][1] <= tempMaxLod) {
-        text("a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0)), (display.y + display.cHeight) - y_offXU - 54);
+        text("a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][1] * 100) / 100.0)), (display.y + display.plotHeight) - y_offXU - 54);
     }
     
     if (currentPhenotype.thresholds.length > 1 && currentPhenotype.thresholds[1][0] <= tempMaxLod) {
-        text("a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0)), (display.y + display.cHeight) - y_offXL - 54);
+        text("a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0), (display.x + display.cWidth) - textWidth("a=" + (round(currentPhenotype.thresholds[0][0] * 100) / 100.0)), (display.y + display.plotHeight) - y_offXL - 54);
     }
 }
 
@@ -205,26 +205,26 @@ void drawThresholdLabels(LODDisplay display, Phenotype currentPhenotype, int tem
 * @param tempMaxLod the maximum LOD score for those being drawn
 */
 void drawChrThresholdLabels(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod) {
-    float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-    float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+    float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+    float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
     
     int threshIndex = (currentPhenotype.thresholds.length > 1) ? 1 : 0;
     
-    float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
-    float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+    float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
+    float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
     
     int xNum = chrLengths.length;
     
     if (((display.current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1]) <= tempMaxLod) {
         text("a=" + (round(((display.current_chr == xNum) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1]) * 100) / 100.0), 
             (display.x + display.cWidth) - textWidth("a=" + (round(((display.current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1]) * 100) / 100.0)), 
-            (display.y + display.cHeight) - ((display.current_chr == xNum) ? y_offXU : y_offU) - 54);
+            (display.y + display.plotHeight) - ((display.current_chr == xNum) ? y_offXU : y_offU) - 54);
     }
     
     if (((display.current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0]) <= tempMaxLod) {
         text("a=" + (round(((display.current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0]) * 100) / 100.0), 
             (display.x + display.cWidth) - textWidth("a=" + (round(((display.current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0]) * 100) / 100.0)), 
-            (display.y + display.cHeight) - ((display.current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 54);
+            (display.y + display.plotHeight) - ((display.current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 54);
     }
 }
 
@@ -238,7 +238,7 @@ void drawChrThresholdLabels(LODDisplay display, Phenotype currentPhenotype, int 
 void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod) {
   
     float lastx = map(display.offset + currentPhenotype.position[0] + chrOffsets[currentPhenotype.chromosome[0] - 1], 0.0, display.zoomFactor * chrTotal, 0.0, display.cWidth);
-    float lasty = map(currentPhenotype.lodscores[0], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+    float lasty = map(currentPhenotype.lodscores[0], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
     
     if (display.current_chr != -1) {
         lastx = -1.0;
@@ -247,7 +247,7 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
     for (int k = 1; k < currentPhenotype.position.length; k++) { // draw LOD curves
         if (display.current_chr == -1 && lastx < 0.0) {
             lastx = map(display.offset + currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, display.zoomFactor * chrTotal, 0.0, display.cWidth);
-            lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+            lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
             continue;
         } else if (display.current_chr == -1 && (lastx > display.cWidth || map(display.offset + currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, display.zoomFactor * chrTotal, 0.0, display.cWidth) > display.cWidth)) {
             break;
@@ -257,12 +257,12 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
             if (display.current_chr != -1) {
                 if (lastx < 0.0 && currentPhenotype.chromosome[k] - 1 == display.current_chr) {
                     lastx = map(display.offset + currentPhenotype.position[k], 0.0, display.zoomFactor * ceil(display.maxOffset), 0.0, display.cWidth);
-                    lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+                    lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
                 } else if (currentPhenotype.chromosome[k] - 1 == display.current_chr && (lastx > display.cWidth || map(display.offset + currentPhenotype.position[k], 0.0, display.zoomFactor * ceil(display.maxOffset), 0.0, display.cWidth) > display.cWidth)) {
                     break;
                 } else if (currentPhenotype.chromosome[k] - 1 == display.current_chr) {
-                    line(display.x + lastx, display.y + display.cHeight - lasty - 50, display.x + (lastx = map(display.offset + currentPhenotype.position[k], 0.0, 
-                        display.zoomFactor * ceil(display.maxOffset), 0.0, display.cWidth)), display.y + display.cHeight - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50);
+                    line(display.x + lastx, display.y + display.plotHeight - lasty - 50, display.x + (lastx = map(display.offset + currentPhenotype.position[k], 0.0, 
+                        display.zoomFactor * ceil(display.maxOffset), 0.0, display.cWidth)), display.y + display.plotHeight - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.plotHeight - 50)) - 50);
                 } else if (currentPhenotype.chromosome[k] - 1 > display.current_chr) {
                     break;
                 }
@@ -272,15 +272,19 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
             
             if (currentPhenotype.chromosome[k - 1] != currentPhenotype.chromosome[k]) {
                 lastx = map(display.offset + currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, display.zoomFactor * chrTotal, 0.0, display.cWidth);
-                lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50);
+                lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.plotHeight - 50);
             } else {
-                line(display.x + lastx, display.y + display.cHeight - lasty - 50, display.x + (lastx = map(display.offset + currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, display.zoomFactor * chrTotal, 0.0, display.cWidth)),
-                    display.y + display.cHeight - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.cHeight - 50)) - 50);
+                line(display.x + lastx, display.y + display.plotHeight - lasty - 50, display.x + (lastx = map(display.offset + currentPhenotype.position[k] + chrOffsets[currentPhenotype.chromosome[k] - 1], 0.0, display.zoomFactor * chrTotal, 0.0, display.cWidth)),
+                    display.y + display.plotHeight - (lasty = map(currentPhenotype.lodscores[k], 0.0, tempMaxLod, 0.0, display.plotHeight - 50)) - 50);
             }
         } catch (ArrayIndexOutOfBoundsException error) {
             error.printStackTrace();
         }
     }
+}
+
+
+void drawGenes(LODDisplay display) {
 }
 
 // convenience method comparing two sets of threshold data

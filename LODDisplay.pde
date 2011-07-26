@@ -15,9 +15,11 @@ class LODDisplay extends UIComponent {
     float velocity = 0.0, lastVelocity = 0.0;
     float gravity = 0.95;
     int current_chr = -1, panId = -1;
+    float plotHeight = 0;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
         super(newX, newY, newWidth, newHeight);
+        plotHeight = cHeight - 200;
     }
     
     void update() {
@@ -31,6 +33,7 @@ class LODDisplay extends UIComponent {
         
         if (cHeight <= 0.0) {
             cHeight = (drawHeight - y) + cHeight;
+            plotHeight = cHeight - 200;
         }
         
         if (abs(velocity) < 1.0) {
@@ -73,8 +76,8 @@ class LODDisplay extends UIComponent {
         textFont(font);
         strokeWeight(2);
         stroke(0x00);
-        line(x, y, x, (y + cHeight) - 50);
-        line(x, y + cHeight - 50, x + cWidth, y + cHeight - 50);
+        line(x, y, x, (y + plotHeight) - 50);
+        line(x, y + plotHeight - 50, x + cWidth, y + plotHeight - 50);
         fill(0x00);
         strokeWeight(1);
         int xNum = chrLengths.length;
@@ -93,8 +96,8 @@ class LODDisplay extends UIComponent {
                     continue;
                 }
                 
-                text(chrNames[i], x + pos - (textWidth(chrNames[i]) / 2.0), y + cHeight - 14);
-                line(x + pos, y + cHeight - 50, x + pos, y + cHeight - 34);
+                text(chrNames[i], x + pos - (textWidth(chrNames[i]) / 2.0), y + plotHeight - 14);
+                line(x + pos, y + plotHeight - 50, x + pos, y + plotHeight - 34);
             }
         } else {
             for (int i = 1; i <= 4; i++) {
@@ -109,12 +112,12 @@ class LODDisplay extends UIComponent {
                 
                 if (x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) > cWidth || x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) < 30.0) {
                     continue;
-                    //text(valueText + ((i == 1) ? unit : ""), x + 16 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + cHeight) - 14);
+                    //text(valueText + ((i == 1) ? unit : ""), x + 16 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + plotHeight) - 14);
                 } else {
-                    text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0), (y + cHeight) - 14);
+                    text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0), (y + plotHeight) - 14);
                 }
                 
-                line(x + x_off, (y + cHeight) - 50, x + x_off, (y + cHeight) - 34);
+                line(x + x_off, (y + plotHeight) - 50, x + x_off, (y + plotHeight) - 34);
             }
         } 
         
@@ -177,13 +180,13 @@ class LODDisplay extends UIComponent {
                     currentPhenotype.thresholds[1][1] = autoUpper;
                 }
                 
-                float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, cHeight - 50);
-                float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, cHeight - 50);
+                float y_offL = map(currentPhenotype.thresholds[0][0], 0.0, tempMaxLod, 0.0, plotHeight - 50);
+                float y_offU = map(currentPhenotype.thresholds[0][1], 0.0, tempMaxLod, 0.0, plotHeight - 50);
                 
                 int threshIndex = (currentPhenotype.thresholds.length > 1) ? 1 : 0;
                 
-                float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, cHeight - 50);
-                float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, cHeight - 50);
+                float y_offXL = map(currentPhenotype.thresholds[threshIndex][0], 0.0, tempMaxLod, 0.0, plotHeight - 50);
+                float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, plotHeight - 50);
                 
                 textFont(smallFont);
                 
@@ -204,11 +207,11 @@ class LODDisplay extends UIComponent {
                 } else {
                     for (float xp = x; xp < x + cWidth - 10; xp += 20.0) {
                         if (((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][1] : currentPhenotype.thresholds[0][1]) <= tempMaxLod) {
-                            line(xp, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXU : y_offU) - 50.0, xp + 10.0, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXU : y_offU) - 50.0);
+                            line(xp, (y + plotHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXU : y_offU) - 50.0, xp + 10.0, (y + plotHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXU : y_offU) - 50.0);
                         }
                         
                         if (((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? currentPhenotype.thresholds[1][0] : currentPhenotype.thresholds[0][0]) <= tempMaxLod) {
-                            line(xp, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0, xp + 10.0, (y + cHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0);
+                            line(xp, (y + plotHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0, xp + 10.0, (y + plotHeight) - ((current_chr == xNum && currentPhenotype.thresholds.length > 1) ? y_offXL : y_offL) - 50.0);
                         }
                     }
                                             
@@ -221,11 +224,11 @@ class LODDisplay extends UIComponent {
                     float roundedLower = round(lowerThresh*100)/100.0;
                     
                     if (upperThresh < tempMaxLod) {
-                        text("a=" + roundedUpper, (x + cWidth) - textWidth("a=" + roundedUpper), (y + cHeight) - upperOffset - 54.0);
+                        text("a=" + roundedUpper, (x + cWidth) - textWidth("a=" + roundedUpper), (y + plotHeight) - upperOffset - 54.0);
                     }
                     
                     if (lowerThresh < tempMaxLod) {
-                        text("a=" + roundedLower, (x + cWidth) - textWidth("a=" + roundedLower), (y + cHeight) - lowerOffset - 54.0);
+                        text("a=" + roundedLower, (x + cWidth) - textWidth("a=" + roundedLower), (y + plotHeight) - lowerOffset - 54.0);
                     }
                 }
                 
@@ -238,7 +241,7 @@ class LODDisplay extends UIComponent {
     }
     
     void mouseAction() {
-        if (!(keyPressed && key == CODED && keyCode == 157) && mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + cHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
+        if (!(keyPressed && key == CODED && keyCode == 157) && mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + plotHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
             for (int i = 0; i < chrOffsets.length; i++) {
                 if (mouseX > map(offset + chrOffsets[i], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                     if (i == chrOffsets.length - 1) {
