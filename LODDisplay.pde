@@ -25,6 +25,8 @@ class LODDisplay extends UIComponent {
     void update() {
         if (zoomFactor > 1.0) {
             zoomFactor = 1.0;
+        } else if (zoomFactor < 0.01) {
+            zoomFactor = 0.01;
         }
         
         if (abs(velocity) < 1.0) {
