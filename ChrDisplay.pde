@@ -19,14 +19,6 @@ class ChrDisplay extends UIComponent {
     }
     
     void update() {
-        if (cWidth <= 0.0) {
-            cWidth = (drawWidth - x) + cWidth;
-        }
-        
-        if (cHeight <= 0.0) {
-            cHeight = (drawHeight - y) + cHeight;
-        }
-        
         chromosomeWidth = cWidth / chrColumns;
         chromosomeHeight = cHeight / ceil(chrLengths.length / (float)chrColumns);
         multiplier = (chromosomeHeight - 24) / max(chrLengths);

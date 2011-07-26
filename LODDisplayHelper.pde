@@ -285,6 +285,27 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
 
 
 void drawGenes(LODDisplay display) {
+    if (!genesLoaded) { // genes aren't loaded yet, don't draw anything
+        return;
+    }
+    
+    int startChromosome = 1;
+    
+    for (int i = 1; i < chrOffsets.length; i++) {
+        if (abs(display.offset) >= chrOffsets[i - 1] && abs(display.offset) < chrOffsets[i]) {
+            startChromosome = i;
+            break;
+        }
+    }
+    
+    if (abs(display.offset) > chrTotal) {
+        startChromosome = 20;
+    }
+    
+    float start = display.offset;
+    //float stop = 
+    for (Gene g : genes) {
+    }
 }
 
 // convenience method comparing two sets of threshold data

@@ -24,6 +24,7 @@ import SimpleOpenNI.*;
 boolean exiting = false;
 boolean dragReady = true, dragging = false;
 boolean kinect_showmenu = false;
+boolean genesLoaded = false;
 
 int chrColumns = 7;
 int unitThreshold;
@@ -176,8 +177,22 @@ void setup() {
   
     initMouseWheelListener();
   
-    tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, -35, -25), (ENABLE_KINECT) ? 1 : 0, 0);
-    tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, -35, -25), (ENABLE_KINECT) ? 2 : 1, 0);
+    tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, 0, 0) {
+        public void update() {
+            cWidth = (drawWidth - x) - 35;
+            cHeight = (drawHeight - y)  - 25;
+            plotHeight = cHeight - 200;
+            super.update();
+        }
+    }, (ENABLE_KINECT) ? 1 : 0, 0);
+    
+    tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, 0, 0) {
+        public void update() {
+            cWidth = (drawWidth - x) - 35;
+            cHeight = (drawHeight - y) - 25;
+            super.update();
+        }
+    }, (ENABLE_KINECT) ? 2 : 1, 0);
   
     if (ENABLE_KINECT) {  
         tabs.addComponent(quit = new UIButton((drawWidth / 2.0) + 8, (tabs.cHeight / 2.0) + tabs.y + 128, "Exit",  256, 128, 48, new UIAction() {

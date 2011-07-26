@@ -27,15 +27,6 @@ class LODDisplay extends UIComponent {
             zoomFactor = 1.0;
         }
         
-        if (cWidth <= 0.0) {
-            cWidth = (drawWidth - x) + cWidth;
-        }
-        
-        if (cHeight <= 0.0) {
-            cHeight = (drawHeight - y) + cHeight;
-            plotHeight = cHeight - 200;
-        }
-        
         if (abs(velocity) < 1.0) {
             velocity = 0.0;
         }
@@ -189,6 +180,8 @@ class LODDisplay extends UIComponent {
                 float y_offXU = map(currentPhenotype.thresholds[threshIndex][1], 0.0, tempMaxLod, 0.0, plotHeight - 50);
                 
                 textFont(smallFont);
+                
+                drawGenes(this);
                 
                 if (current_chr == -1) {
                     float endX = -1.0;

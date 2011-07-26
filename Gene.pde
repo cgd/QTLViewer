@@ -61,9 +61,18 @@ Gene[] readGenes(InputStreamReader reader) throws IOException {
     
     String[] lines = new String(total).split("\n");
     
+    ArrayList<String> names = new ArrayList<String>();
+    
     for (String l : lines) {
         if (l.trim().length() > 0) {
-            ret = (Gene[])append(ret, new Gene(l));
+            Gene g;
+            ret = (Gene[])append(ret, g = new Gene(l));
+            
+            if (names.contains(g.name.toLowerCase())) {
+                ret[ret.length - 1].draw = g.draw = false;
+            } else {
+                names.add(g.name.toLowerCase());
+            }
         }
     }
     

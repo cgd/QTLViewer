@@ -108,11 +108,11 @@ void initMenuBar() {
             
             float old = loddisplay.zoomFactor;
             loddisplay.zoomFactor -= 0.05;
-            
-            if (loddisplay.current_chr == -1) {
-                loddisplay.offset -= ((old * chrTotal) - (loddisplay.zoomFactor * chrTotal)) / 2.0;
+            float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
+            if (mouseX > loddisplay.x && mouseX < loddisplay.cWidth + loddisplay.x && mouseY > loddisplay.y && mouseY < loddisplay.cHeight + loddisplay.y) {
+                loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)));
             } else {
-                loddisplay.offset -= ((old * loddisplay.maxOffset) - (loddisplay.zoomFactor * loddisplay.maxOffset)) / 2.0;
+                loddisplay.offset -= ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)) / 2.0;
             }
         }
     });
@@ -126,11 +126,12 @@ void initMenuBar() {
             
             float old = loddisplay.zoomFactor;
             loddisplay.zoomFactor += 0.05;
+            float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
             
-            if (loddisplay.current_chr == -1) {
-                loddisplay.offset -= ((old * chrTotal) - (loddisplay.zoomFactor * chrTotal)) / 2.0;
+            if (mouseX > loddisplay.x && mouseX < loddisplay.cWidth + loddisplay.x && mouseY > loddisplay.y && mouseY < loddisplay.cHeight + loddisplay.y) {
+                loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)));
             } else {
-                loddisplay.offset -= ((old * loddisplay.maxOffset) - (loddisplay.zoomFactor * loddisplay.maxOffset)) / 2.0;
+                loddisplay.offset -= ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)) / 2.0;
             }
         }
     });
@@ -216,11 +217,19 @@ void initConstants() {
         error.printStackTrace();
     }
     
-    try {
-        genes = readGenes(new InputStreamReader(createInput("refFlat.txt")));
-    } catch (IOException error) {
-        error.printStackTrace();
-    }
+    new Thread() { // load genes in separate thread, takes a bit of time to load
+        public void run() {
+            try {
+                long time = System.currentTimeMillis();
+                genes = readGenes(new InputStreamReader(createInput("refFlat.txt")));
+                println("Genes loaded in " + ((System.currentTimeMillis() - time) / 1000.0) + " seconds");
+            } catch (IOException error) {
+                error.printStackTrace();
+            }
+            
+            genesLoaded = true;
+        }
+    }.start();
 }
 
 void initMenu() {
@@ -270,8 +279,12 @@ void initMouseWheelListener() {
                         loddisplay.offset += map(e.getUnitsToScroll(), 0.0, realWidth, 0.0, (loddisplay.current_chr == -1) ? loddisplay.zoomFactor * chrTotal : loddisplay.zoomFactor * loddisplay.maxOffset);
                     }
                 } else if (keyPressed && key == CODED && keyCode == 157) { // command key down
+                    float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
+                    float old = loddisplay.zoomFactor;
+                    
                     if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-                        loddisplay.zoomFactor -= e.getUnitsToScroll() / 100.0;
+                        loddisplay.zoomFactor += e.getUnitsToScroll() / 100.0;
+                        loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, (old * visibleLength) - (loddisplay.zoomFactor * visibleLength));
                     }
                 } else if (e.getWheelRotation() < -5) { // -5 is threshold for scrolling up
                     loddisplay.allChr();
