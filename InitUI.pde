@@ -215,6 +215,12 @@ void initConstants() {
     } catch (NullPointerException error) {
         error.printStackTrace();
     }
+    
+    try {
+        genes = readGenes(new InputStreamReader(createInput("refFlat.txt")));
+    } catch (IOException error) {
+        error.printStackTrace();
+    }
 }
 
 void initMenu() {

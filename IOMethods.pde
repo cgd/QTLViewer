@@ -274,15 +274,21 @@ void loadConfig() {
  * @return the order of the chromosome
  */
 int getChr(String stringChr) {
-    int chr = 1;
+    int chr = 21;
+    
+    String nString = new String(stringChr).trim();
+    
+    if (nString.startsWith("chr")) {
+        nString = nString.substring(3);
+    }
     
     try {
-      chr = Integer.parseInt(stringChr);
+        chr = Integer.parseInt(nString);
     } catch (NumberFormatException error) {
         for (int i = 0; i < chrNames.length; i++) {
-            if (chrNames[i].equals(stringChr)) {
-              chr = i+1;
-              break;
+            if (chrNames[i].equals(nString)) {
+                chr = i + 1;
+                break;
             }
         }
     }

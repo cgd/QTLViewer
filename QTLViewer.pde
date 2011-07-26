@@ -8,8 +8,8 @@
  * @since 1.6
  */
 
-public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
+public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -44,6 +44,7 @@ String[] chrNames;
 
 ArrayList<Parent_File> parentFiles;
 ArrayList<KinectUser> users;
+Gene[] genes;
 
 PFont legendFont;
 PFont large, buttonfont = createFont("Arial", 16, true);
