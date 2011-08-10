@@ -112,8 +112,10 @@ class LODDisplay extends UIComponent {
                 
                 line(x + x_off, (y + plotHeight) - 50, x + x_off, (y + plotHeight) - 34);
             }
-        } 
+        }
         
+        drawGenes(this);
+
         if (maxLod == -1.0) {
             return;
         }
@@ -183,7 +185,9 @@ class LODDisplay extends UIComponent {
                 
                 textFont(smallFont);
                 
-                drawGenes(this);
+                stroke(phenotypeNode.drawcolor, 0x7F);
+                fill(phenotypeNode.drawcolor, 0x7F);
+                strokeWeight(3);
                 
                 if (current_chr == -1) {
                     float endX = -1.0;

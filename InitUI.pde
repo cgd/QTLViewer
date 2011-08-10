@@ -194,8 +194,8 @@ void initConstants() {
     chrTotal = chrLengths[0];
     
     for (int i = 1; i < chrLengths.length; i++) {
-        chrNames[i-1] = str(i);
-        chrOffsets[i] = chrOffsets[i-1] + chrLengths[i-1];
+        chrNames[i - 1] = str(i);
+        chrOffsets[i] = chrOffsets[i - 1] + chrLengths[i - 1];
         chrTotal += chrLengths[i];
         chrMarkerpos[i] = 0.0;
     }

@@ -234,7 +234,7 @@ class UIKTree extends UITree {
             }
         }
         
-        if (currentPh != -1 && mouseX > 264 && mouseY > 312 && mouseX < 264 + drawHeight - 572 && mouseY < 312 + drawHeight - 572) {
+        if (currentPh != -1 && mousePressed && mouseButton == LEFT && mouseX > 264 && mouseY > 312 && mouseX < 264 + drawHeight - 572 && mouseY < 312 + drawHeight - 572) {
             float h = map(mouseX - 264, 0, drawHeight - 572, 0, 255);
             float b = map(mouseY - 312, 0, drawHeight - 572, 0, 255);
             

@@ -1,3 +1,7 @@
+float lastZoomFactor = 1.0, lastOffset = 0.0, lastcWidth = 0.0, lastcHeight = 0.0;
+int lastChr = -1;
+PGraphics geneDisplay;
+
 /**
 * @return the index of the last chromosome for which any phenotype has data
 */
@@ -40,11 +44,8 @@ void findMax(LODDisplay display) {
                 if (display.current_chr == -1 && (tempmaxLod = max(currentPhenotype.lodscores)) > maxLod) {
                     maxLod = tempmaxLod;
                 } else {
-                  
                     for (int k = 0; k < currentPhenotype.lodscores.length; k++) {
-                      
                         if (currentPhenotype.chromosome[k] == display.current_chr + 1) {
-                          
                             if (currentPhenotype.lodscores[k] > maxLod) {
                                 maxLod = currentPhenotype.lodscores[k];
                             }
@@ -287,25 +288,74 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
 void drawGenes(LODDisplay display) {
     if (!genesLoaded) { // genes aren't loaded yet, don't draw anything
         return;
-    }
-    
-    int startChromosome = 1;
-    
-    for (int i = 1; i < chrOffsets.length; i++) {
-        if (abs(display.offset) >= chrOffsets[i - 1] && abs(display.offset) < chrOffsets[i]) {
-            startChromosome = i;
-            break;
+    } else if (geneDisplay == null || lastcHeight != display.cHeight || lastcWidth != display.cWidth || lastZoomFactor != display.zoomFactor || lastOffset != display.offset || lastChr != display.current_chr) {
+        lastcHeight = display.cHeight;
+        lastcWidth = display.cWidth;
+        lastZoomFactor = display.zoomFactor;
+        lastOffset = display.offset;
+        lastChr = display.current_chr;
+        
+        geneDisplay = createGraphics((int)display.cWidth, (int)(display.cHeight - display.plotHeight), JAVA2D);
+        geneDisplay.smooth();
+        geneDisplay.beginDraw();
+        
+        int startChromosome = 1, endChromosome = 20;
+        float mOffset = map(display.cWidth * display.zoomFactor, 0.0, display.cWidth, 0.0, (display.current_chr == -1) ? chrTotal : display.maxOffset) - display.offset;
+        
+        if (display.current_chr == -1) {
+            for (int i = 1; i < chrOffsets.length; i++) {
+                if (abs(display.offset) >= chrOffsets[i - 1] && abs(display.offset) < chrOffsets[i]) {
+                    startChromosome = i;
+                }
+                
+                if (mOffset >= chrOffsets[i - 1] && mOffset < chrOffsets[i]) {
+                    endChromosome = i;
+                }
+            }
+        } else {
+            startChromosome = endChromosome = display.current_chr;
         }
+        
+        if (abs(display.offset) > chrTotal) {
+            startChromosome = 20;
+        }
+        
+        geneDisplay.fill(0x00);
+        geneDisplay.noStroke();
+        geneDisplay.rectMode(CORNERS);
+        
+        for (Gene g : genes) {
+            try {
+                float chrStart, chrEnd;
+                
+                if (g.chromosome == startChromosome) {
+                    chrStart = abs(display.offset) - chrOffsets[g.chromosome - 1];
+                } else {
+                    chrStart = 0.0;
+                }
+                
+                if (g.chromosome == endChromosome) {
+                    chrEnd = mOffset - chrOffsets[g.chromosome - 1];
+                } else {
+                    chrEnd = chrLengths[g.chromosome - 1];
+                }
+                
+                if (g.chromosome < startChromosome || g.chromosome > endChromosome || !g.drawThis(chrStart, chrEnd)) {
+                    continue;
+                }
+                
+                float _maxOffset = (display.current_chr == -1) ? chrTotal : display.maxOffset;
+                float xStart = map(display.offset + chrOffsets[g.chromosome - 1] + g.geneStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                float xEnd = map(display.offset + chrOffsets[g.chromosome - 1] + g.geneEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                geneDisplay.rect(xStart, 0, xEnd, 25);
+            } catch (ArrayIndexOutOfBoundsException error) { // g.chromosome probably is 21, so ignore
+            }
+        }
+        
+        geneDisplay.endDraw();
     }
     
-    if (abs(display.offset) > chrTotal) {
-        startChromosome = 20;
-    }
-    
-    float start = display.offset;
-    //float stop = 
-    for (Gene g : genes) {
-    }
+    image(geneDisplay, display.x, display.y + display.plotHeight);
 }
 
 // convenience method comparing two sets of threshold data
