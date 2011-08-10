@@ -6,7 +6,7 @@
 
 class LODDisplay extends UIComponent {
   
-    boolean chr_ready = true;
+    boolean chr_ready = true, dragging = false;
     PFont font = createFont("Arial", 24, true), smallFont = createFont("Arial", 12, true);
     float maxOffset = -1.0;
     float zoomFactor = 1.0;
@@ -16,6 +16,7 @@ class LODDisplay extends UIComponent {
     float gravity = 0.95;
     int current_chr = -1, panId = -1;
     float plotHeight = 0;
+    Point firstMousePos = new Point(-1, -1);
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
         super(newX, newY, newWidth, newHeight);
@@ -27,6 +28,10 @@ class LODDisplay extends UIComponent {
             zoomFactor = 1.0;
         } else if (zoomFactor < 0.01) {
             zoomFactor = 0.01;
+        }
+        
+        if (!ENABLE_KINECT && dragging) {
+            velocity = mouseX - pmouseX;
         }
         
         if (abs(velocity) < 1.0) {
@@ -240,20 +245,32 @@ class LODDisplay extends UIComponent {
     }
     
     void mouseAction() {
-        if (!(keyPressed && key == CODED && keyCode == 157) && mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + plotHeight - 50 && active && focus && mousePressed && mouseButton == LEFT && chr_ready && current_chr == -1) {
-            for (int i = 0; i < chrOffsets.length; i++) {
-                if (mouseX > map(offset + chrOffsets[i], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
-                    if (i == chrOffsets.length - 1) {
-                        current_chr = i;
-                    } else if (mouseX < map(offset + chrOffsets[i + 1], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
-                        current_chr = i;
+        if (!mousePressed && mouseX == firstMousePos.x && mouseY == firstMousePos.y) {
+            firstMousePos.x = firstMousePos.y = -1;
+            
+            if (!(keyPressed && key == CODED && keyCode == 157) && mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + plotHeight - 50 && active && focus && mouseButton == LEFT && current_chr == -1 && maxLod != -1.0) {
+                for (int i = 0; i < chrOffsets.length; i++) {
+                    if (mouseX > map(offset + chrOffsets[i], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
+                        if (i == chrOffsets.length - 1) {
+                            current_chr = i;
+                        } else if (mouseX < map(offset + chrOffsets[i + 1], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
+                            current_chr = i;
+                        }
                     }
                 }
+                            
+                offset = 0.0;
+                zoomFactor = 1.0;
             }
+        } else if (!mousePressed) {
+            firstMousePos.x = firstMousePos.y = -1;
+        } else if (mousePressed && (firstMousePos.x < 0 || firstMousePos.y < 0)) {
+            firstMousePos.x = mouseX;
+            firstMousePos.y = mouseY;
             
-            offset = 0.0;
-            zoomFactor = 1.0;
         }
+        
+        dragging = mousePressed;
     }
     
     void nextChr() {

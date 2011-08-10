@@ -347,7 +347,18 @@ void drawGenes(LODDisplay display) {
                 float _maxOffset = (display.current_chr == -1) ? chrTotal : display.maxOffset;
                 float xStart = map(display.offset + chrOffsets[g.chromosome - 1] + g.geneStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
                 float xEnd = map(display.offset + chrOffsets[g.chromosome - 1] + g.geneEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
-                geneDisplay.rect(xStart, 0, xEnd, 25);
+                float codeStart = map(display.offset + chrOffsets[g.chromosome - 1] + g.codeStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                float codeEnd = map(display.offset + chrOffsets[g.chromosome - 1] + g.codeEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                
+                /*if (xEnd - xStart <= 1.0) {
+                    line(xStart, 0, xStart, 25);
+                } else if (xEnd - xStart < 4.0) {
+                    geneDisplay.rect(xStart, 0, xEnd, 25);
+                } else {*/
+                    geneDisplay.rect(xStart, 6.25, codeStart, 18.75);
+                    geneDisplay.rect(codeEnd, 6.25, xEnd, 18.75);
+                    geneDisplay.rect(codeStart, 0, codeEnd, 25);
+                //}
             } catch (ArrayIndexOutOfBoundsException error) { // g.chromosome probably is 21, so ignore
             }
         }

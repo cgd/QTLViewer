@@ -225,8 +225,8 @@ void updateLegend() {
     }
     
     if (mouseX > tabs.x && mouseY > tabs.y && mouseX < drawWidth - 50 && mouseY < drawHeight - 100) {
-        loddisplay.chr_ready = chrdisplay.chr_ready = (!mousePressed || mouseButton != LEFT);
+        loddisplay.chr_ready = chrdisplay.chr_ready = (mousePressed || mouseButton != LEFT);
     } else {
-        loddisplay.chr_ready = chrdisplay.chr_ready = !(mousePressed && mouseButton == LEFT && dragging);
+        loddisplay.chr_ready = chrdisplay.chr_ready = !(mouseButton == LEFT && dragging);
     }
 }
