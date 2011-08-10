@@ -45,7 +45,7 @@ class Gene {
             return false;
         }
         
-        return (geneEnd > startPos && geneStart < endPos);
+        return (geneEnd >= startPos && geneStart <= endPos);
     }
 }
 

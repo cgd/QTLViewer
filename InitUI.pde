@@ -284,7 +284,15 @@ void initMouseWheelListener() {
                     
                     if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
                         loddisplay.zoomFactor += e.getUnitsToScroll() / 100.0;
-                        loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, (old * visibleLength) - (loddisplay.zoomFactor * visibleLength));
+                        
+                        if (loddisplay.zoomFactor < 0.01) {
+                            loddisplay.zoomFactor = loddisplay.oldzoomFactor;
+                        } else if (loddisplay.zoomFactor > 1.0) {
+                            loddisplay.zoomFactor = loddisplay.oldzoomFactor;
+                        } else {
+                            loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, (old * visibleLength) - (loddisplay.zoomFactor * visibleLength));
+                            loddisplay.oldzoomFactor = loddisplay.zoomFactor;
+                        }
                     }
                 } else if (e.getWheelRotation() < -5) { // -5 is threshold for scrolling up
                     loddisplay.allChr();

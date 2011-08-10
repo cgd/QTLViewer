@@ -146,10 +146,14 @@ class KinectUser {
                 old = display.zoomFactor;
                 display.zoomFactor = display.oldzoomFactor * (100.0 / map(handDiff, 0, firsthandDiff, 0, 100));
                 
-                if (display.current_chr == -1) {
-                    display.offset -= ((old * chrTotal) - (display.zoomFactor * chrTotal)) / 2.0;
+                if (display.zoomFactor < 0.01 || display.zoomFactor > 1.0) {
+                    display.zoomFactor = old;
                 } else {
-                    display.offset -= ((old * display.maxOffset) - (display.zoomFactor * display.maxOffset)) / 2.0;
+                    if (display.current_chr == -1) {
+                        display.offset -= ((old * chrTotal) - (display.zoomFactor * chrTotal)) / 2.0;
+                    } else {
+                        display.offset -= ((old * display.maxOffset) - (display.zoomFactor * display.maxOffset)) / 2.0;
+                    }
                 }
             }
             

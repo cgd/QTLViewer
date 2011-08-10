@@ -105,8 +105,7 @@ class ChrDisplay extends UIComponent {
     
     void mouseAction() {
         // switch to LOD view if a chromosome is selected
-        if (mousePressed && mouseButton == LEFT && chr_ready && mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight) {
-              
+        if (mousePressed && mouseButton == LEFT && mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight) {
             if (floor((mouseX - x)/chromosomeWidth) + (chrColumns * floor((mouseY - y) / chromosomeHeight)) < chrLengths.length &&
                 floor((mouseX - x)/chromosomeWidth) + (chrColumns * floor((mouseY - y) / chromosomeHeight)) >= 0) {
                 
@@ -114,6 +113,7 @@ class ChrDisplay extends UIComponent {
                 
                 if (chrs[chrNum].peaks.length > 0) {
                     loddisplay.current_chr = chrNum;
+                    updateGenes = true;
                     tabs.prevPage();
                 }
             }

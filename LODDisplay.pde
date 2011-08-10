@@ -26,15 +26,15 @@ class LODDisplay extends UIComponent {
     void update() {
         if (zoomFactor > 1.0) {
             zoomFactor = 1.0;
-        } else if (zoomFactor < 0.01) {
+        } else if (zoomFactor <= 0.01) {
             zoomFactor = 0.01;
         }
-        
+
         if (!ENABLE_KINECT && dragging) {
             velocity = mouseX - pmouseX;
         }
-        
-        if (abs(velocity) < 1.0) {
+
+        if (abs(velocity) < 1.0 || exiting || !focus || !active) {
             velocity = 0.0;
         }
         
@@ -56,8 +56,7 @@ class LODDisplay extends UIComponent {
         
         if (offset > 0.0) {
             offset = 0.0;
-        }
-        
+        }   
         
         if (current_chr == -1 && map(offset + chrTotal, 0.0, zoomFactor * chrTotal, 0.0, cWidth) < cWidth) {
             offset = (zoomFactor * chrTotal) - chrTotal;
