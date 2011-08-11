@@ -3,6 +3,18 @@ double lastZoomFactor = 1.0, lastOffset = 0.0;
 int lastChr = -1;
 boolean updateGenes = true;
 PGraphics geneDisplay;
+PFont tiny = createFont("Arial", 10.0, true);
+
+color[] colors  = new color[] {
+  color(0xFF, 0x00, 0x00),
+  color(0x00, 0xFF, 0x00),
+  color(0x00, 0x00, 0xFF),
+  color(0xFF, 0xFF, 0x00),
+  color(0xFF, 0x00, 0xFF),
+  color(0x00, 0xFF, 0xFF)
+};
+
+int cIndex = 0;
 
 /**
 * @return the index of the last chromosome for which any phenotype has data
@@ -288,6 +300,7 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
 
 
 void drawGenes(LODDisplay display) {
+    cIndex = 0;
     if (!genesLoaded) { // genes aren't loaded yet, don't draw anything
         return;
     } else if (geneDisplay == null || /*lastcHeight != display.cHeight || lastcWidth != display.cWidth || */(lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || (lastOffset != display.offset && abs(display.velocity) < 0.1 && !ENABLE_KINECT) || lastChr != display.current_chr || updateGenes) {
@@ -325,10 +338,9 @@ void drawGenes(LODDisplay display) {
             startChromosome = 20;
         }
 
-        geneDisplay.fill(0x00);
         geneDisplay.noStroke();
         geneDisplay.rectMode(CORNERS);
-        
+        geneDisplay.textFont(tiny);
         for (Gene g : genes) {
             try {
                 double chrStart, chrEnd;
@@ -348,6 +360,10 @@ void drawGenes(LODDisplay display) {
                     continue;
                 }
                 
+                cIndex++;
+                color c = colors[cIndex % colors.length];
+                geneDisplay.fill(c);
+                
                 float _maxOffset = (display.current_chr == -1) ? chrTotal : display.maxOffset;
                 float chrOffset = (display.current_chr == -1) ? chrOffsets[g.chromosome - 1] : 0.0;
                 float xStart = (float)map(display.offset + chrOffset + g.geneStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
@@ -356,8 +372,7 @@ void drawGenes(LODDisplay display) {
                 float codeEnd = (float)map(display.offset + chrOffset + g.codeEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
                 
                 if (Math.abs(xEnd - xStart) <= 1.0) {
-                    geneDisplay.stroke(0x00);
-                    geneDisplay.strokeWeight(1);
+                    geneDisplay.stroke(c);
                     geneDisplay.line(xStart, 0, xStart, 24);
                     geneDisplay.noStroke();
                 } else if (Math.abs(xEnd - xStart) < 4.0) {
@@ -365,7 +380,27 @@ void drawGenes(LODDisplay display) {
                 } else {
                     geneDisplay.rect(xStart, 6.25, codeStart, 18.75);
                     geneDisplay.rect(codeEnd, 6.25, xEnd, 18.75);
-                    geneDisplay.rect(xStart, 12.5, xEnd, 12.5);
+                    
+                    geneDisplay.stroke(c);
+                    geneDisplay.line(codeStart, 12.5, codeEnd, 12.5);
+                    geneDisplay.noStroke();
+                    
+                    for (int i = 0; i < g.exons.length; i++) {
+                        float exonStart = (float)map(display.offset + chrOffset + g.exons[i][0], 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                        float exonEnd = (float)map(display.offset + chrOffset + g.exons[i][1], 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                        geneDisplay.rect(exonStart, 0, exonEnd, 25);
+                    }
+                    
+                    geneDisplay.stroke(0x00);
+                    geneDisplay.fill(0x00);
+                    
+                    geneDisplay.pushMatrix();
+                    geneDisplay.translate(xStart, 35);
+                    geneDisplay.rotate(QUARTER_PI);
+                    geneDisplay.text(g.name, 0, 0);
+                    geneDisplay.popMatrix();
+                    
+                    geneDisplay.noStroke();
                 }
             } catch (ArrayIndexOutOfBoundsException error) { // g.chromosome probably is 21, so ignore
                 mOffset = map(display.cWidth * display.zoomFactor, 0.0, display.cWidth, 0.0, (display.current_chr == -1) ? chrTotal : display.maxOffset) - display.offset;
