@@ -76,7 +76,7 @@ void setup() {
         size(screen.width, drawHeight = screen.height); // SimpleOpenNI is apparently not compatible with OpenGL
         drawWidth = (int)((4.0 / 3.0) * drawHeight);
     } else {
-        size(drawWidth = 1100, drawHeight = 700, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
+        size(drawWidth = 1600, drawHeight = 900, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
         hint(ENABLE_OPENGL_4X_SMOOTH); // enable OPENGL 4x AA
     }
   
