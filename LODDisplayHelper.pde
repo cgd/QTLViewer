@@ -290,7 +290,7 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
 void drawGenes(LODDisplay display) {
     if (!genesLoaded) { // genes aren't loaded yet, don't draw anything
         return;
-    } else if (geneDisplay == null || lastcHeight != display.cHeight || lastcWidth != display.cWidth || lastZoomFactor != display.zoomFactor || lastOffset != display.offset || lastChr != display.current_chr || updateGenes) {
+    } else if (geneDisplay == null || lastcHeight != display.cHeight || lastcWidth != display.cWidth || (lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || (lastOffset != display.offset && abs(display.velocity) < 0.1 && !ENABLE_KINECT) || lastChr != display.current_chr || updateGenes) {
         lastcHeight = display.cHeight;
         lastcWidth = display.cWidth;
         lastZoomFactor = display.zoomFactor;
@@ -324,10 +324,11 @@ void drawGenes(LODDisplay display) {
         if (Math.abs(display.offset) > chrTotal) {
             startChromosome = 20;
         }
-        
+
         geneDisplay.fill(0x00);
         geneDisplay.noStroke();
         geneDisplay.rectMode(CORNERS);
+        
         for (Gene g : genes) {
             try {
                 double chrStart, chrEnd;

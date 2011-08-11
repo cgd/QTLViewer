@@ -134,25 +134,25 @@ class KinectUser {
         
         // left and right hands down
         if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady && tabs.currentpage == 1) {
-            LODDisplay display = (LODDisplay)tabs.get(1).get(0);
             double old = 1.0;
             
             if (!dragZoom) {
                 firsthandDiff = abs(lefthand.x - righthand.x);
-                display.oldzoomFactor = old = display.zoomFactor;
+                loddisplay.oldzoomFactor = old = loddisplay.zoomFactor;
+                loddisplay.zoomStart(ID);
             }
             
             if (tabs.currentpage == 1) {
-                old = display.zoomFactor;
-                display.zoomFactor = display.oldzoomFactor * (100.0 / map(handDiff, 0, firsthandDiff, 0, 100));
+                old = loddisplay.zoomFactor;
+                loddisplay.zoomFactor = loddisplay.oldzoomFactor * (100.0 / map(handDiff, 0, firsthandDiff, 0, 100));
                 
-                if (display.zoomFactor < 0.01 || display.zoomFactor > 1.0) {
-                    display.zoomFactor = old;
+                if (loddisplay.zoomFactor < 0.01 || loddisplay.zoomFactor > 1.0) {
+                    loddisplay.zoomFactor = old;
                 } else {
-                    if (display.current_chr == -1) {
-                        display.offset -= ((old * chrTotal) - (display.zoomFactor * chrTotal)) / 2.0;
+                    if (loddisplay.current_chr == -1) {
+                        loddisplay.offset -= ((old * chrTotal) - (loddisplay.zoomFactor * chrTotal)) / 2.0;
                     } else {
-                        display.offset -= ((old * display.maxOffset) - (display.zoomFactor * display.maxOffset)) / 2.0;
+                        loddisplay.offset -= ((old * loddisplay.maxOffset) - (loddisplay.zoomFactor * loddisplay.maxOffset)) / 2.0;
                     }
                 }
             }
@@ -174,6 +174,10 @@ class KinectUser {
                 ready = true;
             } else {
                 ready = false;
+            }
+            
+            if (dragZoom) {
+                loddisplay.zoomEnd(ID);
             }
             
             dragZoom = false;
@@ -199,6 +203,11 @@ class KinectUser {
             lefthandDown = -1;
         } else {
             lefthandDown = -1;
+            
+            if (dragZoom) {
+                loddisplay.zoomEnd(ID);
+            }
+            
             dragZoom = false;
             dragstart = null;
             leftReady = true;
@@ -257,6 +266,8 @@ class KinectUser {
             if (tabs.currentpage == 1) {
                 ((LODDisplay)tabs.get(1).get(0)).oldzoomFactor = ((LODDisplay)tabs.get(1).get(0)).zoomFactor;
             }
+            
+            loddisplay.zoomEnd(ID);
         }
         
         stroke(0x00);

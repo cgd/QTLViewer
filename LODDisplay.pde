@@ -6,7 +6,7 @@
 
 class LODDisplay extends UIComponent {
   
-    boolean chr_ready = true, dragging = false;
+    boolean chr_ready = true, dragging = false, panning = false;
     PFont font = createFont("Arial", 24, true), smallFont = createFont("Arial", 12, true);
     float maxOffset = -1.0;
     double zoomFactor = 1.0;
@@ -34,9 +34,12 @@ class LODDisplay extends UIComponent {
             velocity = mouseX - pmouseX;
         }
 
-        if (abs(velocity) < 1.0 || exiting || !focus || !active) {
+        if (velocity != 0.0 && abs(velocity) < 1.0 || exiting || !focus || !active) {
             velocity = 0.0;
+            updateGenes = true;
         }
+        
+        panning = panId != -1 || dragging;
         
         if (current_chr == -1) {
             if (velocity < 0.0) {
@@ -352,5 +355,16 @@ class LODDisplay extends UIComponent {
         }
         
         lastVelocity = 0.0;
+        
+        if (velocity < 1.0) {
+            updateGenes = true;
+        }
+    }
+    
+    void zoomStart(int ID) {
+    }
+    
+    void zoomEnd(int ID) {
+        updateGenes = true;
     }
 }
