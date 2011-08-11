@@ -9,9 +9,9 @@ class LODDisplay extends UIComponent {
     boolean chr_ready = true, dragging = false;
     PFont font = createFont("Arial", 24, true), smallFont = createFont("Arial", 12, true);
     float maxOffset = -1.0;
-    float zoomFactor = 1.0;
-    float oldzoomFactor = 1.0;
-    float offset = 0.0; // measured in cM
+    double zoomFactor = 1.0;
+    double oldzoomFactor = 1.0;
+    double offset = 0.0; // measured in cM
     float velocity = 0.0, lastVelocity = 0.0;
     float gravity = 0.95;
     int current_chr = -1, panId = -1;
@@ -26,10 +26,10 @@ class LODDisplay extends UIComponent {
     void update() {
         if (zoomFactor > 1.0) {
             zoomFactor = 1.0;
-        } else if (zoomFactor <= 0.01) {
-            zoomFactor = 0.01;
+        } else if (zoomFactor <= 0.001) {
+            zoomFactor = 0.001;
         }
-
+        
         if (!ENABLE_KINECT && dragging) {
             velocity = mouseX - pmouseX;
         }
@@ -87,19 +87,19 @@ class LODDisplay extends UIComponent {
         
         if (current_chr == -1) {
             for (int i = 0; i < chrLengths.length; i++) {
-                float pos = map(offset + chrOffsets[i] + (chrLengths[i] / 2.0), 0.0, chrTotal * zoomFactor, 0.0, cWidth);
+                float pos = (float)map(offset + chrOffsets[i] + (chrLengths[i] / 2.0), 0.0, chrTotal * zoomFactor, 0.0, cWidth);
                 
                 if (pos >= cWidth || pos <= 0.0) {
                     continue;
                 }
                 
-                text(chrNames[i], x + pos - (textWidth(chrNames[i]) / 2.0), y + plotHeight - 14);
+                text(chrNames[i], x + (float)pos - (textWidth(chrNames[i]) / 2.0), y + plotHeight - 14);
                 line(x + pos, y + plotHeight - 50, x + pos, y + plotHeight - 34);
             }
         } else {
             for (int i = 1; i <= 4; i++) {
                 int value = round((i * ceil(maxOffset)) / 4.0);
-                float x_off = map(offset + value, 0.0, zoomFactor * ceil(maxOffset), 0.0, cWidth);
+                float x_off = (float)map(offset + value, 0.0, zoomFactor * ceil(maxOffset), 0.0, cWidth);
                 String valueText = str(value), unit = "cM";
                 
                 if (unitSelect.selected == 1) {
@@ -199,7 +199,7 @@ class LODDisplay extends UIComponent {
                     if ((currentPhenotype.thresholds.length > 1 && thresholdsEqual(currentPhenotype.thresholds))) {
                         endX = x + cWidth;
                     } else {
-                        endX = map(offset + chrOffsets[xNum], 0.0, zoomFactor * chrTotal, x, x + cWidth);
+                        endX = (float)map(offset + chrOffsets[xNum], 0.0, zoomFactor * chrTotal, x, x + cWidth);
                     }
                     
                     if ((currentPhenotype.thresholds.length > 1 && !thresholdsEqual(currentPhenotype.thresholds)) || currentPhenotype.thresholds.length > 0) {

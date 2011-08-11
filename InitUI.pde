@@ -106,13 +106,25 @@ void initMenuBar() {
                 return;
             }
             
-            float old = loddisplay.zoomFactor;
-            loddisplay.zoomFactor -= 0.05;
-            float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
-            if (mouseX > loddisplay.x && mouseX < loddisplay.cWidth + loddisplay.x && mouseY > loddisplay.y && mouseY < loddisplay.cHeight + loddisplay.y) {
-                loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)));
+            double old = loddisplay.zoomFactor;
+            if (loddisplay.zoomFactor > 0.05) {
+                loddisplay.zoomFactor -= 0.05;
+            } else if (loddisplay.zoomFactor > 0.01) {
+                loddisplay.zoomFactor -= 0.01;
             } else {
-                loddisplay.offset -= ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)) / 2.0;
+                loddisplay.zoomFactor -= 0.001;
+            }
+            
+            if (loddisplay.zoomFactor < 0.001) {
+                loddisplay.zoomFactor = old;
+            } else {
+                float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
+                
+                if (mouseX > loddisplay.x && mouseX < loddisplay.cWidth + loddisplay.x && mouseY > loddisplay.y && mouseY < loddisplay.cHeight + loddisplay.y) {
+                    loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, (old * visibleLength) - (loddisplay.zoomFactor * visibleLength));
+                } else {
+                    loddisplay.offset -= ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)) / 2.0;
+                }
             }
         }
     });
@@ -124,14 +136,19 @@ void initMenuBar() {
                 return;
             }
             
-            float old = loddisplay.zoomFactor;
+            double old = loddisplay.zoomFactor;
             loddisplay.zoomFactor += 0.05;
-            float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
             
-            if (mouseX > loddisplay.x && mouseX < loddisplay.cWidth + loddisplay.x && mouseY > loddisplay.y && mouseY < loddisplay.cHeight + loddisplay.y) {
-                loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)));
+            if (loddisplay.zoomFactor > 1.0) {
+                loddisplay.zoomFactor = old;
             } else {
-                loddisplay.offset -= ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)) / 2.0;
+                float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
+                
+                if (mouseX > loddisplay.x && mouseX < loddisplay.cWidth + loddisplay.x && mouseY > loddisplay.y && mouseY < loddisplay.cHeight + loddisplay.y) {
+                    loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, (old * visibleLength) - (loddisplay.zoomFactor * visibleLength));
+                } else {
+                    loddisplay.offset -= ((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)) / 2.0;
+                }
             }
         }
     });
@@ -280,7 +297,7 @@ void initMouseWheelListener() {
                     }
                 } else if (keyPressed && key == CODED && keyCode == 157) { // command key down
                     float visibleLength = (loddisplay.current_chr == -1) ? chrTotal : loddisplay.maxOffset;
-                    float old = loddisplay.zoomFactor;
+                    double old = loddisplay.zoomFactor;
                     
                     if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
                         loddisplay.zoomFactor += e.getUnitsToScroll() / 100.0;
@@ -290,7 +307,7 @@ void initMouseWheelListener() {
                         } else if (loddisplay.zoomFactor > 1.0) {
                             loddisplay.zoomFactor = loddisplay.oldzoomFactor;
                         } else {
-                            loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, (old * visibleLength) - (loddisplay.zoomFactor * visibleLength));
+                            loddisplay.offset -= map(mouseX - loddisplay.x, 0.0, loddisplay.cWidth, 0.0, (float)((old * visibleLength) - (loddisplay.zoomFactor * visibleLength)));
                             loddisplay.oldzoomFactor = loddisplay.zoomFactor;
                         }
                     }

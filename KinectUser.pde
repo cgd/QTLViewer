@@ -135,7 +135,7 @@ class KinectUser {
         // left and right hands down
         if (CoM.z - lefthand.z > DEPTH_LOWER && CoM.z - righthand.z > DEPTH_LOWER && zoomReady && tabs.currentpage == 1) {
             LODDisplay display = (LODDisplay)tabs.get(1).get(0);
-            float old = 1.0;
+            double old = 1.0;
             
             if (!dragZoom) {
                 firsthandDiff = abs(lefthand.x - righthand.x);

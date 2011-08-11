@@ -309,3 +309,7 @@ void draw() {
         updateKinect();
     }
 }
+
+double map(double value, double src_low, double src_high, double dest_low, double dest_high) {
+    return (((value - src_low) / (src_high - src_low)) * (dest_high - dest_low)) + dest_low;
+}
