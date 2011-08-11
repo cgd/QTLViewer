@@ -61,6 +61,7 @@ void updateViewArea() {
     // expand/contract fileTree view area
     if (Math.abs(tabs.x - tabsXTarget) < 0.1) {
         tabs.x = tabsXTarget;
+        updateGenes = true;
     }
     
     fileTree.cWidth -= (ENABLE_KINECT) ? 0 : (tabs.x - tabsXTarget) * velocity;

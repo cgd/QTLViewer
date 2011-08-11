@@ -34,9 +34,12 @@ class LODDisplay extends UIComponent {
             velocity = mouseX - pmouseX;
         }
 
-        if (velocity != 0.0 && abs(velocity) < 1.0 || exiting || !focus || !active) {
-            velocity = 0.0;
+        if (velocity != 0.0 && abs(velocity) < 1.0 && !exiting && focus && active) {
             updateGenes = true;
+        }
+        
+        if ((velocity != 0.0 && abs(velocity) < 1.0) || exiting || !focus || !active) {
+            velocity = 0.0;
         }
         
         panning = panId != -1 || dragging;
