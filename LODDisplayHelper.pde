@@ -302,6 +302,8 @@ void drawGenes(LODDisplay display) {
         geneDisplay.beginDraw();
         
         int startChromosome = 1, endChromosome = 20;
+        
+        // last position (in cM) visible 
         float mOffset = map(display.cWidth * display.zoomFactor, 0.0, display.cWidth, 0.0, (display.current_chr == -1) ? chrTotal : display.maxOffset) - display.offset;
         
         if (display.current_chr == -1) {
@@ -331,32 +333,32 @@ void drawGenes(LODDisplay display) {
                 float chrStart, chrEnd;
                 
                 if (g.chromosome == startChromosome) {
-                    chrStart = abs(display.offset) - chrOffsets[g.chromosome - 1];
+                    chrStart = abs(display.offset) - ((display.current_chr == -1) ? chrOffsets[g.chromosome - 1] : 0.0);
                 } else {
                     chrStart = 0.0;
                 }
                 
                 if (g.chromosome == endChromosome) {
-                    chrEnd = mOffset - chrOffsets[g.chromosome - 1];
+                    chrEnd = mOffset - ((display.current_chr == -1) ? chrOffsets[g.chromosome - 1] : 0.0);
                 } else {
                     chrEnd = chrLengths[g.chromosome - 1];
                 }
                 
                 if (g.chromosome < startChromosome || g.chromosome > endChromosome || !g.drawThis(chrStart, chrEnd)) {
-                    println("no-draw: (" + chrStart + ", " + chrEnd + ") " + g.chromosome + " " + chrLengths[g.chromosome - 1]);
                     continue;
                 }
                 
                 float _maxOffset = (display.current_chr == -1) ? chrTotal : display.maxOffset;
-                float xStart = map(display.offset + chrOffsets[g.chromosome - 1] + g.geneStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
-                float xEnd = map(display.offset + chrOffsets[g.chromosome - 1] + g.geneEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
-                float codeStart = map(display.offset + chrOffsets[g.chromosome - 1] + g.codeStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
-                float codeEnd = map(display.offset + chrOffsets[g.chromosome - 1] + g.codeEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                float chrOffset = (display.current_chr == -1) ? chrOffsets[g.chromosome - 1] : 0.0;
+                float xStart = map(display.offset + chrOffset + g.geneStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                float xEnd = map(display.offset + chrOffset + g.geneEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                float codeStart = map(display.offset + chrOffset + g.codeStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
+                float codeEnd = map(display.offset + chrOffset + g.codeEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
                 
                 if (abs(xEnd - xStart) <= 1.0) {
                     geneDisplay.stroke(0x00);
                     geneDisplay.strokeWeight(1);
-                    geneDisplay.line(xStart, 0, xStart, 25);
+                    geneDisplay.line(xStart, 0, xStart, 24);
                     geneDisplay.noStroke();
                 } else if (abs(xEnd - xStart) < 4.0) {
                     geneDisplay.rect(xStart, 0, xEnd, 25);

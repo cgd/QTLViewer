@@ -244,7 +244,7 @@ class LODDisplay extends UIComponent {
     }
     
     void mouseAction() {
-        if (!mousePressed && mouseX == firstMousePos.x && mouseY == firstMousePos.y) {
+        if ((!mousePressed && mouseX == firstMousePos.x && mouseY == firstMousePos.y) || (mousePressed && ENABLE_KINECT)) {
             firstMousePos.x = firstMousePos.y = -1;
             
             if (!(keyPressed && key == CODED && keyCode == 157) && mouseX > x && mouseY > y && mouseX < x + cWidth && mouseY < y + plotHeight - 50 && active && focus && mouseButton == LEFT && current_chr == -1 && maxLod != -1.0) {
