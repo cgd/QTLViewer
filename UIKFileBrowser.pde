@@ -5,6 +5,8 @@ class UIKFileBrowser extends UIComponent {
     PFont main = createFont("Arial", 48, true);
     int page = 0, panId = -1;
     long lastFrame = -1;
+    long lastPan = -1;
+    boolean panReady = true;
     
     UIButton open;
     
@@ -18,6 +20,12 @@ class UIKFileBrowser extends UIComponent {
     }
     
     void update() {
+        if (lastPan != -1 && System.currentTimeMillis() - lastPan >= 1000) {
+            lastPan = -1;
+            panAmount = 0.0;
+            panReady = true;
+        }
+        
         if (ENABLE_KINECT_SIMULATE) {
             if (keyPressed && key == CODED && keyCode == DOWN) {
                 page++;
@@ -140,6 +148,7 @@ class UIKFileBrowser extends UIComponent {
                 if (mousePressedInRect(this, x, y + 78 + (l * 48), x + cWidth, y + 72 + ((l + 1) * 48)) && (lastFrame == -1 || frameCount - lastFrame > 1)) {
                     if(new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isDirectory()) {
                         path += "/" + dirs[i];
+                        page = 0;
                         break;
                     } else if (new File(path + "/" + dirs[i]).exists() && new File(path + "/" + dirs[i]).isFile()) {
                         loadFile(path + "/" + dirs[i]);
@@ -163,13 +172,16 @@ class UIKFileBrowser extends UIComponent {
     }
     
     void pan(PVector vec) {
+        lastPan = System.currentTimeMillis();
         panAmount += vec.y;
 
-        if (panAmount > 300.0 && panId != -1) {
+        if (panAmount > 300.0 && panId != -1 && panReady) {
             page++;
+            panReady = false;
             panAmount = 0;
-        } else if (panAmount < -300.0 && panId != -1 && page > 0) {
+        } else if (panAmount < -300.0 && panId != -1 && page > 0 && panReady) {
             page--;
+            panReady = false;
             panAmount = 0;
         }
     }
@@ -178,9 +190,11 @@ class UIKFileBrowser extends UIComponent {
     
     void panStart(int id) {
         panId = id;
+        panReady = true;
     }
     
     void panEnd(int id) {
         panId = -1;
+        panReady = true;
     }
 }

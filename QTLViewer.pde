@@ -8,8 +8,8 @@
  * @since 1.6
  */
 
-public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
+public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -64,8 +64,6 @@ UIKSpinner defLower;
 UITextInput upperDefault, lowerDefault;
 
 MouseMap unitConverter;
-
-//PGraphics icon;
 
 SimpleOpenNI context;
 
@@ -253,29 +251,6 @@ void setup() {
     legendY = 250.0;
   
     lastTime = System.currentTimeMillis();
-    
-    /*
-    int dim;
-    if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
-        dim = 128;
-    } else if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
-        dim = 32;
-    } else {
-        dim = 64;
-    }
-  
-    icon = createGraphics(dim, dim, JAVA2D);
-    icon.beginDraw();
-    icon.background(0x00, 0x55);
-    icon.smooth();
-    icon.textFont(createFont("Arial", dim / 2, true));
-    icon.fill(0xFF, 0x00, 0x00);
-    icon.text("QTL", 0, (dim / 2) + (dim / 8));
-    icon.textFont(createFont("Arial", dim / 4, true));
-    icon.text("VIEWER", 0, (dim / 2) + (dim / 8) + (dim / 4));
-    icon.endDraw();
-    frame.setIconImage(icon.image);
-    */
 }
 
 void draw() {

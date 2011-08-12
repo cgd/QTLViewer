@@ -1,10 +1,11 @@
 class UIKTree extends UITree {
     PFont title = createFont("Arial", 48, true);
-    boolean displayFile = false;
+    boolean displayFile = false, panReady = true;
     int currentFile = -1;
     int currentPh = -1;
     int page = 0;
     long lastFrame = -1;
+    long lastPan = -1;
     float panYAmount = 0.0, panXAmount = 0.0;
     int panId = -1;
     UIButton ryes, rno;
@@ -58,6 +59,12 @@ class UIKTree extends UITree {
     }
     
     void update() {
+        if (lastPan != -1 && System.currentTimeMillis() - lastPan >= 1000) {
+            lastPan = -1;
+            panXAmount = panYAmount = 0.0;
+            panReady = true;
+        }
+        
         stroke(0x00);
         strokeWeight(2);
         fill(0xAA);
@@ -245,30 +252,37 @@ class UIKTree extends UITree {
     }
     
     void pan(PVector vec) {
+        lastPan = System.currentTimeMillis();
         panYAmount += vec.y;
         panXAmount += vec.x;
-        
+
         if (panYAmount > 300.0 && panId != -1) {
             page++;
+            panReady = false;
             panYAmount = 0;
         } else if (panYAmount < -300.0 && panId != -1 && page > 0) {
             page--;
+            panReady = false;
             panYAmount = 0;
         }
         
-        if (panXAmount > 200.0 && panId != -1 && currentFile <= size()) {
+        if (panXAmount > 200.0 && panId != -1 && currentFile <= size() && panReady) {
             currentFile++;
-        } else if (panXAmount < -200.0 && panId != -1 && currentFile > 0) {
+            panReady = false;
+        } else if (panXAmount < -200.0 && panId != -1 && currentFile > 0 && panReady) {
             currentFile--;
+            panReady = false;
         }
     }
     
     void panStart(int id) {
         panId = id;
+        panReady = true;
     }
     
     void panEnd(int id) {
         panId = -1;
+        panReady = true;
     }
     
     color negate(color c) {

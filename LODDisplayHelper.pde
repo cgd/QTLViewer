@@ -1,5 +1,4 @@
 double lastZoomFactor = 1.0, lastOffset = 0.0;
-//float lastcWidth = 0.0, lastcHeight = 0.0;
 int lastChr = -1;
 boolean updateGenes = true;
 PGraphics geneDisplay;
@@ -291,10 +290,8 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
 void drawGenes(LODDisplay display) {
     if (!genesLoaded) { // genes aren't loaded yet, don't draw anything
         return;
-    } else if ((geneDisplay == null || /*lastcHeight != display.cHeight || lastcWidth != display.cWidth || */(lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || 
+    } else if ((geneDisplay == null || (lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || 
         (lastOffset != display.offset && abs(display.velocity) < 0.1 && !ENABLE_KINECT) || lastChr != display.current_chr || updateGenes) && (!display.dragging && display.panId == -1)) {
-        //lastcHeight = display.cHeight;
-        //lastcWidth = display.cWidth;
         lastZoomFactor = display.zoomFactor;
         lastOffset = display.offset;
         lastChr = display.current_chr;
