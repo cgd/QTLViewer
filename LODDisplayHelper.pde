@@ -6,17 +6,6 @@ PGraphics geneDisplay;
 PFont tiny = createFont("Arial", 10.0, true);
 float strandHeight = 25.0;
 
-color[] colors  = new color[] {
-  color(0xFF, 0x00, 0x00),
-  color(0x00, 0xFF, 0x00),
-  color(0x00, 0x00, 0xFF),
-  color(0xFF, 0xFF, 0x00),
-  color(0xFF, 0x00, 0xFF),
-  color(0x00, 0xFF, 0xFF)
-};
-
-int cIndex = 0;
-
 /**
 * @return the index of the last chromosome for which any phenotype has data
 */
@@ -301,10 +290,9 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
 
 
 void drawGenes(LODDisplay display) {
-    cIndex = 0;
     if (!genesLoaded) { // genes aren't loaded yet, don't draw anything
         return;
-    } else if (geneDisplay == null || /*lastcHeight != display.cHeight || lastcWidth != display.cWidth || */(lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || (lastOffset != display.offset && abs(display.velocity) < 0.1 && !ENABLE_KINECT) || lastChr != display.current_chr || updateGenes) {
+    } else if (geneDisplay == null || /*lastcHeight != display.cHeight || lastcWidth != display.cWidth || */(lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || (lastOffset != display.offset && abs(display.velocity) < 0.1 && !ENABLE_KINECT) || lastChr != display.current_chr || updateGenes && !display.dragging) {
         //lastcHeight = display.cHeight;
         //lastcWidth = display.cWidth;
         lastZoomFactor = display.zoomFactor;
@@ -361,9 +349,7 @@ void drawGenes(LODDisplay display) {
                     continue;
                 }
                 
-                cIndex++;
-                color c = colors[cIndex % colors.length];
-                geneDisplay.fill(c);
+                geneDisplay.fill(g.drawColor);
                 
                 float _maxOffset = (display.current_chr == -1) ? chrTotal : display.maxOffset;
                 float chrOffset = (display.current_chr == -1) ? chrOffsets[g.chromosome - 1] : 0.0;
@@ -374,7 +360,7 @@ void drawGenes(LODDisplay display) {
                 float codeEnd = (float)map(display.offset + chrOffset + g.codeEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
                 
                 if (Math.abs(xEnd - xStart) <= 1.0) {
-                    geneDisplay.stroke(c);
+                    geneDisplay.stroke(g.drawColor);
                     geneDisplay.line(xStart, yOffset, xStart, yOffset + strandHeight - 1.0);
                     geneDisplay.noStroke();
                 } else if (Math.abs(xEnd - xStart) < 4.0) {
@@ -383,7 +369,7 @@ void drawGenes(LODDisplay display) {
                     geneDisplay.rect(xStart, yOffset + (strandHeight / 4.0), codeStart, yOffset + (3 * (strandHeight / 4.0)));
                     geneDisplay.rect(codeEnd, yOffset + (strandHeight / 4.0), xEnd, yOffset + (3 * (strandHeight / 4.0)));
                     
-                    geneDisplay.stroke(c);
+                    geneDisplay.stroke(g.drawColor);
                     geneDisplay.line(codeStart, yOffset + (strandHeight / 2.0), codeEnd, yOffset + (strandHeight / 2.0));
                     geneDisplay.noStroke();
                     

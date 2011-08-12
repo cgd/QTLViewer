@@ -1,4 +1,14 @@
-    
+int[] geneColors  = new int[] {
+  color(0xFF, 0x00, 0x00),
+  color(0x00, 0xFF, 0x00),
+  color(0x00, 0x00, 0xFF),
+  color(0xFF, 0xFF, 0x00),
+  color(0xFF, 0x00, 0xFF),
+  color(0x00, 0xFF, 0xFF)
+};
+
+int cIndex = 0;
+
 class Gene {
     String name, altName;
     int chromosome;
@@ -7,6 +17,7 @@ class Gene {
     float codeStart, codeEnd;
     float[][] exons = null;
     boolean draw = true;
+    int drawColor;
     
     Gene(String line) { // parse a line from gene file
         String[] segs = line.split("\t");
@@ -38,6 +49,8 @@ class Gene {
                 exons[i]  = new float[] { start, end };
             }
         }
+        
+        drawColor = geneColors[cIndex++ % geneColors.length];
     }
     
     boolean drawThis(float startPos, float endPos) {
