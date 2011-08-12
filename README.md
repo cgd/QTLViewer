@@ -2,6 +2,11 @@
 
 ### Standard version:
 
+**Usage**
+
+* File manager:
+  * Go to File>Open to load a file or folder. The file(s) will appear in the side bar
+
 ### Kinect version:
 
 **Installation**
@@ -32,6 +37,8 @@ Stand about 10 feet from the Kinect sensor. On the right side of the screen ther
   * After activation, move left hand to allow another action.
 
 **Usage**
+
+Select a tab to change to that page.
 
 * File browser:
   * Select a folder to browse its contents, or a file to load it.
