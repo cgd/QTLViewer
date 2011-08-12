@@ -113,6 +113,8 @@ class ChrDisplay extends UIComponent {
                 
                 if (chrs[chrNum].peaks.length > 0) {
                     loddisplay.current_chr = chrNum;
+                    loddisplay.zoomFactor = 1.0;
+                    loddisplay.offset = 0.0;
                     updateGenes = true;
                     tabs.prevPage();
                 }
