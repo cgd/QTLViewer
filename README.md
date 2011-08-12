@@ -4,8 +4,28 @@
 
 **Usage**
 
+Click a tab to change to that page.
+
 * File manager:
-  * Go to File>Open to load a file or folder. The file(s) will appear in the side bar
+  * Go to File>Open to load a file or folder. The file(s) will appear in the side bar as a header with a list of phenotypes.
+  * To activate a phenotype, check the square to the left of the label.
+  * To change the color of a phenotype, click the colored rectangle to the left of the label. A color selection box will appear.
+  * To show or hide a file's contents, click the appropriate symbol to the left of the file name.
+  * To remove a file or phenotype from the list, click the "X" symbol to the right of the name. The "X" will not appear until the cursor is over the name.
+  * To hide the file manager bar, click anywhere between it and the tab pages.
+* LOD score plot:
+  * Zoom in/out or reset with the appropriate options under the View menu option, or by holding command/control and scrolling the mouse wheel.
+  * Scroll through the graph with the mouse wheel, or by clicking and dragging.
+  * View an individual chromosome by clicking it.
+  * Return to the genome-wide view with View>Show All, or by scrolling the mouse wheel quickly up.
+  * Switch to the next or previous chromosome with the View menu.
+* Chromosome view:
+  * Click a chromosome to view it in the LOD score plot.
+* Menu:
+  * Click the menu tab at the bottom of the screen or use the View options to show/hide the menu.
+  * Use the text boxes to change the default LOD thresholds.
+  * Use the centimorgans and base pairs radio options to change the units.
+  * Click the "Load config" button or use the File menu options to load a new configuration file.
 
 ### Kinect version:
 
