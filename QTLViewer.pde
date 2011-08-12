@@ -19,7 +19,6 @@ import javax.swing.JColorChooser;
 import org.jax.mousemap.*;
 import org.jax.mousemap.MouseMap.*;
 import org.jax.util.datastructure.SequenceUtilities;
-import SimpleOpenNI.*;
 
 boolean exiting = false;
 boolean dragReady = true, dragging = false;
@@ -73,6 +72,7 @@ SimpleOpenNI context;
 void setup() {
     // set up base UI
     if (ENABLE_KINECT) {
+        import SimpleOpenNI.*;
         size(screen.width, drawHeight = screen.height); // SimpleOpenNI is apparently not compatible with OpenGL
         drawWidth = (int)((4.0 / 3.0) * drawHeight);
     } else {
@@ -132,11 +132,11 @@ void setup() {
   
     if (ENABLE_KINECT) {
         titles = new String[] {
-            "File Management", "LOD Score view", "Chromosome view", "Genome Browser", "Settings"
+            "File Management", "LOD Score view", "Chromosome view", "Settings"
         };
     } else {
         titles = new String[] {
-            "LOD Score view", "Chromosome view", "Genome Browser"
+            "LOD Score view", "Chromosome view"
         };
     }
     
@@ -204,7 +204,7 @@ void setup() {
                 kinect_showmenu = false;
                 exiting = true;
             }
-        }), 4, 0);
+        }), 3, 0);
         
         tabs.addComponent(defUpper = new UIKSpinner(0, 400, 48, 3.0, "Default upper threshold") {
             public void update() {
@@ -213,7 +213,7 @@ void setup() {
                 textColor = color(0x00);
                 super.update();
             }
-        }, 4, 0);
+        }, 3, 0);
         
         tabs.addComponent(defLower = new UIKSpinner(0, 558, 48, 1.5, "Default lower threshold") {
             public void update() {
@@ -222,14 +222,14 @@ void setup() {
                 textColor = color(0x00);
                 super.update();
             }
-        }, 4, 0);
+        }, 3, 0);
         
         tabs.addComponent(unitSelect = new UIRadioGroup((tabs.cWidth / 2.0) + 32 + tabs.x, 400, 48.0, 100.0, new String[] {"Centimorgans", "Base pairs"}) {
             public void update() {
                 super.textColor = color(0x00);
                 super.update();
             }
-        } , 4, 0);
+        } , 3, 0);
         
         tabs.addComponent(new UIButton((tabs.cWidth / 2.0) - 264 + tabs.x, (tabs.cHeight / 2.0) + tabs.y + 128, "Stop Tracking", 256, 128, 36, new UIAction() {
             public void doAction() {
@@ -244,7 +244,7 @@ void setup() {
                     context.startPoseDetection("Psi", mouseId);
                 }
             }
-        }), 4, 0);
+        }), 3, 0);
         
         tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
     }
