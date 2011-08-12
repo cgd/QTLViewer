@@ -338,10 +338,10 @@ class LODDisplay extends UIComponent {
             offset = (zoomFactor * chrTotal) - chrTotal;
         }
         
-        if (vec.y > 100.0 && current_chr != -1) {
-            current_chr = -1;
+        if (vec.y > 100.0) {
             zoomFactor = 1.0;
             offset = 0.0;
+            current_chr = -1;
         }
     }
     
@@ -361,7 +361,7 @@ class LODDisplay extends UIComponent {
         lastVelocity = 0.0;
         
         if (velocity < 1.0) {
-            updateGenes = true;
+            //updateGenes = true;
         }
     }
     

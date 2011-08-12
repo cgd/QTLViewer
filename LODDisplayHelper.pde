@@ -291,7 +291,8 @@ void drawLODCurve(LODDisplay display, Phenotype currentPhenotype, int tempMaxLod
 void drawGenes(LODDisplay display) {
     if (!genesLoaded) { // genes aren't loaded yet, don't draw anything
         return;
-    } else if (geneDisplay == null || /*lastcHeight != display.cHeight || lastcWidth != display.cWidth || */(lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || (lastOffset != display.offset && abs(display.velocity) < 0.1 && !ENABLE_KINECT) || lastChr != display.current_chr || updateGenes && !display.dragging) {
+    } else if ((geneDisplay == null || /*lastcHeight != display.cHeight || lastcWidth != display.cWidth || */(lastZoomFactor != display.zoomFactor && !ENABLE_KINECT) || 
+        (lastOffset != display.offset && abs(display.velocity) < 0.1 && !ENABLE_KINECT) || lastChr != display.current_chr || updateGenes) && (!display.dragging && display.panId == -1)) {
         //lastcHeight = display.cHeight;
         //lastcWidth = display.cWidth;
         lastZoomFactor = display.zoomFactor;
