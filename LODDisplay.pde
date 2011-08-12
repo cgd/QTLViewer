@@ -286,6 +286,8 @@ class LODDisplay extends UIComponent {
         
         if (current_chr > -1 && current_chr < lastChr()-1) {
             current_chr++;
+            zoomFactor = 1.0;
+            offset = 0.0;
         }
     }
     
@@ -296,6 +298,8 @@ class LODDisplay extends UIComponent {
         
         if (current_chr > 0) {
             current_chr--;
+            zoomFactor = 1.0;
+            offset = 0.0;
         }
     }
     
@@ -305,6 +309,8 @@ class LODDisplay extends UIComponent {
         }
         
         current_chr = -1;
+        zoomFactor = 1.0;
+        offset = 0.0;
     }
     
     int size() { return 0; }
