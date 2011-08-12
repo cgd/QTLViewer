@@ -26,6 +26,10 @@ class UIKFileBrowser extends UIComponent {
             }
         }
         
+        while (path.indexOf("//") != -1) {
+            path = path.replace("//", "/");
+        }
+        
         textFont(main);
         fill(0x00);
         
@@ -43,7 +47,6 @@ class UIKFileBrowser extends UIComponent {
             w += 16 * (pathText.length - 1);
             
             if (w >= cWidth) {
-                //pathText = subset(pathText, 1);
                 startIndex++;
             }
         } while (w + 8 >= cWidth);
@@ -145,7 +148,6 @@ class UIKFileBrowser extends UIComponent {
                 }
             }
             
-            // bounds exception: -22
             String title = dirs[i];
             
             if (textWidth(title) >= cWidth) {
@@ -162,7 +164,7 @@ class UIKFileBrowser extends UIComponent {
     
     void pan(PVector vec) {
         panAmount += vec.y;
-        
+
         if (panAmount > 300.0 && panId != -1) {
             page++;
             panAmount = 0;
