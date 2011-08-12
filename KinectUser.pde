@@ -182,7 +182,7 @@ class KinectUser {
             
             dragZoom = false;
             zoomReady = false;
-        } else if (CoM.z - lefthand.z > ((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + DEPTH_LOWER) {
+        } else if (CoM.z - lefthand.z > /*((DEPTH_UPPER - DEPTH_LOWER) / 2.0) + */DEPTH_LOWER) {
             if (dragstart == null) {
                 dragstart = lefthand;
                 
