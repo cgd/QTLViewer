@@ -237,9 +237,7 @@ void initConstants() {
     new Thread() { // load genes in separate thread, takes a bit of time to load
         public void run() {
             try {
-                long time = System.currentTimeMillis();
                 genes = readGenes(new InputStreamReader(createInput("refFlat.txt")));
-                println("Genes loaded in " + ((System.currentTimeMillis() - time) / 1000.0) + " seconds");
             } catch (IOException error) {
                 error.printStackTrace();
             }
@@ -285,7 +283,7 @@ void initMouseWheelListener() {
             // side scroll: e.getModifiers is 1  
             if (!exiting && tabs.currentpage == 0 && mouseX > tabsXTarget && tabs.focus && tabs.active) {
                 // negative = left, positive = right
-                if (e.getModifiers() == 1) {// && (frameCount - lastFrame) > 8) { // 8 means no more than 60/8 switches per second (FPS is 60)
+                if (e.getModifiers() == 1) { // 8 means no more than 60/8 switches per second (FPS is 60)
                     float realWidth = loddisplay.cWidth;
                     
                     if (realWidth < 0.0) {

@@ -4,7 +4,6 @@
 
 void updateMenu() {
     // draw the menu, set focus/activity based on whether or not the menu is shown
-
     if (menuTargetY == -100.0) { // menu is shown
         texts.active = texts.focus = !exiting;
         unitSelect.active = unitSelect.focus = !exiting;
@@ -70,9 +69,7 @@ void updateViewArea() {
     fileTree.cWidth -= (ENABLE_KINECT) ? 0 : (tabs.x - tabsXTarget) * velocity;
     tabs.x -= (tabs.x - tabsXTarget) * velocity;
     ((LODDisplay)tabs.get((ENABLE_KINECT) ? 1 : 0).get(0)).x = tabs.x + 65;
-    //((LODDisplay)tabs.get((ENABLE_KINECT) ? 1 : 0).get(0)).cWidth = -35;
     ((ChrDisplay)tabs.get((ENABLE_KINECT) ? 2 : 1).get(0)).x = tabs.x + 25;
-    //((ChrDisplay)tabs.get((ENABLE_KINECT) ? 2 : 1).get(0)).cWidth = -35;
     
     if (tabs.x != tabsXTarget) {
         ((ChrDisplay)tabs.get((ENABLE_KINECT) ? 2 : 1).get(0)).update = true; // update the ChrDisplay if its width has changed

@@ -1,11 +1,3 @@
-/*JFileChooser fd = new JFileChooser();
- fd.setFileSelectionMode(JFileChooser.FILES_ONLY);
- fd.setMultiSelectionEnabled(false);
- fd.setDialogTitle("Select .lod.csv file");
- if (fd.showOpenDialog(null) == JFileChooser.APPROVE_OPTION && fd.getCurrentDirectory() != null && fd.getSelectedFile() != null) {*/
-/*if (path.toLowerCase().endsWith(".chr.csv"))
- path = path.substring(0, path.length() - 8) + ".lod.csv";*/
-//path = fd.getCurrentDirectory().toString() + fd.getSelectedFile().toString();
 /**
  * This method prompts the user to select a file for loading.
  *
@@ -13,8 +5,7 @@
  * It is also important to note that due to some issues with Processing, neither selectInput nor selectFolder work on all setups. My AWT solution should work.
  */
 void openFile() {
-    String path;    
-    // <OPTION 1> (works on my laptop):
+    String path;
     FileDialog fd = new FileDialog((Frame)null, "Select .lod.csv file...", FileDialog.LOAD); // annoying work-around; selectInput was hanging
     fd.setVisible(true); // http://code.google.com/p/processing/issues/detail?id=445
     path = fd.getDirectory() + fd.getFile();
@@ -22,11 +13,6 @@ void openFile() {
     if (fd.getDirectory() != null && fd.getFile() != null) {// ^^ details
         loadFile(path);
     }
-    // </OPTION 1>
-  
-    // <OPTION 2> (works on lab desktop):
-    //if ((path = selectInput("Select .lod.csv file...")) != null) {
-    // </OPTION 2>
 }
 
 /**
@@ -186,8 +172,7 @@ void loadFile(String path) {
  * It is also important to note that due to some issues with Processing, neither selectInput nor selectFolder work on all setups. My AWT solution should work.
  */
 void loadFolder() {
-    /*selectFolder();*/
-    // ^^ same issue as with selectInput
+    // selectFolder has same issue as with selectInput
     FileDialog folderPrompt = new FileDialog((Frame)null, "Select folder...", FileDialog.LOAD);
     System.setProperty("apple.awt.fileDialogForDirectories", "true"); // how would anyone ever know to do this??
     folderPrompt.setVisible(true);

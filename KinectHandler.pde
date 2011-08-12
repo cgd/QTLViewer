@@ -104,72 +104,60 @@ void updateKinect() {
 
 // callbacks
 void onNewUser(int userId) {
-  //println("onNewUser - userId: " + userId);
-  //println("  start pose detection");
-  
-  alertText = "New user " + userId;
-  
-  context.startPoseDetection("Psi",userId);
+    alertText = "New user " + userId;
+    
+    context.startPoseDetection("Psi",userId);
 }
 
 void onLostUser(int userId) {
-  //println("onLostUser - userId: " + userId);
-  alertTime = System.currentTimeMillis();
-  
-  alertText = "Lost user " + userId;
-  
-  for (int i = 0; i < users.size(); i++) {
-      if (users.get(i).ID == userId) {
-          users.remove(i);
-          break;
-      }
-  }
+    alertTime = System.currentTimeMillis();
+    
+    alertText = "Lost user " + userId;
+    
+    for (int i = 0; i < users.size(); i++) {
+        if (users.get(i).ID == userId) {
+            users.remove(i);
+            break;
+        }
+    }
 }
 
 void onStartCalibration(int userId) {
-  //println("onStartCalibration - userId: " + userId);
 }
 
 void onEndCalibration(int userId, boolean successfull) {
-  //println("onEndCalibration - userId: " + userId + ", successfull: " + successfull);
-  
-  if (successfull) {
-      alertTime = System.currentTimeMillis();
-      
-      alertText = "Calibrated user " + userId;
-      
-      //println("  User calibrated !!!");
-      context.startTrackingSkeleton(userId);
-      
-      if (!hasUser(userId)) {
-          KinectUser newU = new KinectUser();
-          newU.ID = userId;
-          users.add(newU);
-      }
-  } else {
-      alertTime = System.currentTimeMillis();
-      
-      alertText = "Failed to calibrate user " + userId;
-      
-      //println("  Failed to calibrate user !!!");
-      //println("  Start pose detection");
-      context.startPoseDetection("Psi",userId);
-  }
+    if (successfull) {
+        alertTime = System.currentTimeMillis();
+        
+        alertText = "Calibrated user " + userId;
+        
+        context.startTrackingSkeleton(userId);
+        
+        if (!hasUser(userId)) {
+            KinectUser newU = new KinectUser();
+            newU.ID = userId;
+            users.add(newU);
+        }
+    } else {
+        alertTime = System.currentTimeMillis();
+        
+        alertText = "Failed to calibrate user " + userId;
+        
+        context.startPoseDetection("Psi",userId);
+    }
 }
 
 void onStartPose(String pose,int userId) {
-  //println("onStartPose - userId: " + userId + ", pose: " + pose);
-  //println(" stop pose detection");
-  alertTime = System.currentTimeMillis();
-  
-  alertText = "Calibrating user " + userId + "...";
-  
-  context.stopPoseDetection(userId); 
-  context.requestCalibrationSkeleton(userId, true);
+    alertTime = System.currentTimeMillis();
+    
+    alertText = "Calibrating user " + userId + "...";
+    
+    context.stopPoseDetection(userId); 
+    context.requestCalibrationSkeleton(userId, true);
 }
 
 void onEndPose(String pose,int userId) {
-  //println("onEndPose - userId: " + userId + ", pose: " + pose);
+
 }
 
 boolean hasUser(int userId) {
