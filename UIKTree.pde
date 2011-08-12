@@ -149,7 +149,7 @@ class UIKTree extends UITree {
                     fill(0xFF);
                     
                     if (mousePressed && mouseButton == RIGHT && mouseX > x && mouseX < x + cWidth && mouseY > y + 72 + (l * 48) + 6 && mouseY < y + 72 + ((l + 1) * 48)) {
-                        super.get(currentFile).get(i).checked = true;
+                        super.get(currentFile).get(i).checked = !super.get(currentFile).get(i).checked;
                         hasUpdated = true;
                     } else if (mousePressedInRect(this, x, y + 72 + (l * 48) + 6, x + cWidth, y + 72 + ((l + 1) * 48)) && (lastFrame == -1 || frameCount - lastFrame > 1)) {                        
                         currentPh = i;
