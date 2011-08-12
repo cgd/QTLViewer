@@ -9,7 +9,7 @@
  */
 
 public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
-public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
+public static final boolean ENABLE_KINECT_SIMULATE = true; // simulate Kinect with the mouse
 
 import processing.opengl.*;
 import java.util.ArrayList;
@@ -181,10 +181,14 @@ void setup() {
         public void update() {
             cWidth = (drawWidth - x) - 35;
             cHeight = (drawHeight - y)  - 25;
-            plotHeight = cHeight - 200;
+            plotHeight = cHeight - ((ENABLE_KINECT) ? 400 : 200);
             super.update();
         }
     }, (ENABLE_KINECT) ? 1 : 0, 0);
+    
+    if (ENABLE_KINECT) {
+        loddisplay.strandHeight = 50.0;
+    }
     
     tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, 0, 0) {
         public void update() {

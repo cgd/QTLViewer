@@ -17,6 +17,7 @@ class LODDisplay extends UIComponent {
     int current_chr = -1, panId = -1;
     float plotHeight = 0;
     Point firstMousePos = new Point(-1, -1);
+    float strandHeight = 25.0;
     
     LODDisplay(float newX, float newY, float newWidth, float newHeight) {
         super(newX, newY, newWidth, newHeight);

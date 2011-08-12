@@ -3,8 +3,7 @@ double lastZoomFactor = 1.0, lastOffset = 0.0;
 int lastChr = -1;
 boolean updateGenes = true;
 PGraphics geneDisplay;
-PFont tiny = createFont("Arial", 10.0, true);
-float strandHeight = 25.0;
+PFont tiny = createFont("Arial", (ENABLE_KINECT) ? 24.0 : 10.0, true);
 
 /**
 * @return the index of the last chromosome for which any phenotype has data
@@ -330,6 +329,7 @@ void drawGenes(LODDisplay display) {
         geneDisplay.noStroke();
         geneDisplay.rectMode(CORNERS);
         geneDisplay.textFont(tiny);
+        
         for (Gene g : genes) {
             try {
                 double chrStart, chrEnd;
@@ -339,6 +339,7 @@ void drawGenes(LODDisplay display) {
                 } else {
                     chrStart = 0.0;
                 }
+                
                 if (g.chromosome == endChromosome) {
                     chrEnd = mOffset - ((display.current_chr == -1) ? chrOffsets[g.chromosome - 1] : 0.0);
                 } else {
@@ -353,7 +354,7 @@ void drawGenes(LODDisplay display) {
                 
                 float _maxOffset = (display.current_chr == -1) ? chrTotal : display.maxOffset;
                 float chrOffset = (display.current_chr == -1) ? chrOffsets[g.chromosome - 1] : 0.0;
-                float yOffset = (g.strand == '+') ? 0.0 : 4 * strandHeight;
+                float yOffset = (g.strand == '+') ? 0.0 : 4 * display.strandHeight;
                 float xStart = (float)map(display.offset + chrOffset + g.geneStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
                 float xEnd = (float)map(display.offset + chrOffset + g.geneEnd, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
                 float codeStart = (float)map(display.offset + chrOffset + g.codeStart, 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
@@ -361,28 +362,28 @@ void drawGenes(LODDisplay display) {
                 
                 if (Math.abs(xEnd - xStart) <= 1.0) {
                     geneDisplay.stroke(g.drawColor);
-                    geneDisplay.line(xStart, yOffset, xStart, yOffset + strandHeight - 1.0);
+                    geneDisplay.line(xStart, yOffset, xStart, yOffset + display.strandHeight - 1.0);
                     geneDisplay.noStroke();
                 } else if (Math.abs(xEnd - xStart) < 4.0) {
-                    geneDisplay.rect(xStart, yOffset, xEnd, yOffset + strandHeight);
+                    geneDisplay.rect(xStart, yOffset, xEnd, yOffset + display.strandHeight);
                 } else {
-                    geneDisplay.rect(xStart, yOffset + (strandHeight / 4.0), codeStart, yOffset + (3 * (strandHeight / 4.0)));
-                    geneDisplay.rect(codeEnd, yOffset + (strandHeight / 4.0), xEnd, yOffset + (3 * (strandHeight / 4.0)));
+                    geneDisplay.rect(xStart, yOffset + (display.strandHeight / 4.0), codeStart, yOffset + (3 * (display.strandHeight / 4.0)));
+                    geneDisplay.rect(codeEnd, yOffset + (display.strandHeight / 4.0), xEnd, yOffset + (3 * (display.strandHeight / 4.0)));
                     
                     geneDisplay.stroke(g.drawColor);
-                    geneDisplay.line(codeStart, yOffset + (strandHeight / 2.0), codeEnd, yOffset + (strandHeight / 2.0));
+                    geneDisplay.line(codeStart, yOffset + (display.strandHeight / 2.0), codeEnd, yOffset + (display.strandHeight / 2.0));
                     geneDisplay.noStroke();
                     
                     for (int i = 0; i < g.exons.length; i++) {
                         float exonStart = (float)map(display.offset + chrOffset + g.exons[i][0], 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
                         float exonEnd = (float)map(display.offset + chrOffset + g.exons[i][1], 0.0, display.zoomFactor * _maxOffset, 0.0, display.cWidth);
-                        geneDisplay.rect(exonStart, yOffset, exonEnd, yOffset + strandHeight);
+                        geneDisplay.rect(exonStart, yOffset, exonEnd, yOffset + display.strandHeight);
                     }
                     
                     String _name = g.name;
                     
-                    if (sin(QUARTER_PI) * textWidth(_name) > 4 * strandHeight) {
-                        while (sin(QUARTER_PI) * textWidth(_name + "...") > 4 * strandHeight) {
+                    if (sin(QUARTER_PI) * textWidth(_name) > 4 * display.strandHeight) {
+                        while (sin(QUARTER_PI) * textWidth(_name + "...") > 4 * display.strandHeight) {
                             _name = _name.substring(0, _name.length() - 1);
                         }
                         
@@ -393,7 +394,7 @@ void drawGenes(LODDisplay display) {
                     geneDisplay.fill(0x00);
                     
                     geneDisplay.pushMatrix();
-                    geneDisplay.translate(xStart, yOffset + strandHeight + 10);
+                    geneDisplay.translate(xStart, yOffset + display.strandHeight + 10);
                     geneDisplay.rotate(QUARTER_PI);
                     geneDisplay.text(_name, 0, 0);
                     geneDisplay.popMatrix();
@@ -401,6 +402,8 @@ void drawGenes(LODDisplay display) {
                     geneDisplay.noStroke();
                 }
             } catch (ArrayIndexOutOfBoundsException error) { // g.chromosome probably is 21, so ignore
+                // the follwing is a fix to a strange bug that would disappear when I tried to fix it
+                // by printing mOffset (or anything, even an empty string) at line 346, it would go away
                 mOffset = map(display.cWidth * display.zoomFactor, 0.0, display.cWidth, 0.0, (display.current_chr == -1) ? chrTotal : display.maxOffset) - display.offset;
             }
         }
