@@ -21,12 +21,20 @@ class ModeDialog extends Dialog implements ActionListener {
     }
     
     public void actionPerformed(ActionEvent evt) {
-        hide();
+        setVisible(false);
         dispose();
         
         if (evt.getActionCommand().equals("Yes")) {
             callback.doAction();
         } else {
         }
+    }
+    
+    public void setVisible(boolean b) {
+        if (b) {
+            setLocation((getToolkit().getScreenSize().width - getWidth()) / 2, (getToolkit().getScreenSize().height - getHeight()) / 2);
+        }
+        
+        super.setVisible(b);
     }
 }

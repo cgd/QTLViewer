@@ -76,7 +76,7 @@ void init() {
         }
     });
     
-    queryUser.show();
+    queryUser.setVisible(true);
     
     super.init();
 }
@@ -154,7 +154,7 @@ void setup() {
   
     if (ENABLE_KINECT) {
         titles = new String[] {
-            "File Management", "LOD Score view", "Chromosome view", "Settings"
+            "File management", "LOD Score view", "Chromosome view", "Settings"
         };
     } else {
         titles = new String[] {
