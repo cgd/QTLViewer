@@ -1,0 +1,32 @@
+class ModeDialog extends Dialog implements ActionListener {
+    UIAction callback;
+    
+    ModeDialog(UIAction _callback) {
+        super((Frame)null, "Choose mode", true);
+        
+        callback = _callback;
+        
+        setLayout(new GridLayout(2, 2));
+        add(new Label("Start in Kinect mode?"));
+        add(new Label(""));
+        
+        Button optYes = new Button("Yes");
+        Button optNo = new Button("No");
+        optYes.addActionListener(this);
+        optNo.addActionListener(this);
+        
+        add(optYes);
+        add(optNo);
+        resize(200, 100);
+    }
+    
+    public void actionPerformed(ActionEvent evt) {
+        hide();
+        dispose();
+        
+        if (evt.getActionCommand().equals("Yes")) {
+            callback.doAction();
+        } else {
+        }
+    }
+}

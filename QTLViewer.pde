@@ -8,7 +8,7 @@
  * @since 1.6
  */
 
-public static final boolean ENABLE_KINECT = true; // whether or not to use Kinect
+public boolean ENABLE_KINECT = false; // whether or not to use Kinect
 public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
@@ -24,6 +24,7 @@ boolean exiting = false;
 boolean dragReady = true, dragging = false;
 boolean kinect_showmenu = false;
 boolean genesLoaded = false;
+boolean hasInit = false;
 
 int chrColumns = 7;
 int unitThreshold;
@@ -67,6 +68,23 @@ MouseMap unitConverter;
 
 SimpleOpenNI context;
 
+void init() {
+    // setup is called three times, and the following code has to be called before any call to size
+    ModeDialog queryUser = new ModeDialog(new UIAction() {
+        public void doAction() {
+            ENABLE_KINECT = true;
+        }
+    });
+    
+    queryUser.show();
+    
+    super.init();
+}
+
+void start() { 
+    super.start();
+}
+
 void setup() {
     // set up base UI
     if (ENABLE_KINECT) {
@@ -81,7 +99,13 @@ void setup() {
     smooth(); // enable Processing 2x AA
     frameRate(60);
     frame.setTitle("QTL Viewer");
-  
+    
+    if (!hasInit) {
+        hasInit = true;
+    } else {
+        return;
+    }
+    
     // see InitUI for init* methods
     initMenuBar();
   
@@ -89,7 +113,7 @@ void setup() {
   
     initMenu();
   
-      if (ENABLE_KINECT) {
+    if (ENABLE_KINECT) {
         initKinect();
         
         legendFont = createFont("Arial", 32, true);
