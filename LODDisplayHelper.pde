@@ -409,7 +409,10 @@ void drawGenes(LODDisplay display) {
         geneDisplay.endDraw();
     }
     
-    image(geneDisplay, display.x, display.y + display.plotHeight);
+    try {
+        image(geneDisplay, display.x, display.y + display.plotHeight);
+    } catch (NullPointerException error) { // geneDisplay is still null for some reason, ignore and it next frame
+    }
 }
 
 // convenience method comparing two sets of threshold data
