@@ -55,6 +55,10 @@ void updateKinect() {
         return;
     }
     
+    if (context == null || context.sceneImage() == null) {
+        return;
+    }
+
     context.update();
 
     imgHeight = (width - drawWidth) / (4.0 / 3.0);
