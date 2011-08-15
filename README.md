@@ -81,3 +81,7 @@ Select a tab to change to that page.
   * Select the centimorgans or base pairs radio options to change units.
   * Select the "Stop tracking" button to stop using the program.
   * Select the "Exit" button to be prompted for closing the program.
+
+### How to switch versions:
+
+Change the boolean field **ENABLE_KINECT** on line 11 to true for Kinect interaction, or false for the regular application.
