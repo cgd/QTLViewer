@@ -259,8 +259,12 @@ class LODDisplay extends UIComponent {
                     if (mouseX > map(offset + chrOffsets[i], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                         if (i == chrOffsets.length - 1) {
                             current_chr = i;
+                            dragging = false;
+                            panId = -1;
                         } else if (mouseX < map(offset + chrOffsets[i + 1], 0.0, zoomFactor * chrTotal, 0.0, drawWidth - 50 - x) + x) {
                             current_chr = i;
+                            dragging = false;
+                            panId = -1;
                         }
                     }
                 }
@@ -276,7 +280,9 @@ class LODDisplay extends UIComponent {
             
         }
         
-        dragging = mousePressed;
+        if (!ENABLE_KINECT) {
+            dragging = mousePressed;
+        }
     }
     
     void nextChr() {
@@ -316,6 +322,10 @@ class LODDisplay extends UIComponent {
     int size() { return 0; }
     
     void pan(PVector vec) {
+        if (panId == -1) {
+            return;
+        }
+        
         lastVelocity = vec.x;
         
         if (abs(vec.x) < 5.0) {
