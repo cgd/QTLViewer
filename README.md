@@ -84,4 +84,4 @@ Select a tab to change to that page.
 
 ### How to switch versions:
 
-Change the boolean field **ENABLE_KINECT** on line 11 to true for Kinect interaction, or false for the regular application.
+Change the boolean field **ENABLE_KINECT** on line 11 to _true_ for Kinect interaction, or _false_ for the regular application.
