@@ -1,7 +1,6 @@
 # QTL Viewer
 
 WARRANTY DISCLAIMER AND COPYRIGHT NOTICE
-========================================
 
 The Jackson Laboratory makes no representation about the suitability or accuracy
 of this software for any purpose, and makes no warranties, either express or
