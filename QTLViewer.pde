@@ -225,7 +225,7 @@ void setup() {
     }, (ENABLE_KINECT) ? 2 : 1, 0);
   
     if (ENABLE_KINECT) {    
-        tabs.addComponent(quit = new UIButton((drawWidth / 2.0) + 8, (tabs.cHeight / 2.0) + tabs.y + 128, "Exit", 256, 128, 48, new UIAction() {
+        tabs.addComponent(quit = new UIButton((drawWidth / 2.0) + 8, (tabs.cHeight / 2.0) + tabs.y + 192, "Exit", 256, 128, 48, new UIAction() {
             public void doAction() {
                 kinect_showmenu = false;
                 exiting = true;
@@ -259,7 +259,7 @@ void setup() {
             }
         }, 3, 0);
   
-        tabs.addComponent(new UIButton((tabs.cWidth / 2.0) - 264 + tabs.x, (tabs.cHeight / 2.0) + tabs.y + 128, "Stop Tracking", 256, 128, 36, new UIAction() {
+        tabs.addComponent(new UIButton((tabs.cWidth / 2.0) - 264 + tabs.x, (tabs.cHeight / 2.0) + tabs.y + 192, "Stop Tracking", 256, 128, 36, new UIAction() {
             public void doAction() {
                 if (!ENABLE_KINECT_SIMULATE) {
                     for (int i = 0; i < users.size(); i++) {
@@ -320,7 +320,8 @@ void draw() {
         if (!ENABLE_KINECT_SIMULATE) {
             fill(0x00);
             noStroke();
-        
+            
+            // draw busy indicator while waiting for thread
             float dim = width - drawWidth - 50;
         
             if (context == null || context.sceneImage() == null) {
