@@ -62,10 +62,10 @@ class ChrDisplay extends UIComponent {
                             currentPhenotype.chr_peaks[k], // peak position in cM
                             currentPhenotype.bayesintrange[k], // range of values (length of colored line)
                             jTreeNode.drawcolor, // color of phenotype, line
-                            x + (chromosomeWidth*((currentPhenotype.chr_chrs[k] - 1)%chrColumns)) + 16, // x coordinate of the drawn chromosome
-                            (multiplier*(currentPhenotype.bayesintrange[k].lower)) + y + (chromosomeHeight*floor((currentPhenotype.chr_chrs[k] - 1)/chrColumns)) + 20, // y coordinate of the drawn chromosome
-                            multiplier*(currentPhenotype.bayesintrange[k].upper - currentPhenotype.bayesintrange[k].lower), // the length of the chromosome in pixels
-                            (multiplier*((currentPhenotype.chr_peaks[k] - 1))) + y + (chromosomeHeight*floor((currentPhenotype.chr_chrs[k] - 1)/chrColumns)) + 20 // the position of the peak in cM (used for sorting)
+                            x + (chromosomeWidth * ((currentPhenotype.chr_chrs[k] - 1) % chrColumns)) + 16, // x coordinate of the drawn chromosome
+                            (multiplier * (currentPhenotype.bayesintrange[k].lower)) + y + (chromosomeHeight * floor((currentPhenotype.chr_chrs[k] - 1) / chrColumns)) + 20, // y coordinate of the drawn chromosome
+                            multiplier * (currentPhenotype.bayesintrange[k].upper - currentPhenotype.bayesintrange[k].lower), // the length of the chromosome in pixels
+                            (multiplier * ((currentPhenotype.chr_peaks[k] - 1))) + y + (chromosomeHeight * floor((currentPhenotype.chr_chrs[k] - 1) / chrColumns)) + 20 // the position of the peak in cM (used for sorting)
                         );
                         
                     }
@@ -80,10 +80,10 @@ class ChrDisplay extends UIComponent {
                 stroke(chrs[i].colors[j]);
                 
                 line(
-                    (float)chrs[i].uppers[j].getX()+(8 * chrs[i].layers[j]),
+                    (float)chrs[i].uppers[j].getX() + (8 * chrs[i].layers[j]),
                     (float)chrs[i].uppers[j].getY(),
-                    (float)chrs[i].uppers[j].getX()+(8 * chrs[i].layers[j]),
-                    (float)chrs[i].uppers[j].getY()+chrs[i].heights[j]
+                    (float)chrs[i].uppers[j].getX() + (8 * chrs[i].layers[j]),
+                    (float)chrs[i].uppers[j].getY() + chrs[i].heights[j]
                 );
                 
                 ellipse(
@@ -106,10 +106,10 @@ class ChrDisplay extends UIComponent {
     void mouseAction() {
         // switch to LOD view if a chromosome is selected
         if (mousePressed && mouseButton == LEFT && mouseX > x && mouseX < x + cWidth && mouseY > y && mouseY < y + cHeight) {
-            if (floor((mouseX - x)/chromosomeWidth) + (chrColumns * floor((mouseY - y) / chromosomeHeight)) < chrLengths.length &&
-                floor((mouseX - x)/chromosomeWidth) + (chrColumns * floor((mouseY - y) / chromosomeHeight)) >= 0) {
+            if (floor((mouseX - x) / chromosomeWidth) + (chrColumns * floor((mouseY - y) / chromosomeHeight)) < chrLengths.length &&
+                floor((mouseX - x) / chromosomeWidth) + (chrColumns * floor((mouseY - y) / chromosomeHeight)) >= 0) {
                 
-                int chrNum = floor((mouseX - x)/chromosomeWidth) + (chrColumns*floor((mouseY - y)/chromosomeHeight));
+                int chrNum = floor((mouseX - x) / chromosomeWidth) + (chrColumns * floor((mouseY - y) / chromosomeHeight));
                 
                 if (chrs[chrNum].peaks.length > 0) {
                     loddisplay.current_chr = chrNum;

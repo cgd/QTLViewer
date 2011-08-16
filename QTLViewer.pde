@@ -144,13 +144,13 @@ void setup() {
     String[] titles;
   
     if (ENABLE_KINECT) {
-      titles = new String[] {
-        "File management", "LOD Score view", "Chromosome view", "Settings"
-      };
+        titles = new String[] {
+            "File management", "LOD Score view", "Chromosome view", "Settings"
+        };
     } else {
-      titles = new String[] {
-        "LOD Score view", "Chromosome view"
-      };
+        titles = new String[] {
+            "LOD Score view", "Chromosome view"
+        };
     }
   
     parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
@@ -258,10 +258,10 @@ void setup() {
                     context.stopTrackingSkeleton(mouseId);
                     context.startPoseDetection("Psi", mouseId);
                 }
-              }
-          }), 3, 0);
+            }
+        }), 3, 0);
   
-          tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
+        tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
     }
   
     legendX = drawWidth - 400.0;
