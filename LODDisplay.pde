@@ -116,7 +116,6 @@ class LODDisplay extends UIComponent {
                 
                 if (x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) > cWidth || x_off + (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0) < 30.0) {
                     continue;
-                    //text(valueText + ((i == 1) ? unit : ""), x + 16 + cWidth - (textWidth(valueText + ((i == 1) ? unit : ""))), (y + plotHeight) - 14);
                 } else {
                     text(valueText + ((i == 1) ? unit : ""), x + x_off - (textWidth(valueText + ((i == 1) ? unit : "")) / 2.0), (y + plotHeight) - 14);
                 }
