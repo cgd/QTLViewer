@@ -1,382 +1,0 @@
-getwd()
-## Load the R/qtl package and check the version#
-version#
-library(qtl)#
-qtlversion()#
-#
-## Change the directory#
-setwd("/Users/garychurchill/GARY/Projects/035_QTL_Archive/scripts")
-## Data import#
-dbnm <- read.cross("csv", file="Brockmann2009_DBA2xNMRI8_B37_Data", na.string="-",#
-                  genotypes=c("D","H","N"),alleles=c("D","N")) #
-#
-## look at the cross object#
-summary.cross(dbnm)#
-names(dbnm$pheno)
-## Data import#
-dbnm <- read.cross("csv", file="Brockmann2009_DBA2xNMRI8_B37_Data.csv", na.string="-",#
-                  genotypes=c("D","H","N"),alleles=c("D","N")) #
-#
-## look at the cross object#
-summary.cross(dbnm)#
-names(dbnm$pheno)
-?read.cross
-dbnm$pheno$pgm
-#
-## Data import#
-dbnm <- read.cross("csv", file="Brockmann2009_DBA2xNMRI8_B37_Data.csv", na.string="-",#
-                  genotypes=c("D","H","N"),alleles=c("D","N")) #
-#
-## look at the cross object#
-summary.cross(dbnm)#
-names(dbnm$pheno)
-quartz()#
-plot.cross(dbnm, pheno=c(9:18))
-#
-## Load the R/qtl package and check the version#
-version#
-library(qtl)#
-qtlversion()#
-#
-## Change the directory#
-setwd("/Users/garychurchill/GARY/Projects/035_QTL_Archive/scripts")#
-#
-## Data import#
-dbnm <- read.cross("csv", file="Brockmann2009_DBA2xNMRI8_B37_Data.csv", na.string="-",#
-                  genotypes=c("D","H","N"),alleles=c("D","N"))
-#
-## look at the cross object#
-summary.cross(dbnm)#
-names(dbnm$pheno)#
-# covariates: "Id" "F" "M" "pgm" "sex" "parity" "subfam" "pupsize" #
-# phenotypes: "Bw3" "Bw4" "Bw5" "Bw6" "Afw" "Afp" "Mw" "Liver" "Kidney" "Spleen" #
-#note phenotype columns are 9-18
-quartz()#
-plot.cross(dbnm, pheno=c(9:18))
-nchr(dbnm) #19 chrs  no X chr #
-nmar(dbnm)
-plot.missing(dbnm)
-plot.map(dbnm)
-newmap <- est.map(dbnm);#
-quartz()#
-plot.map(dbnm, newmap)
-quartz()#
-plot.rf(est.rf(dbnm))
-quartz()#
-plot.rf(est.rf(dbnm, chr=4))
-?est.rf
-quartz()#
-plot.rf(est.rf(dbnm), chr=4)
-ripple(dbnm, 4, 4)
-dbnm$geno[[4]]
-dbnm$geno[4]$map
-dbnm$geno[[4]]$map
-?ripple
-#reorder#
-dbnm <- switch.order(dbnm, 4, c(1,2,5,3,4,6))
-dbnm$geno[[4]]$map
-dbnm$geno[[4]]$map[3]
-dbnm$geno[[4]]$map <- c(20.1640,31.1252,45.4777,53.4255,70.0210,82.6371)
-newmap <- est.map(dbnm);#
-quartz()#
-plot.map(dbnm, newmap)#
-##
-quartz()#
-plot.rf(est.rf(dbnm), chr=4)
-## clean up#
-rm(newmap)#
-ls()
-nind(dbnm)#
-nphe(dbnm)
-nind(dbnm)#
-nphe(dbnm)#
-table(dbnm$pheno$sex) ##
-table(dbnm$pheno$pgm)
-table1<-rbind(mean(dbnm$pheno[,9:18],na.rm = TRUE), sd(dbnm$pheno[,9:18],na.rm = TRUE))
-rownames(table1)<-c("mean", "sd")
-round(table1,2)
-t(round(table1,2))
-rho <- cor(dbnm$pheno[,9:18], method="pearson", use = "complete.obs")#
-round(rho,2)
-quartz()#
-heatmap(rho)
-quartz()#
-pairs(dbnm$pheno[,c(9:18)])
-ls()
-rm(table1, rho)
-ls()
-quartz()#
-boxplot(dbnm$pheno[,c(9:18)])
-?boxplot
-	boxplot(split(dbnm$pheno[,i],sex))
-	boxplot(split(dbnm$pheno[,9],sex))
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex))
-quartz()
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex))
-?par
-?axis
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),)#
-	axis(1,labels=c("F","M"))
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),)#
-	axis(1,at=c(0,1),labels=c("F","M"))
-quartz()
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),)#
-	axis(1,at=c(0,1),labels=c("F","M"))
-?plot.new()
-plot.new()#
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),)#
-	axis(1,at=c(0,1),labels=c("F","M"))
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),)
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex))
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex))#
-	axis(1,at=c(0,1),labels=c("F","M"))
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex))#
-	axis(1,at=c(1,2),labels=c("F","M"))
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),axes=FALSE)#
-	axis(1,at=c(1,2),labels=c("F","M"))
-?par
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),xaxt="n")#
-	axis(1,at=c(1,2),labels=c("F","M"))
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),xaxt="n",main=names(dbmn$pheno)[9])#
-	axis(1,at=c(1,2),labels=c("F","M"))
-#
-plot.new()
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),xaxt="n",main=names(dbmn$pheno)[9])#
-	axis(1,at=c(1,2),labels=c("F","M"))
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),xaxt="n")
-axis(1,at=c(1,2),labels=c("F","M"))
-?text
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-	title(main=names(dbmn$pheno)[9])
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-	title(main=names(dbnm$pheno)[9])
-quartz()#
-	boxplot(split(dbnm$pheno[,9],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-	title(sub=names(dbnm$pheno)[9])
-quartz()#
-for(i in 9:18){#
-	boxplot(split(dbnm$pheno[,i],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-	title(main=names(dbnm$pheno)[i])#
-	}
-?graphic.off
-?graphics.off
-for(i in 9:18){#
-	quartz()#
-	boxplot(split(dbnm$pheno[,i],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-	title(main=names(dbnm$pheno)[i])#
-	}
-?t.test
-	t.test(split(dbnm$pheno[,i],dbnm$pheno$sex))
-aov
-?aov
-?anova
-?t.test
-t.test(dbnm$pheno[dbnm$pheno$sex==0,i],dbnm$pheno[dbnm$pheno$sex==1,i]))
-	t.test(dbnm$pheno[dbnm$pheno$sex==0,i],dbnm$pheno[dbnm$pheno$sex==1,i])
-?title
-for(i in 9:18){#
-	quartz()#
-	boxplot(split(dbnm$pheno[,i],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-   pval <- t.test(dbnm$pheno[dbnm$pheno$sex==0,i],dbnm$pheno[dbnm$pheno$sex==1,i])  #
-	title(c(main=names(dbnm$pheno)[i],as.character(signif(pval,3))))#
-	}
-   pval <- t.test(dbnm$pheno[dbnm$pheno$sex==0,i],dbnm$pheno[dbnm$pheno$sex==1,i])
-pval
-?t.test
-##
-for(i in 9:18){#
-	quartz()#
-	boxplot(split(dbnm$pheno[,i],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-   test <- t.test(dbnm$pheno[dbnm$pheno$sex==0,i],dbnm$pheno[dbnm$pheno$sex==1,i])  #
-	title(c(main=names(dbnm$pheno)[i],as.character(signif(test$p.value,3))))#
-	}#
-##
-#cle
-graphics.off()#
-rm(table1, rho, i, test)#
-ls()
-rm(pval)
-for(i in 9:18){#
-	quartz()#
-	qqnorm(dbnm$pheno[i],main=names(dbnm$pheno)[i])  #
-	}
-quartz()#
-	qqnorm(dbnm$pheno[i])
-?qqnorm
-	quartz()#
-	qqnorm(dbnm$pheno[9],main=names(dbnm$pheno)[i])
-dbnm$pheno[9]
-plot(dbnm$pheno[9])
-?as.vector
-	quartz()#
-	qqnorm(as.vector(dbnm$pheno[9]),main=names(dbnm$pheno)[9])
-	qqnorm(dbnm$pheno[9],main=names(dbnm$pheno)[9])
-names(dbnm$pheno)
-qqnorm(dbnm$pheno$Bw4,main="SBP")
-dbnm$pheno$Bw4
-qqnorm(dbnm$pheno[[9]],main=names(dbnm$pheno)[9])
-for(i in 9:18){#
-	quartz()#
-	qqnorm(dbnm$pheno[[9]],main=names(dbnm$pheno)[9])  #
-	}
-for(i in 9:18){#
-	quartz()#
-	qqnorm(dbnm$pheno[[i]],main=names(dbnm$pheno)[i])  #
-	}
-scan1 <- list()
-scan1
-scan1[1] <- "text"
-scan1[2] <- 39 + 17
-scan1
-?scanone
-## initialize genotype probabilities#
-dbnm <- calc.genoprob(dbnm, step=2)#
-##
-#initialize empty lists to hold scan output#
-scan1.add <- list()#
-perm1.add <- list()#
-##
-pcol = c(9:18)	#vector of phenotype columns to scan #
-nperm = 100
-##
-for(i in 1:length(pcol)){#
-	scan1.add[i]<-scanone(dbnm, pheno.col=pcol(i), model="normal", method="em")#
-	perm1.add[i]<-scanone(dbnm, pheno.col=pcol(i), model="normal", method="em",#
-	   perm.Xsp=TRUE, n.perm=nperm)#
-}
-##
-for(i in 1:length(pcol)){#
-	scan1.add[i]<-scanone(dbnm, pheno.col=pcol[i], model="normal", method="em")#
-	perm1.add[i]<-scanone(dbnm, pheno.col=pcol[i], model="normal", method="em",#
-	   perm.Xsp=TRUE, n.perm=nperm)#
-}
-dbnm <- calc.genoprob(dbnm, step=2)
-?calc.genoprob
-summary(dbnm)
-dbnm <- calc.genoprob(dbnm, step=2)
-qtlversion()
-library(qtl)
-qtlversion()
-dbnm <- calc.genoprob(dbnm, step=2)
-summary(dbnm)
-col.names(dbnm$geno[[4]]$map) <- c("D4Mit196","D4Mit140","D4Mit205",#
-	"D4Mit37","D4Mit54","D4Mit42")#
-dbnm$geno[[4]]$map
-summary(dbnm)
-dbnm$geno[[5]]$map
-class(dbnm$geno[[5]]$map)
-names(dbnm$geno[[5]]$map)
-names(dbnm$geno[[4]]$map)
-names(dbnm$geno[[4]]$map) <- c("D4Mit196","D4Mit140","D4Mit205",#
-	"D4Mit37","D4Mit54","D4Mit42")
-dbnm$geno[[4]]$map
-dbnm <- calc.genoprob(dbnm, step=2)
-scan1.add <- list()#
-perm1.add <- list()#
-##
-pcol = c(9:18)	#vector of phenotype columns to scan #
-nperm = 100			#number of permutations use 100 rough, 1000 final#
-##
-for(i in 1:length(pcol)){#
-	scan1.add[i]<-scanone(dbnm, pheno.col=pcol[i], model="normal", method="em")#
-	perm1.add[i]<-scanone(dbnm, pheno.col=pcol[i], model="normal", method="em",#
-	   perm.Xsp=TRUE, n.perm=nperm)#
-}
-# clear the deck#
-rm(list=ls())
-version#
-library(qtl)#
-qtlversion()
-## Change the directory#
-setwd("/Users/garychurchill/GARY/Projects/035_QTL_Archive/scripts")
-## Data import#
-dbnm <- read.cross("csv", file="Brockmann2009_DBA2xNMRI8_B37_Data.csv", na.string="-",#
-                  genotypes=c("D","H","N"),alleles=c("D","N"))
-summary.cross(dbnm)
-names(dbnm$pheno)
-nind(dbnm)#
-nphe(dbnm)#
-table(dbnm$pheno$sex) # 142F 133M#
-table(dbnm$pheno$pgm)
-quartz()#
-plot.cross(dbnm, pheno=c(9:18))
-nchr(dbnm) #19 autosome plus X chr #
-nmar(dbnm)
-plot.missing(dbnm)
-plot.map(dbnm)
-newmap <- est.map(dbnm);#
-quartz()#
-plot.map(dbnm, newmap)
-quartz()#
-plot.rf(est.rf(dbnm))
-quartz()#
-plot.rf(est.rf(dbnm), chr=4)
-ripple(dbnm, 4, 4)
-dbnm$geno[[4]]$map
-dbnm <- switch.order(dbnm, 4, c(1,2,5,3,4,6))#
-dbnm$geno[[4]]$map
-dbnm$geno[[4]]$map <- c(20.1640,31.1252,45.4777,53.4255,70.0210,82.6371)#
-names(dbnm$geno[[4]]$map) <- c("D4Mit196","D4Mit140","D4Mit205",#
-	"D4Mit37","D4Mit54","D4Mit42")#
-dbnm$geno[[4]]$map
-newmap <- est.map(dbnm);#
-quartz()#
-plot.map(dbnm, newmap)
-quartz()#
-plot.rf(est.rf(dbnm), chr=4)
-## clean up#
-rm(newmap)#
-ls()
-# means and sds#
-table1<-rbind(mean(dbnm$pheno[,9:18],na.rm = TRUE), sd(dbnm$pheno[,9:18],na.rm = TRUE))#
-rownames(table1)<-c("mean", "sd")#
-t(round(table1,2))
-rho <- cor(dbnm$pheno[,9:18], method="pearson", use = "complete.obs")#
-round(rho,2)#
-quartz()#
-heatmap(rho)
-quartz()#
-pairs(dbnm$pheno[,c(9:18)])
-for(i in 9:18){#
-	quartz()#
-	boxplot(split(dbnm$pheno[,i],dbnm$pheno$sex),xaxt="n")  #
-	axis(1,at=c(1,2),labels=c("F","M"))#
-   test <- t.test(dbnm$pheno[dbnm$pheno$sex==0,i],dbnm$pheno[dbnm$pheno$sex==1,i])  #
-	title(c(main=names(dbnm$pheno)[i],as.character(signif(test$p.value,3))))#
-	}
-for(i in 9:18){#
-	quartz()#
-	qqnorm(dbnm$pheno[[i]],main=names(dbnm$pheno)[i])  #
-	}
-graphics.off()#
-rm(table1, rho, i, test)#
-ls()
-##
-rz.transform<-function(y) {#
-   rankY=rank(y, ties.method="average", na.last="keep")#
-   rzT=qnorm(rankY/(length(na.exclude(rankY))+1))  #
-   rzT#
-}#
-dbnm$pheno[,9:18] <- apply(dbnm$pheno[,9:18],2,rz.transform)
-dbnm <- calc.genoprob(dbnm, step=2)
-scan1.add <- list()#
-perm1.add <- list()
