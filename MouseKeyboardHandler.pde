@@ -1,7 +1,11 @@
 void keyPressed() { // most key events are handled by the MenuBar
     if (key == ESC) {
-        exiting = !exiting;
-        key = 0; // nullify the key, preventing Processing from closing automatically
+        if (!ENABLE_KINECT) {
+            exiting = !exiting;
+            key = 0; // nullify the key, preventing Processing from closing automatically
+        }
+        
+        // if Kinect version, exit
     }
   
     if (exiting) {

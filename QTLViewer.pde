@@ -114,11 +114,11 @@ void setup() {
     initMenu();
   
     if (ENABLE_KINECT) {
-        new Thread() {
-            public void run() {
+        //new Thread() {
+            //public void run() {
                 initKinect();
-            }
-        }.start();
+            //}
+        //}.start();
   
         legendFont = createFont("Arial", 32, true);
     
@@ -316,27 +316,29 @@ void draw() {
   
     if (ENABLE_KINECT) {
         updateKinect();
-    
-        fill(0x00);
-        noStroke();
-    
-        float dim = width - drawWidth - 50;
-    
-        if (context == null || context.sceneImage() == null) {
-            float angle = TWO_PI * ((System.currentTimeMillis() % 2000) / 1999.0);
-            float value = (1 / 255.0) * TWO_PI;
-            float last = 0.0;
-      
-            for (int i = 0; i < 255; i++) {
-                float diff = (i / 255.0) * TWO_PI;
-                fill(0x00, 0xFF - i);
-                arc(drawWidth + 25 + (dim / 2.0), 400, dim, dim, angle - diff, last);
-                last = angle - diff + value;
-            }
-      
-            fill(0xAA);
+        
+        if (!ENABLE_KINECT_SIMULATE) {
+            fill(0x00);
             noStroke();
-            ellipse(drawWidth + 25 + (dim / 2.0), 400, (3 * dim) / 4.0, (3 * dim) / 4.0);
+        
+            float dim = width - drawWidth - 50;
+        
+            if (context == null || context.sceneImage() == null) {
+                float angle = TWO_PI * ((System.currentTimeMillis() % 2000) / 1999.0);
+                float value = (1 / 255.0) * TWO_PI;
+                float last = 0.0;
+          
+                for (int i = 0; i < 255; i++) {
+                    float diff = (i / 255.0) * TWO_PI;
+                    fill(0x00, 0xFF - i);
+                    arc(drawWidth + 25 + (dim / 2.0), 400, dim, dim, angle - diff, last);
+                    last = angle - diff + value;
+                }
+          
+                fill(0xAA);
+                noStroke();
+                ellipse(drawWidth + 25 + (dim / 2.0), 400, (3 * dim) / 4.0, (3 * dim) / 4.0);
+            }
         }
     }
 }
