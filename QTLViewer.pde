@@ -70,14 +70,14 @@ MouseMap unitConverter;
 SimpleOpenNI context = null;
 
 void init() {
-    // setup is called three times, and the following code has to be called before any call to size
-    /*ModeDialog queryUser = new ModeDialog(new UIAction() {
-        public void doAction() {
-            ENABLE_KINECT = true;
-        }
-    });
-
-    queryUser.setVisible(true);*/
+  // setup is called three times, and the following code has to be called before any call to size
+  /*ModeDialog queryUser = new ModeDialog(new UIAction() {
+   public void doAction() {
+   ENABLE_KINECT = true;
+   }
+   });
+   
+   queryUser.setVisible(true);*/
 
     super.init();
 }
@@ -95,40 +95,40 @@ void setup() {
         size(drawWidth = 1600, drawHeight = 900, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
         hint(ENABLE_OPENGL_4X_SMOOTH); // enable OPENGL 4x AA
     }
-
+  
     smooth(); // enable Processing 2x AA
     frameRate(60);
     frame.setTitle("QTL Viewer");
-    
+  
     if (!hasInit) {
         hasInit = true;
     } else {
         return;
     }
-
+  
     // see InitUI for init* methods
     initMenuBar();
-
+  
     initConstants();
-
+  
     initMenu();
-
+  
     if (ENABLE_KINECT) {
         new Thread() {
             public void run() {
                 initKinect();
             }
         }.start();
-
+  
         legendFont = createFont("Arial", 32, true);
-
+    
         // set up exit prompt, fonts
         yes = new UIButton((drawWidth / 2.0) - 80, (drawHeight / 2.0) - 24, "Yes", 72, 48, 32, new UIAction() {
             public void doAction() {
                 exit();
             }
         });
-
+    
         no = new UIButton((drawWidth / 2.0) + 8, (drawHeight / 2.0) - 24, "No", 72, 48, 32, new UIAction() {
             public void doAction() {
                 exiting = false;
@@ -136,39 +136,39 @@ void setup() {
         });
     } else {
         legendFont = createFont("Arial", 16, true);
-
+    
         yes = new UIButton((drawWidth / 2.0) - 40, (drawHeight / 2.0) - 24, "Yes", new UIAction() {
             public void doAction() {
                 exit();
             }
         });
-
+    
         no = new UIButton((drawWidth / 2.0) + 8, (drawHeight / 2.0) - 24, "No", new UIAction() {
             public void doAction() {
                 exiting = false;
             }
         });
     }
-
+  
     large = createFont("Arial", (ENABLE_KINECT) ? 64 : 32, true);
     textFont(large);
-
+  
     // set up tab container
     String[] titles;
-
+  
     if (ENABLE_KINECT) {
-        titles = new String[] {
-            "File management", "LOD Score view", "Chromosome view", "Settings"
-        };
+      titles = new String[] {
+        "File management", "LOD Score view", "Chromosome view", "Settings"
+      };
     } else {
-        titles = new String[] {
-            "LOD Score view", "Chromosome view"
-        };
+      titles = new String[] {
+        "LOD Score view", "Chromosome view"
+      };
     }
-
+  
     parentFiles = new ArrayList<Parent_File>(); // this ArrayList maps to the contents of fileTree
     tabs = new UITabFolder((!ENABLE_KINECT) ? 335 : 10, 30, 10, 10, titles);
-
+  
     if (ENABLE_KINECT) {
         fileTree = new UIKTree(tabs.cWidth - 670, tabs.y + 10, 670, tabs.cHeight - 92, new UIListener() { // remove file
             public int eventHeard(int i, int j) {
@@ -185,7 +185,7 @@ void setup() {
                 filebrowser.lastFrame = frameCount;
             }
         };
-
+    
         tabs.addComponent(fileTree, 0, 0);
     } else {
         fileTree = new UITree(10, 10, 315, drawHeight - 20, new UIListener() { // remove file
@@ -200,9 +200,9 @@ void setup() {
             }
         });
     }
-
+  
     initMouseWheelListener();
-
+  
     tabs.addComponent(loddisplay = new LODDisplay((!ENABLE_KINECT) ? 400 : 65, 40, 0, 0) {
         public void update() {
             cWidth = (drawWidth - x) - 35;
@@ -211,11 +211,11 @@ void setup() {
             super.update();
         }
     }, (ENABLE_KINECT) ? 1 : 0, 0);
-
+  
     if (ENABLE_KINECT) {
         loddisplay.strandHeight = 50.0;
     }
-
+  
     tabs.addComponent(chrdisplay = new ChrDisplay((!ENABLE_KINECT) ? 360 : 25, 40, 0, 0) {
         public void update() {
             cWidth = (drawWidth - x) - 35;
@@ -223,7 +223,7 @@ void setup() {
             super.update();
         }
     }, (ENABLE_KINECT) ? 2 : 1, 0);
-
+  
     if (ENABLE_KINECT) {    
         tabs.addComponent(quit = new UIButton((drawWidth / 2.0) + 8, (tabs.cHeight / 2.0) + tabs.y + 128, "Exit", 256, 128, 48, new UIAction() {
             public void doAction() {
@@ -231,7 +231,7 @@ void setup() {
                 exiting = true;
             }
         }), 3, 0);
-
+  
         tabs.addComponent(defUpper = new UIKSpinner(0, 400, 48, 3.0, "Default upper threshold") {
             public void update() {
                 this.x = (tabs.cWidth / 2.0) - getWidth() - 32 + tabs.x;
@@ -240,7 +240,7 @@ void setup() {
                 super.update();
             }
         }, 3, 0);
-
+  
         tabs.addComponent(defLower = new UIKSpinner(0, 558, 48, 1.5, "Default lower threshold") {
             public void update() {
                 this.x = (tabs.cWidth / 2.0) - getWidth() - 32 + tabs.x;
@@ -249,7 +249,7 @@ void setup() {
                 super.update();
             }
         }, 3, 0);
-
+    
         tabs.addComponent(unitSelect = new UIRadioGroup((tabs.cWidth / 2.0) + 32 + tabs.x, 400, 48.0, 100.0, new String[] {
             "Centimorgans", "Base pairs"
         }) {
@@ -258,7 +258,7 @@ void setup() {
                 super.update();
             }
         }, 3, 0);
-
+  
         tabs.addComponent(new UIButton((tabs.cWidth / 2.0) - 264 + tabs.x, (tabs.cHeight / 2.0) + tabs.y + 128, "Stop Tracking", 256, 128, 36, new UIAction() {
             public void doAction() {
                 if (!ENABLE_KINECT_SIMULATE) {
@@ -267,34 +267,34 @@ void setup() {
                             users.remove(i);
                         }
                     }
-
+          
                     context.stopTrackingSkeleton(mouseId);
                     context.startPoseDetection("Psi", mouseId);
                 }
-            }
-        }), 3, 0);
-
-        tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
+              }
+          }), 3, 0);
+  
+          tabs.addComponent(filebrowser = new UIKFileBrowser(tabs.x + 10, tabs.y + 10, tabs.cWidth - 720, tabs.cHeight - 20), 0, 0);
     }
-
+  
     legendX = drawWidth - 400.0;
     legendY = 250.0;
-
+  
     lastTime = System.currentTimeMillis();
 }
 
 void draw() {
     background(0xAA);
-
+  
     // see module UpdateUI for update* methods
     updateViewArea();
-
+  
     if (!ENABLE_KINECT) {
         updateMenu();
     }
-
+  
     updateLegend();
-
+  
     // display exit prompt, buttons if appropriate
     if (exiting) {
         noStroke();
@@ -313,27 +313,27 @@ void draw() {
         yes.active = false;
         no.active = false;
     } 
-
+  
     if (ENABLE_KINECT) {
         updateKinect();
-        
+    
         fill(0x00);
         noStroke();
-        
+    
         float dim = width - drawWidth - 50;
-        
+    
         if (context == null || context.sceneImage() == null) {
             float angle = TWO_PI * ((System.currentTimeMillis() % 2000) / 1999.0);
             float value = (1 / 255.0) * TWO_PI;
             float last = 0.0;
-            
+      
             for (int i = 0; i < 255; i++) {
                 float diff = (i / 255.0) * TWO_PI;
                 fill(0x00, 0xFF - i);
                 arc(drawWidth + 25 + (dim / 2.0), 400, dim, dim, angle - diff, last);
                 last = angle - diff + value;
             }
-            
+      
             fill(0xAA);
             noStroke();
             ellipse(drawWidth + 25 + (dim / 2.0), 400, (3 * dim) / 4.0, (3 * dim) / 4.0);
