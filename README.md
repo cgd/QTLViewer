@@ -1,5 +1,10 @@
 # QTL Viewer
 
+### Dependencies:
+
+* Mousemap library for converting between cM and bp.
+* SimpleOpenNI for Kinect interaction.
+
 ### Standard version:
 
 **Usage**
@@ -31,7 +36,7 @@ Click a tab to change to that page.
 
 **Installation**
 
-Requires simple-openni wrapper for Processing. See <http://code.google.com/p/simple-openni/wiki/Installation>.  
+Requires SimpleOpenNI wrapper for Processing. See <http://code.google.com/p/simple-openni/wiki/Installation>.  
 
 **Setup**
 
