@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2010 The Jackson Laboratory
 *
-* This software was developed by Matt Hibbs's Lab at The Jackson
+* This software was developed by Matt Hibbs' Lab at The Jackson
 * Laboratory (see http://cbfg.jax.org/).
 *
 * This is free software: you can redistribute it and/or modify
