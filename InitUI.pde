@@ -26,7 +26,7 @@ void initMenuBar() {
     MenuBar menu = new MenuBar();
     
     Menu fileMenu = new Menu("File");
-    MenuItem openFileItem = new MenuItem("Open File...", new MenuShortcut(KeyEvent.VK_O));
+    MenuItem openFileItem = new MenuItem("Open File...", new MenuShortcut(java.awt.event.KeyEvent.VK_O));
     // action handling callbacks using anonymous inner classes
     openFileItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -35,7 +35,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem openFolderItem = new MenuItem("Open Folder...", new MenuShortcut(KeyEvent.VK_O, true));
+    MenuItem openFolderItem = new MenuItem("Open Folder...", new MenuShortcut(java.awt.event.KeyEvent.VK_O, true));
     openFolderItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting) {
@@ -46,7 +46,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem loadConfigItem = new MenuItem("Load config...", new MenuShortcut(KeyEvent.VK_E));
+    MenuItem loadConfigItem = new MenuItem("Load config...", new MenuShortcut(java.awt.event.KeyEvent.VK_E));
     loadConfigItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if(exiting) {
@@ -63,7 +63,7 @@ void initMenuBar() {
     fileMenu.add(loadConfigItem);
     
     Menu viewMenu = new Menu("View");
-    MenuItem menuup = new MenuItem("Show Menu", new MenuShortcut(KeyEvent.VK_UP));
+    MenuItem menuup = new MenuItem("Show Menu", new MenuShortcut(java.awt.event.KeyEvent.VK_UP));
     menuup.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting) {
@@ -75,7 +75,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem menudown = new MenuItem("Hide Menu", new MenuShortcut(KeyEvent.VK_DOWN));
+    MenuItem menudown = new MenuItem("Hide Menu", new MenuShortcut(java.awt.event.KeyEvent.VK_DOWN));
     menudown.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting) {
@@ -86,7 +86,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(KeyEvent.VK_RIGHT));
+    MenuItem nextchr = new MenuItem("Next Chromosome", new MenuShortcut(java.awt.event.KeyEvent.VK_RIGHT));
     nextchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
@@ -97,7 +97,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem prevchr = new MenuItem("Previous Chromosome", new MenuShortcut(KeyEvent.VK_LEFT));
+    MenuItem prevchr = new MenuItem("Previous Chromosome", new MenuShortcut(java.awt.event.KeyEvent.VK_LEFT));
     prevchr.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
@@ -108,7 +108,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem showall = new MenuItem("Show All", new MenuShortcut(KeyEvent.VK_BACK_SPACE));
+    MenuItem showall = new MenuItem("Show All", new MenuShortcut(java.awt.event.KeyEvent.VK_BACK_SPACE));
     showall.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
@@ -119,7 +119,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem zoomin = new MenuItem("Zoom In", new MenuShortcut(KeyEvent.VK_EQUALS));
+    MenuItem zoomin = new MenuItem("Zoom In", new MenuShortcut(java.awt.event.KeyEvent.VK_EQUALS));
     zoomin.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
@@ -149,7 +149,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem zoomout = new MenuItem("Zoom Out", new MenuShortcut(KeyEvent.VK_MINUS));
+    MenuItem zoomout = new MenuItem("Zoom Out", new MenuShortcut(java.awt.event.KeyEvent.VK_MINUS));
     zoomout.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {
@@ -173,7 +173,7 @@ void initMenuBar() {
         }
     });
     
-    MenuItem zoomreset = new MenuItem("Zoom Reset", new MenuShortcut(KeyEvent.VK_Z));
+    MenuItem zoomreset = new MenuItem("Zoom Reset", new MenuShortcut(java.awt.event.KeyEvent.VK_Z));
     zoomreset.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (exiting || ((ENABLE_KINECT && tabs.currentpage != 1) || (!ENABLE_KINECT && tabs.currentpage != 0))) {

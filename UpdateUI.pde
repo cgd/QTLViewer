@@ -36,9 +36,9 @@ void updateMenu() {
     
     stroke(0xCC);
     fill(0x00, 0x00, 0x00, 0xAA);
-    pushMatrix();
+    //pushMatrix();
     
-    translate(0.0, menuY, 0);
+    // translate(0.0, menuY, 0);
     menuY += (menuTargetY - menuY) * velocity; // this moves the menu up or down in a non-linear way
     
     if (abs(menuTargetY - menuY) < 0.25) {
@@ -49,16 +49,16 @@ void updateMenu() {
     beginShape();
     
     for (int i = 0; i < 20; i+=2) {
-        vertex(i + 10, (-sin((i * HALF_PI) / 20.0) * 20.0) + drawHeight);
+        vertex(i + 10, (-sin((i * HALF_PI) / 20.0) * 20.0) + drawHeight + menuY);
     }
     
-    vertex(75, drawHeight - 20);
+    vertex(75, drawHeight - 20 + menuY);
     
     for (int i = 20; i >= 0; i -= 2) {
-        vertex(95 - i, (-sin((abs(i) * HALF_PI) / 20.0) * 20.0) + drawHeight);
+        vertex(95 - i, (-sin((abs(i) * HALF_PI) / 20.0) * 20.0) + drawHeight + menuY);
     }
     
-    vertex(drawWidth - 10, drawHeight);
+    vertex(drawWidth - 10, drawHeight + menuY);
     vertex(drawWidth - 10, drawHeight + 100);
     vertex(10, drawHeight + 100);
     vertex(10, drawHeight);
@@ -66,7 +66,7 @@ void updateMenu() {
     
     // update, draw menu components
     fill(0xFF);
-    popMatrix();
+    //popMatrix();
     ((UIComponent)texts.get(0)).y = (drawHeight + menuY) + 10;
     ((UIComponent)texts.get(1)).y = (drawHeight + menuY) + 36;
     unitSelect.y = drawHeight + menuY + 10;

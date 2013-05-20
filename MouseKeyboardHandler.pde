@@ -18,7 +18,7 @@
 * along with this software. If not, see <http://www.gnu.org/licenses/>.
 */
 
-void keyPressed() { // most key events are handled by the MenuBar
+void keyPressed(java.awt.event.KeyEvent event) { // most key events are handled by the MenuBar
     if (key == ESC) {
         if (!ENABLE_KINECT) {
             exiting = !exiting;
@@ -29,16 +29,18 @@ void keyPressed() { // most key events are handled by the MenuBar
     }
   
     if (exiting) {
-        yes.keyAction(key, keyCode, keyEvent.getModifiersEx());
-        no.keyAction(key, keyCode, keyEvent.getModifiersEx());
+        yes.keyAction(key, keyCode, event.getModifiersEx());
+        no.keyAction(key, keyCode, event.getModifiersEx());
     } else {
-        texts.keyAction(key, keyCode, keyEvent.getModifiersEx());
+        texts.keyAction(key, keyCode, event.getModifiersEx());
     }
 }
 
-void keyReleased() {
+void keyReleased(java.awt.event.
+
+KeyEvent event) {
     if (! exiting && tabs.active && tabs.focus) {
-        tabs.keyAction(key, keyCode, keyEvent.getModifiersEx());
+        tabs.keyAction(key, keyCode, event.getModifiersEx());
     }
 }
 

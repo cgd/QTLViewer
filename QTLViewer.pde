@@ -32,7 +32,8 @@ public static final boolean ENABLE_KINECT = false; // whether or not to use Kine
 public static final boolean ENABLE_KINECT_SIMULATE = false; // simulate Kinect with the mouse
 
 import processing.opengl.*;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JColorChooser;
@@ -100,13 +101,13 @@ void start() {
 void setup() {
     // set up base UI
     if (ENABLE_KINECT) {
-        size(screen.width, drawHeight = screen.height); // SimpleOpenNI is apparently not compatible with OpenGL
+        size(displayWidth, drawHeight = displayHeight); // SimpleOpenNI is apparently not compatible with OpenGL
         drawWidth = (int)((4.0 / 3.0) * drawHeight);
     } else {
-        size(drawWidth = 1600, drawHeight = 900, OPENGL); // use OPENGL for 4x anti-aliasing (looks better)
-        hint(ENABLE_OPENGL_4X_SMOOTH); // enable OPENGL 4x AA
+        size(drawWidth = 1600, drawHeight = 900); // use OPENGL for 4x anti-aliasing (looks better)
+        //hint(ENABLE_OPENGL_4X_SMOOTH); // enable OPENGL 4x AA
     }
-  
+
     smooth(); // enable Processing 2x AA
     frameRate(60);
     frame.setTitle("QTL Viewer");
@@ -123,7 +124,7 @@ void setup() {
     initConstants();
   
     initMenu();
-  
+
     if (ENABLE_KINECT) {
         initKinect();
   
