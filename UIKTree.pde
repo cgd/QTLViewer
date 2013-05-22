@@ -63,7 +63,7 @@ class UIKTree extends UITree {
         ryes.setKey(this);
         rno.setKey(this);
         
-        hsbGraph = createGraphics(drawHeight - 572, drawHeight - 572, P2D);
+        hsbGraph = createGraphics(drawHeight - 572, drawHeight - 572);
         hsbGraph.beginDraw();
         hsbGraph.noStroke();
         hsbGraph.colorMode(HSB, 255);

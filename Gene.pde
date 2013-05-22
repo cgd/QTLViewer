@@ -55,6 +55,7 @@ class Gene {
         geneEnd = (float)unitConverter.basePairsToCentimorgans(chromosome, Long.parseLong(segs[5]));
         codeStart = (float)unitConverter.basePairsToCentimorgans(chromosome, Long.parseLong(segs[6]));
         codeEnd = (float)unitConverter.basePairsToCentimorgans(chromosome, Long.parseLong(segs[7]));
+
         int exonCount = int(getNumeric(segs[8]));
         String[] exonStarts = segs[9].split(",");
         String[] exonEnds = segs[10].split(",");

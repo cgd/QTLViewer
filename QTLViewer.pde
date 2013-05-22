@@ -24,8 +24,8 @@
  * This module contains methods that operate the UI, which include event handling, input prompting, etc.
  *
  * @author Braden Kell
- * @version 22 April 2011
- * @since 1.6
+ * @version 22 May 2013
+ * @since 1.7
  */
 
 public static final boolean ENABLE_KINECT = false; // whether or not to use Kinect
@@ -119,8 +119,6 @@ void setup() {
     }
   
     // see InitUI for init* methods
-    initMenuBar();
-  
     initConstants();
   
     initMenu();
@@ -143,6 +141,8 @@ void setup() {
             }
         });
     } else {
+        initMenuBar();
+        
         legendFont = createFont("Arial", 16, true);
     
         yes = new UIButton((drawWidth / 2.0) - 40, (drawHeight / 2.0) - 24, "Yes", new UIAction() {
